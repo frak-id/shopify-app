@@ -1,0 +1,77 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "files": {
+        "ignore": [
+            "_cjs",
+            "_esm",
+            "_types",
+            "dist",
+            "build",
+            "node_modules/**",
+            ".sst/**",
+            ".open-next/**",
+            "tsconfig.json",
+            "tsconfig.*.json",
+            "package.json",
+            "sst-env.d.ts"
+        ]
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "complexity": {
+                "noExcessiveCognitiveComplexity": {
+                    "level": "error",
+                    "options": {
+                        "maxAllowedComplexity": 17
+                    }
+                },
+                "noUselessTernary": "error",
+                "useSimplifiedLogicExpression": "error"
+            },
+            "correctness": {
+                "useHookAtTopLevel": "error",
+                "noUnusedVariables": "error",
+                "noUnusedImports": "error",
+                "noUndeclaredVariables": "off",
+                "noUnusedPrivateClassMembers": "error"
+            },
+            "style": {
+                "useFragmentSyntax": "error",
+                "useShorthandArrayType": "error",
+                "useShorthandAssign": "error",
+                "useImportType": "error",
+                "useExportType": "error"
+            }
+        }
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "double",
+            "semicolons": "always",
+            "trailingCommas": "es5"
+        }
+    },
+    "css": {
+        "parser": {
+            "cssModules": true
+        },
+        "linter": {
+            "enabled": true
+        },
+        "formatter": {
+            "enabled": true,
+            "indentStyle": "space",
+            "indentWidth": 4
+        }
+    }
+}

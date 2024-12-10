@@ -1,0 +1,32 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "87da8338f40c95301b4881ca4bfb23db"
+application_url = "https://meters-outer-lobby-prevention.trycloudflare.com"
+embedded = true
+name = "Frak"
+handle = "frak"
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "frak-store-app.myshopify.com"
+
+[webhooks]
+api_version = "2024-10"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_customer_events,read_orders,read_pixels,read_products,read_themes,write_pixels"
+
+[auth]
+redirect_urls = [
+  "https://meters-outer-lobby-prevention.trycloudflare.com/auth/callback",
+  "https://meters-outer-lobby-prevention.trycloudflare.com/auth/shopify/callback",
+  "https://meters-outer-lobby-prevention.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
