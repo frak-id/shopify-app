@@ -5,6 +5,7 @@ import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
 import { doesThemeSupportBlock } from "app/services.server/theme";
+import { useTranslation } from "react-i18next";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
 
@@ -22,6 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
     const { apiKey, isThemeSupported } = useLoaderData<typeof loader>();
+    const { t } = useTranslation();
     return (
         <AppProvider isEmbeddedApp apiKey={apiKey}>
             <RootProvider>
@@ -31,8 +33,10 @@ export default function App() {
                     </Link>
                     {isThemeSupported && (
                         <>
-                            <Link to="/app/pixel">Application pixel</Link>
-                            <Link to="/app/webhook">Webhook</Link>
+                            <Link to="/app/pixel">{t("navigation.pixel")}</Link>
+                            <Link to="/app/webhook">
+                                {t("navigation.webhook")}
+                            </Link>
                         </>
                     )}
                 </NavMenu>

@@ -2,6 +2,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BlockStack, Card, Page, Text } from "@shopify/polaris";
 import { type IntentWebPixel, Pixel } from "app/components/Pixel";
+import { useTranslation } from "react-i18next";
 import {
     createWebPixel,
     deleteWebPixel,
@@ -40,21 +41,19 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function PixelPage() {
     const webPixel = useLoaderData<typeof loader>();
+    const { t } = useTranslation();
     return (
-        <Page title="Application pixel">
+        <Page title={t("pixel.title")}>
             <BlockStack gap="500">
                 <Card>
                     <BlockStack gap="200">
                         <Text as="p" variant="bodyMd">
-                            Your pixel is{" "}
-                            <strong>
-                                {webPixel ? "connected" : "not connected"}
-                            </strong>{" "}
-                            to your store.
+                            {webPixel
+                                ? t("pixel.connected")
+                                : t("pixel.notConnected")}
                         </Text>
                         <Text as="p" variant="bodyMd">
-                            {!webPixel &&
-                                "You need to connect your pixel to your store to track your customers purchases."}
+                            {!webPixel && t("pixel.needConnection")}
                         </Text>
                         <Text as="p" variant="bodyMd">
                             <Pixel id={webPixel?.id} />

@@ -13,6 +13,7 @@ import {
 import { WalletGated } from "app/components/WalletGated";
 import type { loader as appLoader } from "app/routes/app";
 import { firstProductPublished, shopInfo } from "app/services.server/shop";
+import { useTranslation } from "react-i18next";
 import { ShopInfo } from "../components/ShopInfo";
 import { authenticate } from "../shopify.server";
 
@@ -42,17 +43,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function Index() {
     const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
     const isThemeSupported = rootData?.isThemeSupported;
+    const { t } = useTranslation();
 
     return (
         <Page
-            title="Frak configuration"
+            title={t("common.title")}
             primaryAction={
                 <Button
                     variant="primary"
                     url={process.env.BUSINESS_URL}
                     target="_blank"
                 >
-                    Go to dashboard
+                    {t("common.goToDashboard")}
                 </Button>
             }
         >

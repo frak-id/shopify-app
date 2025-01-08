@@ -1,1 +1,44 @@
-{}
+{
+    "common": {
+        "title": "Configuration Frak",
+        "goToDashboard": "Aller au tableau de bord"
+    },
+    "navigation": {
+        "pixel": "Pixel d'application",
+        "webhook": "Webhook"
+    },
+    "pixel": {
+        "title": "Pixel d'application",
+        "connected": "Votre pixel est connecté à votre boutique.",
+        "notConnected": "Votre pixel n'est pas connecté à votre boutique.",
+        "needConnection": "Vous devez connecter votre pixel à votre boutique pour suivre les achats de vos clients.",
+        "actions": {
+            "cta": {
+                "connect": "Connecter le pixel d'application",
+                "disconnect": "Déconnecter le pixel d'application"
+            },
+            "messages": {
+                "connect": "Pixel d'application connecté avec succès",
+                "disconnect": "Pixel d'application déconnecté avec succès",
+                "error": "Erreur de suppression du pixel d'application"
+            }
+        }
+    },
+    "webhook": {
+        "title": "Webhook",
+        "connected": "Votre webhook est connecté à votre boutique.",
+        "notConnected": "Votre webhook n'est pas connecté à votre boutique.",
+        "needConnection": "Vous devez connecter votre webhook à votre boutique pour suivre les achats de vos clients.",
+        "actions": {
+            "cta": {
+                "connect": "Connecter le webhook",
+                "disconnect": "Déconnecter le webhook"
+            },
+            "messages": {
+                "connect": "Webhook connecté avec succès",
+                "disconnect": "Webhook déconnecté avec succès",
+                "error": "Erreur de suppression du webhook"
+            }
+        }
+    }
+}

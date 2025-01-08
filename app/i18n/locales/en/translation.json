@@ -1,1 +1,44 @@
-{}
+{
+    "common": {
+        "title": "Frak configuration",
+        "goToDashboard": "Go to dashboard"
+    },
+    "navigation": {
+        "pixel": "Application pixel",
+        "webhook": "Webhook"
+    },
+    "pixel": {
+        "title": "Application pixel",
+        "connected": "Your pixel is connected to your store.",
+        "notConnected": "Your pixel is not connected to your store.",
+        "needConnection": "You need to connect your pixel to your store to track your customers purchases.",
+        "actions": {
+            "cta": {
+                "connect": "Connect application pixel",
+                "disconnect": "Disconnect application pixel"
+            },
+            "messages": {
+                "connect": "Application pixel connected successfully",
+                "disconnect": "Application pixel disconnected successfully",
+                "error": "Application pixel deletion error"
+            }
+        }
+    },
+    "webhook": {
+        "title": "Webhook",
+        "connected": "Your webhook is connected to your store.",
+        "notConnected": "Your webhook is not connected to your store.",
+        "needConnection": "You need to connect your webhook to your store to track your customers purchases.",
+        "actions": {
+            "cta": {
+                "connect": "Connect webhook",
+                "disconnect": "Disconnect webhook"
+            },
+            "messages": {
+                "connect": "Webhook connected successfully",
+                "disconnect": "Webhook disconnected successfully",
+                "error": "Webhook deletion error"
+            }
+        }
+    }
+}

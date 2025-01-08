@@ -8,6 +8,7 @@ import type {
 } from "app/services.server/webhook";
 import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 
@@ -18,6 +19,7 @@ export function Webhook({ id }: { id?: string }) {
         | CreateWebhookSubscriptionReturnType
         | DeleteWebhookSubscriptionReturnType
     >();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!fetcher.data) return;
@@ -30,19 +32,19 @@ export function Webhook({ id }: { id?: string }) {
             .deletedWebhookSubscriptionId;
 
         if (userErrors?.length > 0) {
-            shopify.toast.show("Webhook deletion error.", {
+            shopify.toast.show(t("webhook.actions.messages.error"), {
                 isError: true,
             });
         }
 
         if (webhook) {
-            shopify.toast.show("Webhook connected successfully");
+            shopify.toast.show(t("webhook.actions.messages.connect"));
         }
 
         if (deletedWebhookId) {
-            shopify.toast.show("Webhook disconnected successfully");
+            shopify.toast.show(t("webhook.actions.messages.disconnect"));
         }
-    }, [fetcher.data, shopify.toast]);
+    }, [fetcher.data, shopify.toast, t]);
 
     const handleAction = async (intent: IntentWebhook, productId?: string) => {
         fetcher.submit(
@@ -65,7 +67,7 @@ export function Webhook({ id }: { id?: string }) {
                         handleAction("createWebhook", productId);
                     }}
                 >
-                    Connect webhook
+                    {t("webhook.actions.cta.connect")}
                 </Button>
             )}
             {id && (
@@ -75,7 +77,7 @@ export function Webhook({ id }: { id?: string }) {
                     disabled={fetcher.state !== "idle"}
                     onClick={() => handleAction("deleteWebhook")}
                 >
-                    Disconnect webhook
+                    {t("webhook.actions.cta.disconnect")}
                 </Button>
             )}
         </>

@@ -8,6 +8,7 @@ import {
     deleteWebhook,
     getWebhooks,
 } from "app/services.server/webhook";
+import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -43,23 +44,19 @@ export default function WebHookPage() {
     const data = useLoaderData<typeof loader>();
     const { webhooks } = data;
     const isWebhookExists = webhooks.edges.length > 0;
+    const { t } = useTranslation();
     return (
-        <Page title="Webhook">
+        <Page title={t("webhook.title")}>
             <BlockStack gap="500">
                 <Card>
                     <BlockStack gap="200">
                         <Text as="p" variant="bodyMd">
-                            Your webhook is{" "}
-                            <strong>
-                                {isWebhookExists
-                                    ? "connected"
-                                    : "not connected"}
-                            </strong>{" "}
-                            to your store.
+                            {isWebhookExists
+                                ? t("webhook.connected")
+                                : t("webhook.notConnected")}
                         </Text>
                         <Text as="p" variant="bodyMd">
-                            {!isWebhookExists &&
-                                "You need to connect your webhook to your store to track your customers purchases."}
+                            {!isWebhookExists && t("webhook.needConnection")}
                         </Text>
                         <Text as="p" variant="bodyMd">
                             <Webhook id={webhooks?.edges[0]?.node?.id} />

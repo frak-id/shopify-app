@@ -6,6 +6,7 @@ import type {
     DeleteWebPixelReturnType,
 } from "app/services.server/webPixel";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export type IntentWebPixel = "createWebPixel" | "deleteWebPixel";
 
@@ -14,6 +15,7 @@ export function Pixel({ id }: { id?: string }) {
     const fetcher = useFetcher<
         CreateWebPixelReturnType | DeleteWebPixelReturnType
     >();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!fetcher.data) return;
@@ -25,19 +27,19 @@ export function Pixel({ id }: { id?: string }) {
             .deletedWebPixelId;
 
         if (userErrors?.length > 0) {
-            shopify.toast.show("Application pixel deletion error.", {
+            shopify.toast.show(t("pixel.actions.messages.error"), {
                 isError: true,
             });
         }
 
         if (webPixel) {
-            shopify.toast.show("Application pixel connected successfully");
+            shopify.toast.show(t("pixel.actions.messages.connect"));
         }
 
         if (deletedWebPixelId) {
-            shopify.toast.show("Application pixel disconnected successfully");
+            shopify.toast.show(t("pixel.actions.messages.disconnect"));
         }
-    }, [fetcher.data, shopify.toast]);
+    }, [fetcher.data, shopify.toast, t]);
 
     const handleAction = async (intent: IntentWebPixel) => {
         fetcher.submit({ intent }, { method: "POST" });
@@ -52,7 +54,7 @@ export function Pixel({ id }: { id?: string }) {
                     disabled={fetcher.state !== "idle"}
                     onClick={() => handleAction("createWebPixel")}
                 >
-                    Connect application pixel
+                    {t("pixel.actions.cta.connect")}
                 </Button>
             )}
             {id && (
@@ -62,7 +64,7 @@ export function Pixel({ id }: { id?: string }) {
                     disabled={fetcher.state !== "idle"}
                     onClick={() => handleAction("deleteWebPixel")}
                 >
-                    Disconnect application pixel
+                    {t("pixel.actions.cta.disconnect")}
                 </Button>
             )}
         </>
