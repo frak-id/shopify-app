@@ -3,12 +3,15 @@ import { useLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Button,
+    EmptyState,
     InlineStack,
     Spinner,
     Text,
 } from "@shopify/polaris";
 import type { loader } from "app/routes/app._index";
 import { type ReactNode, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import LogoFrak from "../../assets/LogoFrak.svg";
 
 export function WalletGated({ children }: { children: ReactNode }) {
     return (
@@ -23,7 +26,8 @@ function WalletGatedInner({ children }: { children: ReactNode }) {
         shop: { url },
     } = useLoaderData<typeof loader>();
     const { data: walletStatus } = useWalletStatus();
-    const { mutate: displayFrakModal, isPending } = useDisplayModal();
+    const { mutate: displayFrakModal } = useDisplayModal();
+    const { t } = useTranslation();
 
     const authenticate = useCallback(() => {
         displayFrakModal({
@@ -43,7 +47,7 @@ function WalletGatedInner({ children }: { children: ReactNode }) {
             <InlineStack gap="200" blockAlign="center">
                 <Spinner size="small" />
                 <Text variant="headingMd" as="h2">
-                    Checking everything...
+                    {t("common.loading")}
                 </Text>
             </InlineStack>
         );
@@ -51,16 +55,24 @@ function WalletGatedInner({ children }: { children: ReactNode }) {
 
     if (!walletStatus.wallet) {
         return (
-            <>
-                <Text as="h2" variant="headingMd">
-                    Please connect to a Frak wallet to administrate your store.
-                </Text>
-                <InlineStack align="space-between">
-                    <Button loading={isPending} onClick={authenticate}>
-                        Connect Wallet
-                    </Button>
-                </InlineStack>
-            </>
+            <EmptyState
+                heading={t("gated.configure")}
+                action={{ content: t("gated.create"), onAction: authenticate }}
+                footerContent={
+                    <p>
+                        <Button
+                            variant="monochromePlain"
+                            onClick={authenticate}
+                        >
+                            {t("gated.alreadyGotAnAccount")}
+                        </Button>
+                        .
+                    </p>
+                }
+                image={LogoFrak}
+            >
+                <p>{t("gated.start")}</p>
+            </EmptyState>
         );
     }
 

@@ -1,7 +1,8 @@
 {
     "common": {
         "title": "Frak configuration",
-        "goToDashboard": "Go to dashboard"
+        "goToDashboard": "Go to dashboard",
+        "loading": "Loading..."
     },
     "navigation": {
         "pixel": "Application pixel",
@@ -40,5 +41,11 @@
                 "error": "Webhook deletion error"
             }
         }
+    },
+    "gated": {
+        "configure": "Configure Frak",
+        "create": "CREATE AN ACCOUNT",
+        "start": "Create a Frak wallet to start using the app.",
+        "alreadyGotAnAccount": "I already have an account"
     }
 }

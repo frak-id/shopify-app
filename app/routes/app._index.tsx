@@ -14,7 +14,6 @@ import { WalletGated } from "app/components/WalletGated";
 import type { loader as appLoader } from "app/routes/app";
 import { firstProductPublished, shopInfo } from "app/services.server/shop";
 import { useTranslation } from "react-i18next";
-import { ShopInfo } from "../components/ShopInfo";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -137,12 +136,6 @@ function ThemeSupported() {
                         </WalletGated>
                     </BlockStack>
                 </Card>
-            </Layout.Section>
-
-            <Layout.Section variant="oneThird">
-                <BlockStack gap="500">
-                    <ShopInfo />
-                </BlockStack>
             </Layout.Section>
         </>
     );

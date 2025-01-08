@@ -1,7 +1,8 @@
 {
     "common": {
         "title": "Configuration Frak",
-        "goToDashboard": "Aller au tableau de bord"
+        "goToDashboard": "Aller au tableau de bord",
+        "loading": "Chargement..."
     },
     "navigation": {
         "pixel": "Pixel d'application",
@@ -40,5 +41,11 @@
                 "error": "Erreur de suppression du webhook"
             }
         }
+    },
+    "gated": {
+        "configure": "Configurer Frak",
+        "create": "CREER UN COMPTE",
+        "start": "Créez un porte-monnaie Frak pour commencer à utiliser l’application.",
+        "alreadyGotAnAccount": "J’ai déjà un compte"
     }
 }
