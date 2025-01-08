@@ -1,4 +1,4 @@
-import { useDisplayModal, useWalletStatus } from "@frak-labs/nexus-sdk/react";
+import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
 import { useLoaderData } from "@remix-run/react";
 import {
     BlockStack,

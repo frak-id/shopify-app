@@ -29,7 +29,7 @@
     "node": "^18.20 || ^20.10 || >=21.0.0"
   },
   "dependencies": {
-    "@frak-labs/nexus-sdk": "^0.0.23",
+    "@frak-labs/react-sdk": "^0.0.3",
     "@remix-run/dev": "^2.15.1",
     "@remix-run/node": "^2.15.1",
     "@remix-run/react": "^2.15.1",
