@@ -5,6 +5,6 @@
   "main": "dist/main.js",
   "license": "UNLICENSED",
   "dependencies": {
-    "@shopify/web-pixels-extension": "^2.15.0"
+    "@shopify/web-pixels-extension": "^2.16.0"
   }
 }
