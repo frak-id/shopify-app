@@ -1,3 +1,4 @@
+import { useWalletStatus } from "@frak-labs/react-sdk";
 import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
 import { NavMenu } from "@shopify/app-bridge-react";
@@ -23,23 +24,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
     const { apiKey, isThemeSupported } = useLoaderData<typeof loader>();
-    const { t } = useTranslation();
+
     return (
         <AppProvider isEmbeddedApp apiKey={apiKey}>
             <RootProvider>
-                <NavMenu>
-                    <Link to="/app" rel="home">
-                        Home
-                    </Link>
-                    {isThemeSupported && (
-                        <>
-                            <Link to="/app/pixel">{t("navigation.pixel")}</Link>
-                            <Link to="/app/webhook">
-                                {t("navigation.webhook")}
-                            </Link>
-                        </>
-                    )}
-                </NavMenu>
+                <Navigation isThemeSupported={isThemeSupported} />
                 <Outlet />
             </RootProvider>
         </AppProvider>
@@ -54,3 +43,26 @@ export function ErrorBoundary() {
 export const headers: HeadersFunction = (headersArgs) => {
     return boundary.headers(headersArgs);
 };
+
+/**
+ * Show the navigation menu only if theme supports the block and wallet is connected
+ * @param isThemeSupported
+ */
+function Navigation({ isThemeSupported }: { isThemeSupported: boolean }) {
+    const { data: walletStatus } = useWalletStatus();
+    const { t } = useTranslation();
+
+    return (
+        <NavMenu>
+            <Link to="/app" rel="home">
+                Home
+            </Link>
+            {isThemeSupported && walletStatus?.wallet && (
+                <>
+                    <Link to="/app/pixel">{t("navigation.pixel")}</Link>
+                    <Link to="/app/webhook">{t("navigation.webhook")}</Link>
+                </>
+            )}
+        </NavMenu>
+    );
+}
