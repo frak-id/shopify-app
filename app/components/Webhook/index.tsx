@@ -1,7 +1,7 @@
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button } from "@shopify/polaris";
-import type { loader } from "app/routes/app.webhook";
+import type { loader } from "app/routes/app";
 import type {
     CreateWebhookSubscriptionReturnType,
     DeleteWebhookSubscriptionReturnType,
@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 
 export function Webhook({ id }: { id?: string }) {
-    const { shop } = useLoaderData<typeof loader>();
+    const rootData = useRouteLoaderData<typeof loader>("routes/app");
     const shopify = useAppBridge();
     const fetcher = useFetcher<
         | CreateWebhookSubscriptionReturnType
@@ -49,7 +49,7 @@ export function Webhook({ id }: { id?: string }) {
     const handleAction = async (intent: IntentWebhook, productId?: string) => {
         fetcher.submit(
             { intent, productId: productId ?? null },
-            { method: "POST" }
+            { method: "POST", action: "/app/webhook" }
         );
     };
 
@@ -61,8 +61,9 @@ export function Webhook({ id }: { id?: string }) {
                     loading={fetcher.state !== "idle"}
                     disabled={fetcher.state !== "idle"}
                     onClick={() => {
+                        if (!rootData?.shop) return;
                         const productId = productIdFromDomain(
-                            shop.myshopifyDomain
+                            rootData.shop.myshopifyDomain
                         );
                         handleAction("createWebhook", productId);
                     }}

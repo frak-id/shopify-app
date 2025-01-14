@@ -1,5 +1,5 @@
 import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
-import { useLoaderData } from "@remix-run/react";
+import { useRouteLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Button,
@@ -8,7 +8,7 @@ import {
     Spinner,
     Text,
 } from "@shopify/polaris";
-import type { loader } from "app/routes/app._index";
+import type { loader } from "app/routes/app";
 import { type ReactNode, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import LogoFrak from "../../assets/LogoFrak.svg";
@@ -22,9 +22,8 @@ export function WalletGated({ children }: { children: ReactNode }) {
 }
 
 function WalletGatedInner({ children }: { children: ReactNode }) {
-    const {
-        shop: { url },
-    } = useLoaderData<typeof loader>();
+    const rootData = useRouteLoaderData<typeof loader>("routes/app");
+    const url = rootData?.shop?.url;
     const { data: walletStatus } = useWalletStatus();
     const { mutate: displayFrakModal } = useDisplayModal();
     const { t } = useTranslation();

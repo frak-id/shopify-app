@@ -42,7 +42,7 @@ export function Pixel({ id }: { id?: string }) {
     }, [fetcher.data, shopify.toast, t]);
 
     const handleAction = async (intent: IntentWebPixel) => {
-        fetcher.submit({ intent }, { method: "POST" });
+        fetcher.submit({ intent }, { method: "POST", action: "/app/pixel" });
     };
 
     return (

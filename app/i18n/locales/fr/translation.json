@@ -8,6 +8,45 @@
         "pixel": "Pixel d'application",
         "webhook": "Webhook"
     },
+    "stepper": {
+        "next": "Suivant",
+        "step": "Etape",
+        "step1": {
+            "title": "Bienvenue chez Frak !",
+            "description": "Prêt à explorer des fonctionnalités passionnantes et à construire un programme de fidélité efficace pour votre entreprise ?"
+        },
+        "step2": {
+            "title": "Pixel d'application",
+            "description": "Afin de suivre votre programme de fidélité, nous avons besoin de mettre en place un pixel d'application.",
+            "success": "Pixel d'application connecté avec succès",
+            "notActivated": "Pixel d'application non connecté"
+        },
+        "step3": {
+            "title": "Webhook",
+            "description": "Ensuite, nous avons besoin de mettre en place un webhook afin de transmettre les informations concernant les commandes.",
+            "success": "Webhook connecté avec succès",
+            "notActivated": "Webhook non connecté"
+        },
+        "step4": {
+            "title": "Configurer l'application Frak intégrée dans votre thème",
+            "description": "L'application Frak a besoin d'être activée dans votre thème.",
+            "link": "Configurer l'application intégrée Frak dans votre thème",
+            "activated": "L'application Frak est activée",
+            "notActivated": "L'application Frak n'est pas activée"
+        },
+        "step5": {
+            "title": "Ajouter le bouton de partage dans votre thème",
+            "description": "Un bouton de partage doit être ajouté sur les pages produits",
+            "link": "Ajoutez le bouton de partage à votre page produit",
+            "noProduct": "Vous devez ajouter un produit à votre boutique pour ajouter le bouton de partage",
+            "activated": "Le bouton Frak est dans votre page produit",
+            "notActivated": "Le bouton Frak n'est pas dans votre page produit"
+        },
+        "step6": {
+            "title": "Bravo !",
+            "description": "Vous avez terminé la configuration de Frak !"
+        }
+    },
     "pixel": {
         "title": "Pixel d'application",
         "connected": "Votre pixel est connecté à votre boutique.",

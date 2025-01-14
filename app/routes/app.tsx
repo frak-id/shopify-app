@@ -5,7 +5,15 @@ import { NavMenu } from "@shopify/app-bridge-react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
-import { doesThemeSupportBlock } from "app/services.server/theme";
+import { firstProductPublished, shopInfo } from "app/services.server/shop";
+import {
+    doesThemeHasFrakActivated,
+    doesThemeHasFrakButton,
+    doesThemeSupportBlock,
+    getMainThemeId,
+} from "app/services.server/theme";
+import { getWebPixel } from "app/services.server/webPixel";
+import { getWebhooks } from "app/services.server/webhook";
 import { useTranslation } from "react-i18next";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
@@ -14,11 +22,42 @@ export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const isThemeSupported = await doesThemeSupportBlock(context);
+
+    const [
+        isThemeSupported,
+        isThemeHasFrakActivated,
+        isThemeHasFrakButton,
+        theme,
+        firstProduct,
+        shop,
+        webhooks,
+    ] = await Promise.all([
+        doesThemeSupportBlock(context),
+        doesThemeHasFrakActivated(context),
+        doesThemeHasFrakButton(context),
+        getMainThemeId(context.admin.graphql),
+        firstProductPublished(context),
+        shopInfo(context),
+        getWebhooks(context),
+    ]);
+
+    let webPixel = null;
+    try {
+        webPixel = await getWebPixel(context);
+    } catch (error) {
+        console.error(error);
+    }
 
     return {
         apiKey: process.env.SHOPIFY_API_KEY || "",
+        theme,
         isThemeSupported,
+        isThemeHasFrakActivated,
+        isThemeHasFrakButton,
+        shop,
+        firstProduct,
+        webPixel,
+        webhooks,
     };
 };
 

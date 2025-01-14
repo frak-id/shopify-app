@@ -8,6 +8,45 @@
         "pixel": "Application pixel",
         "webhook": "Webhook"
     },
+    "stepper": {
+        "next": "Next",
+        "step": "Step",
+        "step1": {
+            "title": "Welcome to Frak!",
+            "description": "Ready to explore exciting features and build an effective loyalty program for your business?"
+        },
+        "step2": {
+            "title": "Application pixel",
+            "description": "In order to track your loyalty program, we need to implement an application pixel.",
+            "success": "Application pixel connected successfully",
+            "notActivated": "Application pixel not connected"
+        },
+        "step3": {
+            "title": "Webhook",
+            "description": "Next, we need to set up a webhook to pass information about the orders.",
+            "success": "Webhook connected successfully",
+            "notActivated": "Webhook not connected"
+        },
+        "step4": {
+            "title": "Setup Frak embedded app within your theme",
+            "description": "Frak app needs to be enabled in your theme.",
+            "link": "Configure Frak embedded application in your theme",
+            "activated": "Frak application is activated",
+            "notActivated": "Frak app is not activated"
+        },
+        "step5": {
+            "title": "Add the share button in your theme",
+            "description": "A share button should be added on product pages",
+            "link": "Add the sharing button to your product page",
+            "noProduct": "You need to add a product to your store to add the sharing button",
+            "activated": "Frak button is on your product page",
+            "notActivated": "Frak button is not in your product page"
+        },
+        "step6": {
+            "title": "Well done!",
+            "description": "You have completed the Frak setup!"
+        }
+    },
     "pixel": {
         "title": "Application pixel",
         "connected": "Your pixel is connected to your store.",

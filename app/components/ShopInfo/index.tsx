@@ -1,6 +1,6 @@
-import { useLoaderData } from "@remix-run/react";
+import { useRouteLoaderData } from "@remix-run/react";
 import { BlockStack, Card, InlineStack, Link, Text } from "@shopify/polaris";
-import type { loader } from "app/routes/app._index";
+import type { loader } from "app/routes/app";
 import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useMemo } from "react";
 
@@ -11,11 +11,13 @@ import { useMemo } from "react";
  * @constructor
  */
 export function ShopInfo() {
-    const {
-        shop: { name, myshopifyDomain },
-    } = useLoaderData<typeof loader>();
+    const rootData = useRouteLoaderData<typeof loader>("routes/app");
+    const shop = rootData?.shop;
+    const myshopifyDomain = shop?.myshopifyDomain;
 
     const someInfos = useMemo(() => {
+        if (!myshopifyDomain) return null;
+
         // Get some info
         const productId = productIdFromDomain(myshopifyDomain);
         return {
@@ -36,7 +38,7 @@ export function ShopInfo() {
                         <Text as="span" variant="bodyMd">
                             Name:
                         </Text>
-                        <span>{name}</span>
+                        <span>{shop?.name}</span>
                     </InlineStack>
 
                     <InlineStack align="space-between">
