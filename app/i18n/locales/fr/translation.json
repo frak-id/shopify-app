@@ -9,6 +9,7 @@
         "webhook": "Webhook"
     },
     "stepper": {
+        "back": "Retour",
         "next": "Suivant",
         "step": "Etape",
         "step1": {

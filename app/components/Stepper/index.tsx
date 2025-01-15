@@ -19,10 +19,6 @@ export function Stepper() {
     const { t } = useTranslation();
     const [step, setStep] = useState(1);
 
-    const increaseStep = useCallback(() => {
-        setStep((prev) => prev + 1);
-    }, []);
-
     useVisibilityChange(
         useCallback(() => {
             revalidate();
@@ -52,18 +48,25 @@ export function Stepper() {
             {step === 5 && <Step5 />}
             {step === 6 && <Step6 />}
 
-            <InlineStack align="end">
-                {step < MAX_STEP && (
-                    <Button
-                        variant="primary"
-                        onClick={increaseStep}
-                        loading={state === "loading"}
-                        disabled={validateSteps(step, rootData)}
-                    >
-                        {t("stepper.next")}
+            <div style={{ display: "flex" }}>
+                {step > 1 && (
+                    <Button onClick={() => setStep((prev) => prev - 1)}>
+                        {t("stepper.back")}
                     </Button>
                 )}
-            </InlineStack>
+                <div style={{ marginLeft: "auto" }}>
+                    {step < MAX_STEP && (
+                        <Button
+                            variant="primary"
+                            onClick={() => setStep((prev) => prev + 1)}
+                            loading={state === "loading"}
+                            disabled={validateSteps(step, rootData)}
+                        >
+                            {t("stepper.next")}
+                        </Button>
+                    )}
+                </div>
+            </div>
         </>
     );
 }
