@@ -61,12 +61,21 @@ function ThemeNotSupported() {
 }
 
 function ThemeSupported() {
+    const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
+    const { t } = useTranslation();
+    const isAllSet = Boolean(
+        rootData?.webPixel?.id &&
+            rootData?.webhooks?.edges?.length &&
+            rootData?.isThemeHasFrakActivated &&
+            rootData?.isThemeHasFrakButton
+    );
+
     return (
         <Layout.Section>
             <Card>
                 <BlockStack gap="500">
                     <WalletGated>
-                        <Stepper />
+                        {isAllSet ? t("common.allSet") : <Stepper />}
                     </WalletGated>
                 </BlockStack>
             </Card>

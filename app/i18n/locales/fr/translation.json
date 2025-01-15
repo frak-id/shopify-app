@@ -2,7 +2,8 @@
     "common": {
         "title": "Configuration Frak",
         "goToDashboard": "Aller au tableau de bord",
-        "loading": "Chargement..."
+        "loading": "Chargement...",
+        "allSet": "L'application Frak est correctement configurée"
     },
     "navigation": {
         "pixel": "Pixel d'application",

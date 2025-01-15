@@ -2,7 +2,8 @@
     "common": {
         "title": "Frak configuration",
         "goToDashboard": "Go to dashboard",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "allSet": "Frak application is correctly set up"
     },
     "navigation": {
         "pixel": "Application pixel",
