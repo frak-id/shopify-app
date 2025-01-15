@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { BlockStack, Card, Page, Text } from "@shopify/polaris";
+import { Badge, BlockStack, Box, Card, Page, Text } from "@shopify/polaris";
+import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { type IntentWebPixel, Pixel } from "app/components/Pixel";
 import { useTranslation } from "react-i18next";
 import {
@@ -47,11 +48,18 @@ export default function PixelPage() {
             <BlockStack gap="500">
                 <Card>
                     <BlockStack gap="200">
-                        <Text as="p" variant="bodyMd">
-                            {webPixel
-                                ? t("pixel.connected")
-                                : t("pixel.notConnected")}
-                        </Text>
+                        <Box paddingBlockStart={"200"} paddingBlockEnd={"200"}>
+                            {webPixel && (
+                                <Badge tone="success" icon={CheckIcon}>
+                                    {t("pixel.connected")}
+                                </Badge>
+                            )}
+                            {!webPixel && (
+                                <Badge tone="critical" icon={XSmallIcon}>
+                                    {t("pixel.notConnected")}
+                                </Badge>
+                            )}
+                        </Box>
                         <Text as="p" variant="bodyMd">
                             {!webPixel && t("pixel.needConnection")}
                         </Text>

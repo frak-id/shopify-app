@@ -6,7 +6,9 @@
     },
     "navigation": {
         "pixel": "Application pixel",
-        "webhook": "Webhook"
+        "webhook": "Webhook",
+        "theme": "Theme",
+        "button": "Share button"
     },
     "stepper": {
         "back": "Back",
@@ -30,10 +32,11 @@
         },
         "step4": {
             "title": "Setup Frak embedded app within your theme",
-            "description": "Frak app needs to be enabled in your theme.",
+            "description": "Frak application needs to be enabled in your theme.",
             "link": "Configure Frak embedded application in your theme",
             "activated": "Frak application is activated",
-            "notActivated": "Frak app is not activated"
+            "notActivated": "Frak application is not activated",
+            "todo": "Please activate the app using the switch as shown below"
         },
         "step5": {
             "title": "Add the share button in your theme",
@@ -41,7 +44,8 @@
             "link": "Add the sharing button to your product page",
             "noProduct": "You need to add a product to your store to add the sharing button",
             "activated": "Frak button is on your product page",
-            "notActivated": "Frak button is not in your product page"
+            "notActivated": "Frak button is not in your product page",
+            "todo": "Please add the button as shown below"
         },
         "step6": {
             "title": "Well done!",
@@ -81,6 +85,18 @@
                 "error": "Webhook deletion error"
             }
         }
+    },
+    "theme": {
+        "title": "Theme",
+        "connected": "Frak application is activated",
+        "notConnected": "Frak application is not activated",
+        "link": "Configuring Frak application in your theme"
+    },
+    "button": {
+        "title": "Share button",
+        "connected": "Frak button is on your product page",
+        "notConnected": "Frak button is not in your product page",
+        "link": "Configure button in your product page"
     },
     "gated": {
         "configure": "Configure Frak",

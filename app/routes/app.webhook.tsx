@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { BlockStack, Card, Page, Text } from "@shopify/polaris";
+import { Badge, BlockStack, Box, Card, Page, Text } from "@shopify/polaris";
+import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { type IntentWebhook, Webhook } from "app/components/Webhook";
 import { shopInfo } from "app/services.server/shop";
 import {
@@ -50,11 +51,18 @@ export default function WebHookPage() {
             <BlockStack gap="500">
                 <Card>
                     <BlockStack gap="200">
-                        <Text as="p" variant="bodyMd">
-                            {isWebhookExists
-                                ? t("webhook.connected")
-                                : t("webhook.notConnected")}
-                        </Text>
+                        <Box paddingBlockStart={"200"} paddingBlockEnd={"200"}>
+                            {isWebhookExists && (
+                                <Badge tone="success" icon={CheckIcon}>
+                                    {t("webhook.connected")}
+                                </Badge>
+                            )}
+                            {!isWebhookExists && (
+                                <Badge tone="critical" icon={XSmallIcon}>
+                                    {t("webhook.notConnected")}
+                                </Badge>
+                            )}
+                        </Box>
                         <Text as="p" variant="bodyMd">
                             {!isWebhookExists && t("webhook.needConnection")}
                         </Text>

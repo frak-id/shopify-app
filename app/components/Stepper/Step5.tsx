@@ -3,12 +3,11 @@ import { Badge, Box, Link, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import type { loader } from "app/routes/app";
 import { useTranslation } from "react-i18next";
+import screenShareButton from "../../assets/share-button.png";
 
 export function Step5() {
     const rootData = useRouteLoaderData<typeof loader>("routes/app");
     const isThemeHasFrakButton = rootData?.isThemeHasFrakButton;
-    const firstProduct = rootData?.firstProduct;
-    const editorUrl = `https://${rootData?.shop.myshopifyDomain}/admin/themes/current/editor`;
     const { t } = useTranslation();
 
     return (
@@ -20,37 +19,61 @@ export function Step5() {
                 <Text as="p">{t("stepper.step5.description")}</Text>
             </Box>
             <Box paddingBlockStart={"200"}>
-                {isThemeHasFrakButton && (
-                    <Text as="p" variant="bodyMd">
-                        <Badge tone="success" icon={CheckIcon}>
-                            {t("stepper.step5.activated")}
-                        </Badge>
-                    </Text>
-                )}
-                {!isThemeHasFrakButton && (
-                    <>
-                        <Text as="p" variant="bodyMd">
-                            <Badge tone="critical" icon={XSmallIcon}>
-                                {t("stepper.step5.notActivated")}
-                            </Badge>
-                        </Text>
-                        <Box paddingBlockStart={"200"}>
-                            <Text as="p" variant="bodyMd">
-                                {firstProduct ? (
-                                    <Link
-                                        url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
-                                        target="_blank"
-                                    >
-                                        {t("stepper.step5.link")}
-                                    </Link>
-                                ) : (
-                                    <>{t("stepper.step5.noProduct")}</>
-                                )}
-                            </Text>
-                        </Box>
-                    </>
+                {isThemeHasFrakButton ? (
+                    <Step5Activated />
+                ) : (
+                    <Step5NotActivated />
                 )}
             </Box>
         </Box>
+    );
+}
+
+export function Step5Activated() {
+    const { t } = useTranslation();
+
+    return (
+        <Text as="p" variant="bodyMd">
+            <Badge tone="success" icon={CheckIcon}>
+                {t("stepper.step5.activated")}
+            </Badge>
+        </Text>
+    );
+}
+
+export function Step5NotActivated() {
+    const rootData = useRouteLoaderData<typeof loader>("routes/app");
+    const firstProduct = rootData?.firstProduct;
+    const editorUrl = `https://${rootData?.shop.myshopifyDomain}/admin/themes/current/editor`;
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <Text as="p" variant="bodyMd">
+                <Badge tone="critical" icon={XSmallIcon}>
+                    {t("stepper.step5.notActivated")}
+                </Badge>
+            </Text>
+            <Box paddingBlockStart={"200"}>
+                <Text as="p" variant="bodyMd">
+                    {t("stepper.step5.todo")}
+                </Text>
+                <img src={screenShareButton} alt="" />
+            </Box>
+            <Box paddingBlockStart={"200"}>
+                <Text as="p" variant="bodyMd">
+                    {firstProduct ? (
+                        <Link
+                            url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
+                            target="_blank"
+                        >
+                            {t("stepper.step5.link")}
+                        </Link>
+                    ) : (
+                        <>{t("stepper.step5.noProduct")}</>
+                    )}
+                </Text>
+            </Box>
+        </>
     );
 }
