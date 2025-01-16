@@ -22,7 +22,7 @@ const shopifyEnv = {
     POSTGRES_SHOPIFY_DB: isProd ? "shopify_app" : "shopify_app_dev",
     POSTGRES_USER: isProd ? "backend" : "backend-dev",
 
-    SHOPIFY_APP_URL: shopifyAppUrl,
+    SHOPIFY_APP_URL: isProd ? shopifyAppUrl : "http://localhost",
     SHOPIFY_API_KEY: shopifyApiKey,
 };
 
