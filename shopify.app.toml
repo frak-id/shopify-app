@@ -1,21 +1,21 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "87da8338f40c95301b4881ca4bfb23db"
-application_url = "https://meters-outer-lobby-prevention.trycloudflare.com"
+application_url = "https://shopify-app.frak.id"
 embedded = true
 name = "Frak"
 handle = "frak"
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "frak-store-app.myshopify.com"
+dev_store_url = "test-store-frak.myshopify.com"
 
 [webhooks]
 api_version = "2025-01"
 
-  [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
-  uri = "/webhooks/app/uninstalled"
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "/webhooks/app/uninstalled"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -23,9 +23,9 @@ scopes = "read_customer_events,read_orders,read_pixels,read_products,read_themes
 
 [auth]
 redirect_urls = [
-  "https://meters-outer-lobby-prevention.trycloudflare.com/auth/callback",
-  "https://meters-outer-lobby-prevention.trycloudflare.com/auth/shopify/callback",
-  "https://meters-outer-lobby-prevention.trycloudflare.com/api/auth/callback"
+    "https://shopify-app.frak.id/auth/callback",
+    "https://shopify-app.frak.id/auth/shopify/callback",
+    "https://shopify-app.frak.id/api/auth/callback",
 ]
 
 [pos]
