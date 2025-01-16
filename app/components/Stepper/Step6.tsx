@@ -1,8 +1,13 @@
 import { Box, Button, Text } from "@shopify/polaris";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export function Step6() {
     const { t } = useTranslation();
+
+    useEffect(() => {
+        window.localStorage.setItem("frak-onBoarding", "done");
+    }, []);
 
     return (
         <Box padding={"600"}>

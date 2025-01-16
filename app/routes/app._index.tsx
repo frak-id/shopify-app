@@ -2,7 +2,8 @@ import { useRouteLoaderData } from "@remix-run/react";
 import { BlockStack, Button, Card, Layout, Page, Text } from "@shopify/polaris";
 import { Stepper } from "app/components/Stepper";
 import { WalletGated } from "app/components/WalletGated";
-import type { loader as appLoader } from "app/routes/app";
+import type { loader } from "app/routes/app";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -18,7 +19,7 @@ import { useTranslation } from "react-i18next";
  * @param request
  */
 export default function Index() {
-    const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
+    const rootData = useRouteLoaderData<typeof loader>("routes/app");
     const isThemeSupported = rootData?.isThemeSupported;
     const { t } = useTranslation();
 
@@ -61,8 +62,9 @@ function ThemeNotSupported() {
 }
 
 function ThemeSupported() {
-    const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
+    const rootData = useRouteLoaderData<typeof loader>("routes/app");
     const { t } = useTranslation();
+    const [onBoarding, setOnBoarding] = useState(false);
     const isAllSet = Boolean(
         rootData?.webPixel?.id &&
             rootData?.webhooks?.edges?.length &&
@@ -70,12 +72,24 @@ function ThemeSupported() {
             rootData?.isThemeHasFrakButton
     );
 
+    useEffect(() => {
+        // If one step is not set, we remove the onboarding flag
+        if (!isAllSet) {
+            window.localStorage.removeItem("frak-onBoarding");
+            return;
+        }
+
+        // If all steps are set, we set the onboarding flag
+        const frakOnboarding = window.localStorage.getItem("frak-onBoarding");
+        setOnBoarding(frakOnboarding === "done");
+    }, [isAllSet]);
+
     return (
         <Layout.Section>
             <Card>
                 <BlockStack gap="500">
                     <WalletGated>
-                        {isAllSet ? t("common.allSet") : <Stepper />}
+                        {onBoarding ? t("common.allSet") : <Stepper />}
                     </WalletGated>
                 </BlockStack>
             </Card>
