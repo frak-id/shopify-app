@@ -19,27 +19,27 @@ export function Step3() {
                 <Text as="p">{t("stepper.step3.description")}</Text>
             </Box>
             <Box paddingBlockStart={"200"}>
-                <Text as="p" variant="bodyMd">
-                    {isWebhookExists && (
+                {isWebhookExists && (
+                    <Text as="p" variant="bodyMd">
                         <Badge tone="success" icon={CheckIcon}>
                             {t("stepper.step3.success")}
                         </Badge>
-                    )}
-                    {!isWebhookExists && (
-                        <>
-                            <Text as="p" variant="bodyMd">
-                                <Badge tone="critical" icon={XSmallIcon}>
-                                    {t("stepper.step3.notActivated")}
-                                </Badge>
-                            </Text>
-                            <Box paddingBlockStart={"200"}>
-                                <Webhook
-                                    id={rootData?.webhooks?.edges[0]?.node?.id}
-                                />
-                            </Box>
-                        </>
-                    )}
-                </Text>
+                    </Text>
+                )}
+                {!isWebhookExists && (
+                    <>
+                        <Text as="p" variant="bodyMd">
+                            <Badge tone="critical" icon={XSmallIcon}>
+                                {t("stepper.step3.notActivated")}
+                            </Badge>
+                        </Text>
+                        <Box paddingBlockStart={"200"}>
+                            <Webhook
+                                id={rootData?.webhooks?.edges[0]?.node?.id}
+                            />
+                        </Box>
+                    </>
+                )}
             </Box>
         </Box>
     );

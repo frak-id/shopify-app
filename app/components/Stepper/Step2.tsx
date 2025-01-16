@@ -18,25 +18,25 @@ export function Step2() {
                 <Text as="p">{t("stepper.step2.description")}</Text>
             </Box>
             <Box paddingBlockStart={"200"}>
-                <Text as="p" variant="bodyMd">
-                    {rootData?.webPixel?.id && (
+                {rootData?.webPixel?.id && (
+                    <Text as="p" variant="bodyMd">
                         <Badge tone="success" icon={CheckIcon}>
                             {t("stepper.step2.success")}
                         </Badge>
-                    )}
-                    {!rootData?.webPixel?.id && (
-                        <>
-                            <Text as="p" variant="bodyMd">
-                                <Badge tone="critical" icon={XSmallIcon}>
-                                    {t("stepper.step2.notActivated")}
-                                </Badge>
-                            </Text>
-                            <Box paddingBlockStart={"200"}>
-                                <Pixel id={rootData?.webPixel?.id} />
-                            </Box>
-                        </>
-                    )}
-                </Text>
+                    </Text>
+                )}
+                {!rootData?.webPixel?.id && (
+                    <>
+                        <Text as="p" variant="bodyMd">
+                            <Badge tone="critical" icon={XSmallIcon}>
+                                {t("stepper.step2.notActivated")}
+                            </Badge>
+                        </Text>
+                        <Box paddingBlockStart={"200"}>
+                            <Pixel id={rootData?.webPixel?.id} />
+                        </Box>
+                    </>
+                )}
             </Box>
         </Box>
     );
