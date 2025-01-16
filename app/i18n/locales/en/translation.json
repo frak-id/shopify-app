@@ -3,7 +3,8 @@
         "title": "Frak configuration",
         "goToDashboard": "Go to dashboard",
         "loading": "Loading...",
-        "allSet": "Frak application is correctly set up"
+        "allSet": "Frak application is correctly set up",
+        "getStarted": "Start application setup"
     },
     "navigation": {
         "pixel": "Application pixel",

@@ -27,7 +27,7 @@ query shopInfo {
     return shop;
 }
 
-type FirstProductPublishedReturnType = {
+export type FirstProductPublishedReturnType = {
     handle: string;
 };
 

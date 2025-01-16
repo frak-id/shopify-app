@@ -1,7 +1,6 @@
 import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
 import { useRouteLoaderData } from "@remix-run/react";
 import {
-    BlockStack,
     Button,
     EmptyState,
     InlineStack,
@@ -14,14 +13,6 @@ import { useTranslation } from "react-i18next";
 import LogoFrak from "../../assets/LogoFrak.svg";
 
 export function WalletGated({ children }: { children: ReactNode }) {
-    return (
-        <BlockStack gap="200">
-            <WalletGatedInner>{children}</WalletGatedInner>
-        </BlockStack>
-    );
-}
-
-function WalletGatedInner({ children }: { children: ReactNode }) {
     const rootData = useRouteLoaderData<typeof loader>("routes/app");
     const url = rootData?.shop?.url;
     const { data: walletStatus } = useWalletStatus();

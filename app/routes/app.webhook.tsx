@@ -1,9 +1,16 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { Badge, BlockStack, Box, Card, Page, Text } from "@shopify/polaris";
+import {
+    Badge,
+    BlockStack,
+    Box,
+    Card,
+    Layout,
+    Page,
+    Text,
+} from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { type IntentWebhook, Webhook } from "app/components/Webhook";
-import { shopInfo } from "app/services.server/shop";
 import {
     createWebhook,
     deleteWebhook,
@@ -14,9 +21,8 @@ import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const shop = await shopInfo(context);
     const webhooks = await getWebhooks(context);
-    return { shop, webhooks };
+    return { webhooks };
 };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -46,32 +52,46 @@ export default function WebHookPage() {
     const { webhooks } = data;
     const isWebhookExists = webhooks.edges.length > 0;
     const { t } = useTranslation();
+
     return (
         <Page title={t("webhook.title")}>
-            <BlockStack gap="500">
-                <Card>
-                    <BlockStack gap="200">
-                        <Box paddingBlockStart={"200"} paddingBlockEnd={"200"}>
-                            {isWebhookExists && (
-                                <Badge tone="success" icon={CheckIcon}>
-                                    {t("webhook.connected")}
-                                </Badge>
-                            )}
-                            {!isWebhookExists && (
-                                <Badge tone="critical" icon={XSmallIcon}>
-                                    {t("webhook.notConnected")}
-                                </Badge>
-                            )}
-                        </Box>
-                        <Text as="p" variant="bodyMd">
-                            {!isWebhookExists && t("webhook.needConnection")}
-                        </Text>
-                        <Text as="p" variant="bodyMd">
-                            <Webhook id={webhooks?.edges[0]?.node?.id} />
-                        </Text>
+            <Layout>
+                <Layout.Section>
+                    <BlockStack gap="500">
+                        <Card>
+                            <BlockStack gap="200">
+                                <Box
+                                    paddingBlockStart={"200"}
+                                    paddingBlockEnd={"200"}
+                                >
+                                    {isWebhookExists && (
+                                        <Badge tone="success" icon={CheckIcon}>
+                                            {t("webhook.connected")}
+                                        </Badge>
+                                    )}
+                                    {!isWebhookExists && (
+                                        <Badge
+                                            tone="critical"
+                                            icon={XSmallIcon}
+                                        >
+                                            {t("webhook.notConnected")}
+                                        </Badge>
+                                    )}
+                                </Box>
+                                <Text as="p" variant="bodyMd">
+                                    {!isWebhookExists &&
+                                        t("webhook.needConnection")}
+                                </Text>
+                                <Text as="p" variant="bodyMd">
+                                    <Webhook
+                                        id={webhooks?.edges[0]?.node?.id}
+                                    />
+                                </Text>
+                            </BlockStack>
+                        </Card>
                     </BlockStack>
-                </Card>
-            </BlockStack>
+                </Layout.Section>
+            </Layout>
         </Page>
     );
 }

@@ -1,13 +1,14 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Badge, Box, Link, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
-import type { loader } from "app/routes/app";
+import type { loader as rootLoader } from "app/routes/app";
+import type { loader } from "app/routes/app.onboarding.$step";
 import { useTranslation } from "react-i18next";
 import screenFrakListener from "../../assets/frak-listener.png";
 
 export function Step4() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
-    const isThemeHasFrakActivated = rootData?.isThemeHasFrakActivated;
+    const data = useLoaderData<typeof loader>();
+    const isThemeHasFrakActivated = data?.isThemeHasFrakActivated;
     const { t } = useTranslation();
 
     return (
@@ -42,10 +43,11 @@ export function Step4Activated() {
 }
 
 export function Step4NotActivated() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
-    const { id } = rootData?.theme || {};
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const data = useLoaderData<typeof loader>();
+    const { id } = data?.theme || {};
     const { t } = useTranslation();
-    const editorUrl = `https://${rootData?.shop.myshopifyDomain}/admin/themes/current/editor`;
+    const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
 
     return (
         <>

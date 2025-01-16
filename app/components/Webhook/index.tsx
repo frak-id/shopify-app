@@ -1,7 +1,7 @@
 import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button } from "@shopify/polaris";
-import type { loader } from "app/routes/app";
+import type { loader as rootLoader } from "app/routes/app";
 import type {
     CreateWebhookSubscriptionReturnType,
     DeleteWebhookSubscriptionReturnType,
@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 
 export function Webhook({ id }: { id?: string }) {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const shopify = useAppBridge();
     const fetcher = useFetcher<
         | CreateWebhookSubscriptionReturnType

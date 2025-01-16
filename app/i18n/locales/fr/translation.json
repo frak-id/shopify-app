@@ -3,7 +3,8 @@
         "title": "Configuration Frak",
         "goToDashboard": "Aller au tableau de bord",
         "loading": "Chargement...",
-        "allSet": "L'application Frak est correctement configurée"
+        "allSet": "L'application Frak est correctement configurée",
+        "getStarted": "Commencer la configuration de l'application"
     },
     "navigation": {
         "pixel": "Pixel d'application",

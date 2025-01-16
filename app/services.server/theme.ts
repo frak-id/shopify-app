@@ -31,12 +31,17 @@ query getFiles($filenames: [String!]!, $themeId: ID!) {
 }
 `;
 
+export type GetMainThemeIdReturnType = {
+    gid: string;
+    id: string;
+};
+
 /**
  * GraphQL query to fetch main theme id
  */
 export async function getMainThemeId(
     graphql: AuthenticatedContext["admin"]["graphql"]
-) {
+): Promise<GetMainThemeIdReturnType | undefined> {
     const response = await graphql(`
 query getMainThemeId {
   themes(first: 1, roles: [MAIN]) {
@@ -52,7 +57,7 @@ query getMainThemeId {
 
     if (!gid) {
         console.warn("No main theme found");
-        return { themeId: false };
+        return undefined;
     }
 
     // Extract the theme id from the full string (e.g. "gid://shopify/OnlineStoreTheme/140895584433")

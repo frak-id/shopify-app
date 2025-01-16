@@ -1,12 +1,12 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { Badge, Box, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { Pixel } from "app/components/Pixel";
-import type { loader } from "app/routes/app";
+import type { loader } from "app/routes/app.onboarding.$step";
 import { useTranslation } from "react-i18next";
 
 export function Step2() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
+    const data = useLoaderData<typeof loader>();
     const { t } = useTranslation();
 
     return (
@@ -18,14 +18,14 @@ export function Step2() {
                 <Text as="p">{t("stepper.step2.description")}</Text>
             </Box>
             <Box paddingBlockStart={"200"}>
-                {rootData?.webPixel?.id && (
+                {data?.webPixel?.id && (
                     <Text as="p" variant="bodyMd">
                         <Badge tone="success" icon={CheckIcon}>
                             {t("stepper.step2.success")}
                         </Badge>
                     </Text>
                 )}
-                {!rootData?.webPixel?.id && (
+                {!data?.webPixel?.id && (
                     <>
                         <Text as="p" variant="bodyMd">
                             <Badge tone="critical" icon={XSmallIcon}>
@@ -33,7 +33,7 @@ export function Step2() {
                             </Badge>
                         </Text>
                         <Box paddingBlockStart={"200"}>
-                            <Pixel id={rootData?.webPixel?.id} />
+                            <Pixel id={data?.webPixel?.id} />
                         </Box>
                     </>
                 )}

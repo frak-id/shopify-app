@@ -1,13 +1,13 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { Badge, Box, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { Webhook } from "app/components/Webhook";
-import type { loader } from "app/routes/app";
+import type { loader } from "app/routes/app.onboarding.$step";
 import { useTranslation } from "react-i18next";
 
 export function Step3() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
-    const isWebhookExists = Boolean(rootData?.webhooks?.edges?.length);
+    const data = useLoaderData<typeof loader>();
+    const isWebhookExists = Boolean(data?.webhooks?.edges?.length);
     const { t } = useTranslation();
 
     return (
@@ -34,9 +34,7 @@ export function Step3() {
                             </Badge>
                         </Text>
                         <Box paddingBlockStart={"200"}>
-                            <Webhook
-                                id={rootData?.webhooks?.edges[0]?.node?.id}
-                            />
+                            <Webhook id={data?.webhooks?.edges[0]?.node?.id} />
                         </Box>
                     </>
                 )}

@@ -1,7 +1,13 @@
-import { useRouteLoaderData } from "@remix-run/react";
-import { BlockStack, Button, Card, Layout, Page, Text } from "@shopify/polaris";
-import { Stepper } from "app/components/Stepper";
-import { WalletGated } from "app/components/WalletGated";
+import { useNavigate, useRouteLoaderData } from "@remix-run/react";
+import {
+    BlockStack,
+    Button,
+    Card,
+    Layout,
+    Link,
+    Page,
+    Text,
+} from "@shopify/polaris";
 import type { loader } from "app/routes/app";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -62,35 +68,30 @@ function ThemeNotSupported() {
 }
 
 function ThemeSupported() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
     const { t } = useTranslation();
     const [onBoarding, setOnBoarding] = useState(false);
-    const isAllSet = Boolean(
-        rootData?.webPixel?.id &&
-            rootData?.webhooks?.edges?.length &&
-            rootData?.isThemeHasFrakActivated &&
-            rootData?.isThemeHasFrakButton
-    );
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // If one step is not set, we remove the onboarding flag
-        if (!isAllSet) {
-            window.localStorage.removeItem("frak-onBoarding");
-            return;
-        }
-
-        // If all steps are set, we set the onboarding flag
         const frakOnboarding = window.localStorage.getItem("frak-onBoarding");
         setOnBoarding(frakOnboarding === "done");
-    }, [isAllSet]);
+
+        if (frakOnboarding !== "done") {
+            navigate("/app/onboarding/step1");
+        }
+    }, [navigate]);
 
     return (
         <Layout.Section>
             <Card>
                 <BlockStack gap="500">
-                    <WalletGated>
-                        {onBoarding ? t("common.allSet") : <Stepper />}
-                    </WalletGated>
+                    {onBoarding ? (
+                        t("common.allSet")
+                    ) : (
+                        <Link url="/app/onboarding/step1">
+                            {t("common.getStarted")}
+                        </Link>
+                    )}
                 </BlockStack>
             </Card>
         </Layout.Section>

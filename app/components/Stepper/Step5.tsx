@@ -1,13 +1,14 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Badge, Box, Link, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
-import type { loader } from "app/routes/app";
+import type { loader as rootLoader } from "app/routes/app";
+import type { loader } from "app/routes/app.onboarding.$step";
 import { useTranslation } from "react-i18next";
 import screenShareButton from "../../assets/share-button.png";
 
 export function Step5() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
-    const isThemeHasFrakButton = rootData?.isThemeHasFrakButton;
+    const data = useLoaderData<typeof loader>();
+    const isThemeHasFrakButton = data?.isThemeHasFrakButton;
     const { t } = useTranslation();
 
     return (
@@ -42,9 +43,10 @@ export function Step5Activated() {
 }
 
 export function Step5NotActivated() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
-    const firstProduct = rootData?.firstProduct;
-    const editorUrl = `https://${rootData?.shop.myshopifyDomain}/admin/themes/current/editor`;
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const data = useLoaderData<typeof loader>();
+    const firstProduct = data?.firstProduct;
+    const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
     const { t } = useTranslation();
 
     return (

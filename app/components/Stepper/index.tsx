@@ -1,4 +1,4 @@
-import { useRevalidator, useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate, useRevalidator } from "@remix-run/react";
 import { Button, InlineStack, ProgressBar, Text } from "@shopify/polaris";
 import { Step1 } from "app/components/Stepper/Step1";
 import { Step2 } from "app/components/Stepper/Step2";
@@ -7,17 +7,17 @@ import { Step4 } from "app/components/Stepper/Step4";
 import { Step5 } from "app/components/Stepper/Step5";
 import { Step6 } from "app/components/Stepper/Step6";
 import { useVisibilityChange } from "app/hooks/useVisibilityChange";
-import type { loader } from "app/routes/app";
-import { useCallback, useState } from "react";
+import type { loader } from "app/routes/app.onboarding.$step";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 const MAX_STEP = 6;
 
-export function Stepper() {
-    const rootData = useRouteLoaderData<typeof loader>("routes/app");
+export function Stepper({ step }: { step: number }) {
+    const data = useLoaderData<typeof loader>();
     const { revalidate, state } = useRevalidator();
     const { t } = useTranslation();
-    const [step, setStep] = useState(1);
+    const navigate = useNavigate();
 
     useVisibilityChange(
         useCallback(() => {
@@ -50,7 +50,11 @@ export function Stepper() {
 
             <div style={{ display: "flex" }}>
                 {step > 1 && (
-                    <Button onClick={() => setStep((prev) => prev - 1)}>
+                    <Button
+                        onClick={() =>
+                            navigate(`/app/onboarding/step${step - 1}`)
+                        }
+                    >
                         {t("stepper.back")}
                     </Button>
                 )}
@@ -58,9 +62,11 @@ export function Stepper() {
                     {step < MAX_STEP && (
                         <Button
                             variant="primary"
-                            onClick={() => setStep((prev) => prev + 1)}
+                            onClick={() =>
+                                navigate(`/app/onboarding/step${step + 1}`)
+                            }
                             loading={state === "loading"}
-                            disabled={validateSteps(step, rootData)}
+                            disabled={validateSteps(step, data)}
                         >
                             {t("stepper.next")}
                         </Button>
@@ -71,7 +77,7 @@ export function Stepper() {
     );
 }
 
-type RouteLoaderData = ReturnType<typeof useRouteLoaderData<typeof loader>>;
+type RouteLoaderData = ReturnType<typeof useLoaderData<typeof loader>>;
 type StepValidation = {
     [key: number]: (data: RouteLoaderData) => boolean;
 };
