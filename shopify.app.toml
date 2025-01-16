@@ -11,7 +11,7 @@ automatically_update_urls_on_dev = true
 dev_store_url = "frak-store-app.myshopify.com"
 
 [webhooks]
-api_version = "2024-10"
+api_version = "2025-01"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
