@@ -5,6 +5,9 @@ import {
     isProd,
     postgresHost,
     postgresPassword,
+    shopifyApiKey,
+    shopifyApiSecret,
+    shopifyAppUrl,
     stage,
     walletUrl,
 } from "./config";
@@ -18,18 +21,20 @@ const shopifyEnv = {
 
     POSTGRES_SHOPIFY_DB: isProd ? "shopify_app" : "shopify_app_dev",
     POSTGRES_USER: isProd ? "backend" : "backend-dev",
+
+    SHOPIFY_APP_URL: shopifyAppUrl,
+    SHOPIFY_API_KEY: shopifyApiKey,
 };
 
-// For now only a dev command
-//  to deploy, we would need a remix app here, but we will see that later
-if ($dev) {
-    new sst.x.DevCommand("shopify:dev", {
-        dev: {
-            title: "Shopify App",
-            autostart: true,
-            command: "bun run shopify:dev",
-        },
-        environment: shopifyEnv,
-        link: [postgresHost, postgresPassword],
-    });
-}
+new sst.aws.Remix("Shopify", {
+    dev: {
+        command: "bun run shopify:dev",
+    },
+    // Set the custom domain
+    domain: {
+        name: "shopify-app.frak.id",
+    },
+    // Environment variables
+    environment: shopifyEnv,
+    link: [postgresHost, postgresPassword, shopifyApiSecret],
+});

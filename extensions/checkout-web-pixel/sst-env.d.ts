@@ -18,5 +18,13 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "SHOPIFY_API_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "Shopify": {
+      "type": "sst.aws.Remix"
+      "url": string
+    }
   }
 }

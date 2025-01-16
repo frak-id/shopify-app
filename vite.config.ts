@@ -46,6 +46,7 @@ if (host === "localhost") {
 const wantedFromConfig: (keyof typeof Resource)[] = [
     "POSTGRES_HOST",
     "POSTGRES_PASSWORD",
+    "SHOPIFY_API_SECRET",
 ];
 
 declare module "@remix-run/node" {
@@ -83,6 +84,12 @@ export default defineConfig(() => {
             ),
             "process.env.POSTGRES_SHOPIFY_DB": JSON.stringify(
                 process.env.POSTGRES_SHOPIFY_DB
+            ),
+            "process.env.SHOPIFY_API_KEY": JSON.stringify(
+                process.env.SHOPIFY_API_KEY
+            ),
+            "process.env.SHOPIFY_APP_URL": JSON.stringify(
+                process.env.SHOPIFY_APP_URL
             ),
             ...Object.fromEntries(sstSecrets),
         },

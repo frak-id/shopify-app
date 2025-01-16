@@ -58,3 +58,8 @@ export const stage = $app.stage ?? "dev";
 // Some secrets
 export const postgresHost = new sst.Secret("POSTGRES_HOST");
 export const postgresPassword = new sst.Secret("POSTGRES_PASSWORD");
+
+// Shopify
+export const shopifyAppUrl = "https://shopify-app.frak.id";
+export const shopifyApiKey = "87da8338f40c95301b4881ca4bfb23db";
+export const shopifyApiSecret = new sst.Secret("SHOPIFY_API_SECRET");
