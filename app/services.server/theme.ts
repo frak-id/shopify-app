@@ -41,7 +41,7 @@ export type GetMainThemeIdReturnType = {
  */
 export async function getMainThemeId(
     graphql: AuthenticatedContext["admin"]["graphql"]
-): Promise<GetMainThemeIdReturnType | undefined> {
+): Promise<GetMainThemeIdReturnType> {
     const response = await graphql(`
 query getMainThemeId {
   themes(first: 1, roles: [MAIN]) {
@@ -55,13 +55,8 @@ query getMainThemeId {
     } = await response.json();
     const gid = themes?.nodes?.[0]?.id;
 
-    if (!gid) {
-        console.warn("No main theme found");
-        return undefined;
-    }
-
     // Extract the theme id from the full string (e.g. "gid://shopify/OnlineStoreTheme/140895584433")
-    const id = gid.split("/").pop();
+    const id = gid.match(/\d+$/)[0];
 
     return { gid, id };
 }
@@ -75,7 +70,7 @@ query getMainThemeId {
  */
 async function getTemplateFiles(
     graphql: AuthenticatedContext["admin"]["graphql"],
-    gid: number,
+    gid: string,
     templates: string[]
 ) {
     const response = await graphql(getFilesQuery, {
@@ -106,10 +101,10 @@ export async function doesThemeSupportBlock({
     admin: { graphql },
 }: AuthenticatedContext) {
     // Get the main theme id
-    const { gid } = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(graphql);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, gid, [
+    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
         "templates/product.json",
     ]);
 
@@ -130,7 +125,7 @@ export async function doesThemeSupportBlock({
 
     const response = await graphql(getFilesQuery, {
         variables: {
-            themeId: gid,
+            themeId: mainThemeId.gid,
             filenames: templateMainSections,
         },
     });
@@ -186,10 +181,10 @@ export async function doesThemeHasFrakActivated({
     admin: { graphql },
 }: AuthenticatedContext) {
     // Get the main theme id
-    const { gid } = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(graphql);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, gid, [
+    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
         "config/settings_data.json",
     ]);
 
@@ -221,10 +216,10 @@ export async function doesThemeHasFrakButton({
     admin: { graphql },
 }: AuthenticatedContext) {
     // Get the main theme id
-    const { gid } = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(graphql);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, gid, [
+    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
         "templates/product.json",
     ]);
 
