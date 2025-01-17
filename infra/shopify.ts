@@ -26,13 +26,15 @@ const shopifyEnv = {
     SHOPIFY_API_KEY: shopifyApiKey,
 };
 
+const subdomain = isProd ? "extension-shop" : "extension-shop-dev";
+
 new sst.aws.Remix("Shopify", {
     dev: {
         command: "bun run shopify:dev",
     },
     // Set the custom domain
     domain: {
-        name: "extension-shop.frak.id",
+        name: `${subdomain}.frak.id`,
     },
     // Environment variables
     environment: shopifyEnv,
