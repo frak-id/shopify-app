@@ -32,7 +32,7 @@ new sst.aws.Remix("Shopify", {
     },
     // Set the custom domain
     domain: {
-        name: "shopify-app.frak.id",
+        name: "extension-shop.frak.id",
     },
     // Environment variables
     environment: shopifyEnv,
