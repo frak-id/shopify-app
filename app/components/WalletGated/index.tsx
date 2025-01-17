@@ -2,8 +2,10 @@ import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
 import { useRouteLoaderData } from "@remix-run/react";
 import {
     Button,
+    Card,
     EmptyState,
     InlineStack,
+    Page,
     Spinner,
     Text,
 } from "@shopify/polaris";
@@ -34,35 +36,44 @@ export function WalletGated({ children }: { children: ReactNode }) {
 
     if (walletStatus === undefined) {
         return (
-            <InlineStack gap="200" blockAlign="center">
-                <Spinner size="small" />
-                <Text variant="headingMd" as="h2">
-                    {t("common.loading")}
-                </Text>
-            </InlineStack>
+            <Page>
+                <InlineStack gap="200" blockAlign="center">
+                    <Spinner size="small" />
+                    <Text variant="headingMd" as="h2">
+                        {t("common.loading")}
+                    </Text>
+                </InlineStack>
+            </Page>
         );
     }
 
     if (!walletStatus.wallet) {
         return (
-            <EmptyState
-                heading={t("gated.configure")}
-                action={{ content: t("gated.create"), onAction: authenticate }}
-                footerContent={
-                    <p>
-                        <Button
-                            variant="monochromePlain"
-                            onClick={authenticate}
-                        >
-                            {t("gated.alreadyGotAnAccount")}
-                        </Button>
-                        .
-                    </p>
-                }
-                image={LogoFrak}
-            >
-                <p>{t("gated.start")}</p>
-            </EmptyState>
+            <Page>
+                <Card>
+                    <EmptyState
+                        heading={t("gated.configure")}
+                        action={{
+                            content: t("gated.create"),
+                            onAction: authenticate,
+                        }}
+                        footerContent={
+                            <p>
+                                <Button
+                                    variant="monochromePlain"
+                                    onClick={authenticate}
+                                >
+                                    {t("gated.alreadyGotAnAccount")}
+                                </Button>
+                                .
+                            </p>
+                        }
+                        image={LogoFrak}
+                    >
+                        <p>{t("gated.start")}</p>
+                    </EmptyState>
+                </Card>
+            </Page>
         );
     }
 
