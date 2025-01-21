@@ -1,58 +1,67 @@
 <script src="https://cdn.jsdelivr.net/npm/@frak-labs/components" defer="defer"></script>
 {% comment %}{{ 'components.js' | asset_url | script_tag }}{% endcomment %}
 <script type="text/javascript">
-    // Top level Frak SDK config
-    const frakConfig = {
-        walletUrl: "https://wallet.frak.id",
-        metadata: {
-            // Your app name (will be displayed on some modals and in the SSO)
-            name: "{{ shop.name }}",
-            // You can also setup custom styles here
-        },
-        domain: window.location.host,
-    };
+  // Top level Frak SDK config
+  const frakConfig = {
+    walletUrl: 'https://wallet.frak.id',
+    metadata: {
+      // Your app name (will be displayed on some modals and in the SSO)
+      name: '{{ shop.name }}',
+      // You can also setup custom styles here
+    },
+    domain: window.location.host,
+  };
 
-    // Precompute a few stuff
-    let logoUrl = "{{ block.settings.logo.src }}";
-    if (!logoUrl.startsWith("cdn.shopify.com")) {
-        logoUrl = `https://${Shopify.shop}/cdn/shop/${logoUrl}`;
-    }
-    const lang = "{{ block.settings.modal_lng }}" === "default" ? undefined : "{{ block.settings.modal_lng }}";
+  // Precompute a few stuff
+  let logoUrl = '{{ block.settings.logo.src }}';
+  if (!logoUrl.startsWith('cdn.shopify.com')) {
+    logoUrl = `https://${Shopify.shop}/cdn/shop/${logoUrl}`;
+  }
+  const lang = '{{ block.settings.modal_lng }}' === 'default' ? undefined : '{{ block.settings.modal_lng }}';
 
-    // Configure base modal info that will be displayed when a user can receive a reward or want to share
-    // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/types/DisplayModalType
-    const baseModalConfig = {
-        login: {
-            allowSso: true,
-            ssoMetadata: {
-                logoUrl,
-                homepageLink: window.location.host,
-            },
-        },
-        metadata: {
-            header: {
-                icon: logoUrl,
-            },
-            lang,
-        },
-    };
+  // Configure base modal info that will be displayed when a user can receive a reward or want to share
+  // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/types/DisplayModalType
+  const baseModalConfig = {
+    login: {
+      allowSso: true,
+      ssoMetadata: {
+        logoUrl,
+        homepageLink: window.location.host,
+      },
+    },
+    metadata: {
+      header: {
+        icon: logoUrl,
+      },
+      lang,
+    },
+  };
 
-    // Configure the info that will be sent via the sharing link
-    // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/actions/displayModal#full-flow
-    const sharingConfig = {
-        // Title that will be displayed on the system sharing modal  (optional)
-        popupTitle: "{{ block.settings.sharing_popup_text }}",
-        // The text that will be shared with the link (optional)
-        text: "{{ block.settings.sharing_text }}",
-        // The link that will be shared (optional, default to the current page)
-        link: window.location.href,
-    };
+  // Configure the info that will be sent via the sharing link
+  // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/actions/displayModal#full-flow
+  const sharingConfig = {
+    // Title that will be displayed on the system sharing modal  (optional)
+    popupTitle: '{{ block.settings.sharing_popup_text }}',
+    // The text that will be shared with the link (optional)
+    text: '{{ block.settings.sharing_text }}',
+    // The link that will be shared (optional, default to the current page)
+    link: window.location.href,
+  };
 
-    window.FrakSetup = {
-        config: frakConfig,
-        modalConfig: baseModalConfig,
-        modalShareConfig: sharingConfig,
-    };
+  window.FrakSetup = {
+    config: frakConfig,
+    modalConfig: baseModalConfig,
+    modalShareConfig: sharingConfig,
+  };
+
+  // Inject custom JavaScript
+  try {
+    const script = document.createElement('script');
+    script.textContent = `{{ block.settings.custom_javascript }}`;
+    document.head.appendChild(script);
+  } catch (error) {
+    console.error('Failed to inject JavaScript:', error.message);
+  }
 </script>
 
 {% schema %}
@@ -96,6 +105,12 @@
       "id": "sharing_popup_text",
       "label": "Sharing popup text",
       "info": "The text that will appear on the user system sharing popup"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_javascript",
+      "label": "Custom JavaScript",
+      "info": "Enter custom JavaScript code to be injected"
     }
   ]
 }
