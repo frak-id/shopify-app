@@ -1,5 +1,5 @@
 <script src="https://cdn.jsdelivr.net/npm/@frak-labs/components" defer="defer"></script>
-{% comment %}{{ 'components.js' | asset_url | script_tag }}{% endcomment %}
+{% comment %} <script src="{{ 'components.js' | asset_url }}" defer></script> {% endcomment %}
 <script type="text/javascript">
   // Top level Frak SDK config
   const frakConfig = {
@@ -48,10 +48,17 @@
     link: window.location.href,
   };
 
+  const modalWalletConfig = {
+    metadata: {
+      position: '{{ block.settings.wallet_button_position }}',
+    },
+  };
+
   window.FrakSetup = {
     config: frakConfig,
     modalConfig: baseModalConfig,
     modalShareConfig: sharingConfig,
+    modalWalletConfig,
   };
 
   // Inject custom JavaScript
@@ -105,6 +112,22 @@
       "id": "sharing_popup_text",
       "label": "Sharing popup text",
       "info": "The text that will appear on the user system sharing popup"
+    },
+    {
+      "type": "select",
+      "id": "wallet_button_position",
+      "label": "Wallet Button Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
     },
     {
       "type": "textarea",

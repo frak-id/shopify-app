@@ -15,12 +15,12 @@ include_config_on_deploy = true
 api_version = "2025-01"
 
   [[webhooks.subscriptions]]
-  topics = [ "app/uninstalled" ]
-  uri = "/webhooks/app/uninstalled"
+  uri = "/webhooks/app/compliance"
+  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://extension-shop-dev.frak.id/webhooks/app/compliance"
-  compliance_topics = [ "customers/data_request", "customers/redact", "shop/redact" ]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
