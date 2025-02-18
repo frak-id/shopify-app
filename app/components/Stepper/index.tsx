@@ -90,7 +90,7 @@ const stepValidations: StepValidation = {
     2: (data) => Boolean(data?.webPixel?.id),
     3: (data) => Boolean(data?.webhooks?.edges?.length),
     4: (data) => Boolean(data?.isThemeHasFrakActivated),
-    5: (data) => Boolean(data?.isThemeHasFrakButton),
+    5: (data) => Boolean(data?.isThemeHasFrakButton || data?.themeWalletButton),
 };
 
 /**
