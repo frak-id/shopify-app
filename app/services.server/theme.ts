@@ -195,7 +195,7 @@ export async function doesThemeHasFrakActivated({
         return false;
     }
 
-    const typeMatch = "apps/frak/blocks/listener/";
+    const typeMatch = "/blocks/listener/";
     const embedBlock = Object.entries(
         jsonTemplateData[0].body.current.blocks as Record<
             string,
@@ -236,11 +236,54 @@ export async function doesThemeHasFrakButton({
 
             if (main && typeof main[1] !== "string" && main[1].block_order) {
                 return main[1].block_order.some((blockId) =>
-                    blockId.includes("frak_referral_button")
+                    blockId.includes("referral_button")
                 );
             }
         })
         .filter((section: string | null) => section);
 
     return templateMainSections.length > 0;
+}
+
+/**
+ * Check if the current shop theme has the Frak wallet button in body
+ */
+export async function doesThemeHasFrakWalletButton({
+    admin: { graphql },
+}: AuthenticatedContext) {
+    // Get the main theme id
+    const mainThemeId = await getMainThemeId(graphql);
+
+    // Retrieve the JSON templates that we want to integrate with
+    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
+        "config/settings_data.json",
+    ]);
+
+    if (
+        jsonTemplateData.length <= 0 ||
+        !jsonTemplateData?.[0]?.body?.current?.blocks
+    ) {
+        return null;
+    }
+
+    const typeMatch = "/blocks/wallet_button/";
+    const walletBlock = Object.entries(
+        jsonTemplateData[0].body.current.blocks as Record<
+            string,
+            ThemeBlockInfo
+        >
+    ).find(
+        ([_id, info]: [string, ThemeBlockInfo]) =>
+            info.type.includes(typeMatch) && !info.disabled
+    );
+
+    if (walletBlock) {
+        // Extract the ID from the type string
+        const [_, blockInfo] = walletBlock;
+        const idMatch = blockInfo.type.match(/wallet_button\/([^/]+)$/);
+        const blockId = idMatch ? idMatch[1] : null;
+        return blockId;
+    }
+
+    return null;
 }

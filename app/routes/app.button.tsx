@@ -33,7 +33,7 @@ export default function buttonPage() {
                     <Box paddingBlockStart={"200"}>
                         {isThemeHasFrakButton && (
                             <>
-                                <Step5Activated />
+                                <Step5Activated type="share" />
                                 <Box paddingBlockStart={"200"}>
                                     {firstProduct ? (
                                         <Link
@@ -48,7 +48,12 @@ export default function buttonPage() {
                                 </Box>
                             </>
                         )}
-                        {!isThemeHasFrakButton && <Step5NotActivated />}
+                        {!isThemeHasFrakButton && (
+                            <Step5NotActivated
+                                type="share"
+                                defaultOpen={true}
+                            />
+                        )}
                     </Box>
                 </Card>
             </BlockStack>

@@ -10,7 +10,8 @@
         "pixel": "Pixel d'application",
         "webhook": "Webhook",
         "theme": "Thème",
-        "button": "Bouton de partage"
+        "button": "Bouton de partage",
+        "buttonWallet": "Bouton porte-monnaie"
     },
     "stepper": {
         "back": "Retour",
@@ -41,13 +42,18 @@
             "todo": "Veuillez activer l'application à l'aide de l'interrupteur comme illustré ci-dessous"
         },
         "step5": {
-            "title": "Ajouter le bouton de partage dans votre thème",
-            "description": "Un bouton de partage doit être ajouté sur les pages produits",
+            "title": "Ajouter le bouton de partage ou de porte-monnaie dans votre thème",
+            "description": "Un bouton de partage ou de porte-monnaie doit être ajouté",
             "link": "Ajoutez le bouton de partage à votre page produit",
             "noProduct": "Vous devez ajouter un produit à votre boutique pour ajouter le bouton de partage",
-            "activated": "Le bouton Frak est dans votre page produit",
-            "notActivated": "Le bouton Frak n'est pas dans votre page produit",
-            "todo": "Veuillez ajouter le bouton comme illustré ci-dessous"
+            "activated": "Le bouton de partage est dans votre page produit",
+            "notActivated": "Le bouton de partage n'est pas dans votre page produit",
+            "todo": "Veuillez ajouter le bouton comme illustré ci-dessous",
+            "collapsibleButtonShareTitle": "Comment ajouter le bouton de partage à votre page produit",
+            "collapsibleButtonWalletTitle": "Comment ajouter le bouton de porte-monnaie",
+            "noWalletButtonActivated": "Le bouton de porte-monnaie n'est pas activé",
+            "todoWalletButton": "Veuillez activer le bouton comme illustré ci-dessous",
+            "walletButtonConnected": "Le bouton porte-monnaie est activé sur votre boutique"
         },
         "step6": {
             "title": "Bravo !",
@@ -99,6 +105,10 @@
         "connected": "Le bouton Frak est dans votre page produit",
         "notConnected": "Le bouton Frak n'est pas dans votre page produit",
         "link": "Configurer le bouton dans votre page produit"
+    },
+    "walletButton": {
+        "title": "Bouton porte-monnaie",
+        "link": "Configurer le bouton porte-monnaie dans l'éditeur de thème"
     },
     "gated": {
         "configure": "Configurer Frak",

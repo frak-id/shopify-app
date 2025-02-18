@@ -10,7 +10,8 @@
         "pixel": "Application pixel",
         "webhook": "Webhook",
         "theme": "Theme",
-        "button": "Share button"
+        "button": "Share button",
+        "buttonWallet": "Wallet button"
     },
     "stepper": {
         "back": "Back",
@@ -41,13 +42,18 @@
             "todo": "Please activate the app using the switch as shown below"
         },
         "step5": {
-            "title": "Add the share button in your theme",
-            "description": "A share button should be added on product pages",
+            "title": "Add the share or wallet button in your theme",
+            "description": "A share or wallet button should be added",
             "link": "Add the sharing button to your product page",
             "noProduct": "You need to add a product to your store to add the sharing button",
-            "activated": "Frak button is on your product page",
-            "notActivated": "Frak button is not in your product page",
-            "todo": "Please add the button as shown below"
+            "activated": "Share button is on your product page",
+            "notActivated": "Share button is not in your product page",
+            "todo": "Please add the button as shown below",
+            "collapsibleButtonShareTitle": "How to add the share button to your product page",
+            "collapsibleButtonWalletTitle": "How to add the wallet button",
+            "noWalletButtonActivated": "Wallet button is not activated",
+            "todoWalletButton": "Please activate the button as shown below",
+            "walletButtonConnected": "Wallet button is active on your store"
         },
         "step6": {
             "title": "Well done!",
@@ -99,6 +105,10 @@
         "connected": "Frak button is on your product page",
         "notConnected": "Frak button is not in your product page",
         "link": "Configure button in your product page"
+    },
+    "walletButton": {
+        "title": "Wallet button",
+        "link": "Configure wallet button in theme editor"
     },
     "gated": {
         "configure": "Configure Frak",

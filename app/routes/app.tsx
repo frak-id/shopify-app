@@ -72,6 +72,9 @@ function Navigation() {
                     <Link to="/app/webhook">{t("navigation.webhook")}</Link>
                     <Link to="/app/theme">{t("navigation.theme")}</Link>
                     <Link to="/app/button">{t("navigation.button")}</Link>
+                    <Link to="/app/walletbutton">
+                        {t("navigation.buttonWallet")}
+                    </Link>
                 </>
             )}
         </NavMenu>

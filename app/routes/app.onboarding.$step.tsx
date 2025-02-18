@@ -10,6 +10,7 @@ import {
     type GetMainThemeIdReturnType,
     doesThemeHasFrakActivated,
     doesThemeHasFrakButton,
+    doesThemeHasFrakWalletButton,
     getMainThemeId,
 } from "app/services.server/theme";
 import {
@@ -40,6 +41,7 @@ type StepData = {
     isThemeHasFrakButton?: boolean;
     theme?: GetMainThemeIdReturnType;
     firstProduct?: FirstProductPublishedReturnType;
+    themeWalletButton?: string | null;
 };
 
 /**
@@ -70,11 +72,13 @@ const stepHandlers = {
     },
 
     5: async (context: AuthenticatedContext): Promise<StepData> => {
-        const [isThemeHasFrakButton, firstProduct] = await Promise.all([
-            doesThemeHasFrakButton(context),
-            firstProductPublished(context),
-        ]);
-        return { isThemeHasFrakButton, firstProduct };
+        const [isThemeHasFrakButton, firstProduct, themeWalletButton] =
+            await Promise.all([
+                doesThemeHasFrakButton(context),
+                firstProductPublished(context),
+                doesThemeHasFrakWalletButton(context),
+            ]);
+        return { isThemeHasFrakButton, firstProduct, themeWalletButton };
     },
 };
 
