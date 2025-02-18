@@ -1,7 +1,7 @@
 import { defineConfig } from "drizzle-kit";
 import { Resource } from "sst";
 
-const isProd = process.env.STAGE === "prod";
+const isProd = process.env.STAGE === "production";
 
 export default defineConfig({
     schema: ["db/schema/*.ts"],

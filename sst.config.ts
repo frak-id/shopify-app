@@ -14,6 +14,11 @@ export default $config({
         };
     },
     async run() {
+        if ($app.stage === "prod") {
+            throw new Error(
+                "[Deprecated] please use `production` stage instead of `prod`"
+            );
+        }
         await import("./infra/config");
         await import("./infra/shopify");
     },
