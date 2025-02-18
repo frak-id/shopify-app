@@ -47,6 +47,7 @@ const wantedFromConfig: (keyof typeof Resource)[] = [
     "POSTGRES_HOST",
     "POSTGRES_PASSWORD",
     "SHOPIFY_API_SECRET",
+    "SHOPIFY_CUSTOM_API_SECRET",
 ];
 
 declare module "@remix-run/node" {
@@ -104,6 +105,9 @@ export default defineConfig(() => {
         },
         plugins: [
             remix({
+                buildDirectory: process.env.IS_CUSTOM_APP
+                    ? "build-custom"
+                    : "build",
                 future: {
                     v3_fetcherPersist: true,
                     v3_relativeSplatPath: true,

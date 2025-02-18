@@ -12,7 +12,9 @@ import { drizzleDb } from "./db.server";
 // Create the Shopify app
 const shopify = shopifyApp({
     apiKey: process.env.SHOPIFY_API_KEY,
-    apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
+    apiSecretKey: process.env.IS_CUSTOM_APP
+        ? process.env.SHOPIFY_CUSTOM_API_SECRET || ""
+        : process.env.SHOPIFY_API_SECRET || "",
     apiVersion: ApiVersion.January25,
     scopes: process.env.SCOPES?.split(","),
     appUrl: process.env.SHOPIFY_APP_URL || "",

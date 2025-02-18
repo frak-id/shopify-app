@@ -28,6 +28,7 @@ cdk.context.json
 
 # production
 build
+build-custom
 dist
 
 # misc
