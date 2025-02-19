@@ -10,8 +10,15 @@
   {% assign custom_class = 'frak-share-button-custom' %}
 {% endif %}
 
+{% assign button_text = '' %}
+{% if block.settings.text == '' %}
+  {% assign button_text = 'share_btn.label' | t %}
+{% else %}
+  {% assign button_text = block.settings.text %}
+{% endif %}
+
 <frak-button-share
-  text="{{ 'share_btn.label' | t }}"
+  text="{{ button_text }}"
   classname="button {{ button_class }} {{ full_width_class }} {{ custom_class }}"
 ></frak-button-share>
 
@@ -27,6 +34,11 @@
   "name": "Frak Sharing Button",
   "target": "section",
   "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Button text"
+    },
     {
       "type": "select",
       "id": "button_style",
