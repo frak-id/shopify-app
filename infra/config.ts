@@ -65,8 +65,3 @@ export const shopifyAppUrl = isProd
     : "https://extension-shop-dev.frak.id";
 export const shopifyApiKey = "87da8338f40c95301b4881ca4bfb23db";
 export const shopifyApiSecret = new sst.Secret("SHOPIFY_API_SECRET");
-export const shopifyCustomAppUrl = "https://extension-custom-shop.frak.id";
-export const shopifyCustomApiKey = "5a65623a5ceb9e6dc7147271eb7bb9f1";
-export const shopifyCustomApiSecret = new sst.Secret(
-    "SHOPIFY_CUSTOM_API_SECRET"
-);
