@@ -1,6 +1,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@frak-labs/components" defer="defer"></script>
 {% comment %} <script src="{{ 'components.js' | asset_url }}" defer></script> {% endcomment %}
 <script type="text/javascript">
+  // Precompute a few stuff
+  let logoUrl = '{{ block.settings.logo.src }}';
+  if (!logoUrl.startsWith('cdn.shopify.com')) {
+    logoUrl = `https://${Shopify.shop}/cdn/shop/${logoUrl}`;
+  }
+  const lang = '{{ block.settings.modal_lng }}' === 'default' ? undefined : '{{ block.settings.modal_lng }}';
+
   // Top level Frak SDK config
   const frakConfig = {
     walletUrl: 'https://wallet.frak.id',
@@ -8,16 +15,11 @@
       // Your app name (will be displayed on some modals and in the SSO)
       name: '{{ shop.name }}',
       // You can also setup custom styles here
+      lang,
+      logoUrl,
     },
     domain: window.location.host,
   };
-
-  // Precompute a few stuff
-  let logoUrl = '{{ block.settings.logo.src }}';
-  if (!logoUrl.startsWith('cdn.shopify.com')) {
-    logoUrl = `https://${Shopify.shop}/cdn/shop/${logoUrl}`;
-  }
-  const lang = '{{ block.settings.modal_lng }}' === 'default' ? undefined : '{{ block.settings.modal_lng }}';
 
   // Configure base modal info that will be displayed when a user can receive a reward or want to share
   // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/types/DisplayModalType
@@ -28,12 +30,6 @@
         logoUrl,
         homepageLink: window.location.host,
       },
-    },
-    metadata: {
-      header: {
-        icon: logoUrl,
-      },
-      lang,
     },
   };
 
