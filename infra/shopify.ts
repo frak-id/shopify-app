@@ -19,8 +19,8 @@ const shopifyEnv = {
     BACKEND_URL: backendUrl,
     INDEXER_URL: indexerUrl,
 
-    POSTGRES_SHOPIFY_DB: isProd ? "shopify_app" : "shopify_app_dev",
-    POSTGRES_USER: isProd ? "backend" : "backend-dev",
+    POSTGRES_SHOPIFY_DB: isProd ? "shopify_prod" : "shopify_dev",
+    POSTGRES_USER: isProd ? "shopify-prod" : "shopify-dev",
 
     SHOPIFY_APP_URL: isProd ? shopifyAppUrl : "http://localhost",
     SHOPIFY_API_KEY: shopifyApiKey,
