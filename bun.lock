@@ -4,7 +4,7 @@
     "": {
       "name": "@frak-labs/shopify-app",
       "dependencies": {
-        "@frak-labs/react-sdk": "^0.0.11",
+        "@frak-labs/react-sdk": "^0.0.15",
         "@remix-run/dev": "^2.16.2",
         "@remix-run/node": "^2.16.2",
         "@remix-run/react": "^2.16.2",
@@ -211,9 +211,9 @@
 
     "@frak-labs-shopify/checkout-web-pixel": ["@frak-labs-shopify/checkout-web-pixel@workspace:extensions/checkout-web-pixel"],
 
-    "@frak-labs/core-sdk": ["@frak-labs/core-sdk@0.0.11", "", { "dependencies": { "@jsonjoy.com/json-pack": "^1.2.0" }, "peerDependencies": { "viem": "^2.23.14" } }, "sha512-FVnHz2G3PBiGG+FUCerpaLWjALjs6tmZfq8QOqMgHEmHJFVCPXpDQme3WbSF0ywoYFE6ETp+4aJmoe8cQ8XQKg=="],
+    "@frak-labs/core-sdk": ["@frak-labs/core-sdk@0.0.15", "", { "dependencies": { "@jsonjoy.com/json-pack": "^1.2.0" }, "peerDependencies": { "viem": "^2.23.14" } }, "sha512-RkEjABEJLq4r9aMYTnw5veB4fUp6Bc1/vStJEKyRlS2j7EHHxxwCinZqfEzxojpc5LS/Q8J4qO9zjxEzCsniyw=="],
 
-    "@frak-labs/react-sdk": ["@frak-labs/react-sdk@0.0.11", "", { "dependencies": { "@frak-labs/core-sdk": "0.0.11" }, "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18", "viem": "^2.x" } }, "sha512-zGUxtDWFGHMRK52HHFZCH5l4GOb5yWtbjMsBE9mPYhFtMxAgadpvM/CkQB4CTnRzcgeFBLd5Xfw7pPIb12Iu6g=="],
+    "@frak-labs/react-sdk": ["@frak-labs/react-sdk@0.0.15", "", { "dependencies": { "@frak-labs/core-sdk": "0.0.15" }, "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18", "viem": "^2.x" } }, "sha512-3OfgU2dTSLWBQtqg52QwjHS5BwX/+npM2I2LWqRnEZ1ANJL678ogIRRaDKGIv4Hg4QaG7Sv0dg7pge2USu8dmg=="],
 
     "@graphql-codegen/add": ["@graphql-codegen/add@5.0.3", "", { "dependencies": { "@graphql-codegen/plugin-helpers": "^5.0.3", "tslib": "~2.6.0" }, "peerDependencies": { "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0" } }, "sha512-SxXPmramkth8XtBlAHu4H4jYcYXM/o3p01+psU+0NADQowA8jtYkK6MW5rV6T+CxkEaNZItfSmZRPgIuypcqnA=="],
 
