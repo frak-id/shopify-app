@@ -1,11 +1,3 @@
-import * as aws from "@pulumi/aws";
-
-// Get the VPC
-const { id: vpcId } = await aws.ec2.getVpc({
-    filters: [{ name: "tag:Name", values: ["master-vpc"] }],
-});
-export const vpc = sst.aws.Vpc.get("MasterVpc", vpcId);
-
 // Get some info about the deployment env
 export const isProd = $app.stage === "production";
 export const isLocal = $dev ?? false;
@@ -36,8 +28,8 @@ export function getStaticVariable({
 
 // Some simple config depending on the stack
 export const indexerUrl = isProd
-    ? "https://indexer.frak.id"
-    : "https://indexer-dev.frak.id";
+    ? "https://indexer.gcp.frak.id"
+    : "https://indexer.gcp-dev.frak.id";
 export const backendUrl = getStaticVariable({
     prod: "https://backend.frak.id",
     dev: "https://backend-dev.frak.id",
