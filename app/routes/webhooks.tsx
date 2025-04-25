@@ -1,12 +1,30 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { drizzleDb } from "app/db.server";
+import { sessionTable } from "db/schema/sessionTable";
+import { eq } from "drizzle-orm";
 import { authenticate } from "../shopify.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-    const { shop, topic } = await authenticate.webhook(request);
+    const { shop, session, topic } = await authenticate.webhook(request);
 
     console.log(`Received ${topic} webhook for ${shop}`);
 
     switch (topic) {
+        /*
+        When a shop is uninstalled, the APP_UNINSTALLED webhook is sent to the app.
+        The app should use this information to delete any data that it has stored for the shop.
+
+        PAYLOAD app/uninstalled
+        */
+        case "APP_UNINSTALLED":
+            if (session) {
+                // Webhook requests can trigger multiple times and after an app has already been uninstalled.
+                // If this webhook already ran, the session may have been deleted previously.
+                await drizzleDb
+                    .delete(sessionTable)
+                    .where(eq(sessionTable.shop, shop));
+            }
+            break;
         /*
         GDPR compliance webhooks
         https://shopify.dev/docs/apps/build/privacy-law-compliance#subscribe-to-compliance-webhooks
