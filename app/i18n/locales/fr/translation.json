@@ -11,7 +11,8 @@
         "webhook": "Webhook",
         "theme": "Thème",
         "button": "Bouton de partage",
-        "buttonWallet": "Bouton porte-monnaie"
+        "buttonWallet": "Bouton porte-monnaie",
+        "status": "Statut"
     },
     "stepper": {
         "back": "Retour",
@@ -115,5 +116,10 @@
         "create": "CREER UN COMPTE",
         "start": "Créez un porte-monnaie Frak pour commencer à utiliser l’application.",
         "alreadyGotAnAccount": "J’ai déjà un compte"
+    },
+    "status": {
+        "title": "Statut",
+        "connected": "Frak est connecté à votre boutique.",
+        "notConnected": "Frak n'est pas connecté à votre boutique."
     }
 }

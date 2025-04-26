@@ -48,6 +48,7 @@
     "i18next-http-backend": "^3.0.2",
     "isbot": "^5.1.25",
     "jsonc-parser": "^3.3.1",
+    "ky": "^1.8.1",
     "pick": "^0.0.1",
     "postgres": "^3.4.5",
     "radash": "^12.1.0",

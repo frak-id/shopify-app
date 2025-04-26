@@ -11,7 +11,8 @@
         "webhook": "Webhook",
         "theme": "Theme",
         "button": "Share button",
-        "buttonWallet": "Wallet button"
+        "buttonWallet": "Wallet button",
+        "status": "Status"
     },
     "stepper": {
         "back": "Back",
@@ -115,5 +116,10 @@
         "create": "CREATE AN ACCOUNT",
         "start": "Create a Frak wallet to start using the app.",
         "alreadyGotAnAccount": "I already have an account"
+    },
+    "status": {
+        "title": "Status",
+        "connected": "Frak is connected to your store.",
+        "notConnected": "Frak is not connected to your store."
     }
 }

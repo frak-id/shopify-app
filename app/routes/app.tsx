@@ -75,6 +75,7 @@ function Navigation() {
                     <Link to="/app/walletbutton">
                         {t("navigation.buttonWallet")}
                     </Link>
+                    <Link to="/app/status">{t("navigation.status")}</Link>
                 </>
             )}
         </NavMenu>
