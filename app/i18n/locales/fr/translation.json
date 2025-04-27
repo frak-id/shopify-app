@@ -114,12 +114,49 @@
     "gated": {
         "configure": "Configurer Frak",
         "create": "CREER UN COMPTE",
-        "start": "Créez un porte-monnaie Frak pour commencer à utiliser l’application.",
-        "alreadyGotAnAccount": "J’ai déjà un compte"
+        "start": "Créez un porte-monnaie Frak pour commencer à utiliser l'application.",
+        "alreadyGotAnAccount": "J'ai déjà un compte"
     },
     "status": {
-        "title": "Statut",
-        "connected": "Frak est connecté à votre boutique.",
-        "notConnected": "Frak n'est pas connecté à votre boutique."
+        "title": "Statut de connexion Frak",
+        "connected": "Connecté à Frak",
+        "notConnected": "Non connecté",
+        "noWallet": {
+            "title": "Connexion de portefeuille requise",
+            "message": "Veuillez connecter votre portefeuille dans la page des paramètres pour continuer la configuration."
+        },
+        "connectionStatus": {
+            "title": "Statut de connexion",
+            "loading": "Vérification du statut de connexion...",
+            "checking": "Nous vérifions si votre boutique est connectée à l'écosystème Frak.",
+            "connected": "Votre boutique est correctement connectée à l'écosystème Frak.",
+            "notConnected": "Votre boutique n'est pas encore connectée à l'écosystème Frak. Suivez les instructions ci-dessous pour terminer la configuration."
+        },
+        "setupCode": {
+            "title": "Votre code de configuration",
+            "description": "Copiez ce code et collez-le dans la plateforme Frak Business lors de l'enregistrement de votre produit.",
+            "copyButton": "Copier le code",
+            "copied": "Code copié dans le presse-papiers"
+        },
+        "setupInstructions": {
+            "title": "Comment configurer votre intégration Frak",
+            "description": "Suivez ces étapes pour enregistrer votre boutique dans l'écosystème Frak :",
+            "step1": "Visitez la plateforme Frak Business",
+            "step2": "Connectez-vous avec la même adresse de portefeuille que vous utilisez avec cette application Shopify",
+            "step3": "Cliquez sur le bouton 'Lister un produit'",
+            "step4": "Remplissez les informations requises :",
+            "productName": "Choisissez un nom qui sera affiché aux utilisateurs finaux",
+            "productType": "Sélectionnez au moins : 'Webshop', 'Referral' et 'Purchase'",
+            "setupCode": "Copiez et collez le code de configuration indiqué ci-dessous",
+            "domainName": "Entrez le même nom de domaine que celui configuré pour votre boutique Shopify",
+            "goToFrak": "Aller à Frak Business",
+            "copyCode": "Copier le code"
+        },
+        "connectedShop": {
+            "title": "Votre boutique sur Frak",
+            "productName": "Nom du produit",
+            "createdOn": "Créé le",
+            "description": "Votre boutique est correctement connectée à l'écosystème Frak et prête à utiliser toutes les fonctionnalités."
+        }
     }
 }
