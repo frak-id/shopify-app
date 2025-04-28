@@ -3,6 +3,7 @@
         "title": "Configuration Frak",
         "goToDashboard": "Aller au tableau de bord",
         "loading": "Chargement...",
+        "loadingTimeout": "Le chargement a expiré. Veuillez réessayer.",
         "allSet": "L'application Frak est correctement configurée",
         "getStarted": "Commencer la configuration de l'application"
     },

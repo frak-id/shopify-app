@@ -1,6 +1,7 @@
 import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
 import { useRouteLoaderData } from "@remix-run/react";
 import {
+    Banner,
     Button,
     Card,
     EmptyState,
@@ -10,7 +11,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import type { loader } from "app/routes/app";
-import { type ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import LogoFrak from "../../assets/LogoFrak.svg";
 
@@ -20,6 +21,19 @@ export function WalletGated({ children }: { children: ReactNode }) {
     const { data: walletStatus } = useWalletStatus();
     const { mutate: displayFrakModal } = useDisplayModal();
     const { t } = useTranslation();
+    const [showTimeoutError, setShowTimeoutError] = useState(false);
+
+    useEffect(() => {
+        if (walletStatus === undefined) {
+            const timeoutId = setTimeout(
+                () => setShowTimeoutError(true),
+                10000
+            );
+
+            return () => clearTimeout(timeoutId);
+        }
+        setShowTimeoutError(false);
+    }, [walletStatus]);
 
     const authenticate = useCallback(() => {
         displayFrakModal({
@@ -37,11 +51,20 @@ export function WalletGated({ children }: { children: ReactNode }) {
     if (walletStatus === undefined) {
         return (
             <Page>
-                <InlineStack gap="200" blockAlign="center">
-                    <Spinner size="small" />
-                    <Text variant="headingMd" as="h2">
-                        {t("common.loading")}
-                    </Text>
+                <InlineStack gap="200" blockAlign="center" direction="row">
+                    {!showTimeoutError && (
+                        <InlineStack gap="200" blockAlign="center">
+                            <Spinner size="small" />
+                            <Text variant="headingMd" as="h2">
+                                {t("common.loading")}
+                            </Text>
+                        </InlineStack>
+                    )}
+                    {showTimeoutError && (
+                        <Banner tone="critical">
+                            <p>{t("common.loadingTimeout")}</p>
+                        </Banner>
+                    )}
                 </InlineStack>
             </Page>
         );

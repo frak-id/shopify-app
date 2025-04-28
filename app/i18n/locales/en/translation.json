@@ -3,6 +3,7 @@
         "title": "Frak configuration",
         "goToDashboard": "Go to dashboard",
         "loading": "Loading...",
+        "loadingTimeout": "The loading has expired. Please try again.",
         "allSet": "Frak application is correctly set up",
         "getStarted": "Start application setup"
     },
