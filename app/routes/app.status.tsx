@@ -6,7 +6,7 @@ import {
     Page,
     Spinner,
 } from "@shopify/polaris";
-import { useQuery } from "@tanstack/react-query";
+import { useSetupCode } from "app/hooks/useSetupCode";
 import { useTranslation } from "react-i18next";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
 import { SetupCodeCard } from "../components/Status/SetupCodeCard";
@@ -22,28 +22,10 @@ export default function StatusPage() {
         isLoading: isShopInfoLoading,
         refetch: refetchShopInfo,
     } = useOnChainShopInfo();
-    const { t } = useTranslation();
-
-    const { data: setupCode, isLoading: isSetupCodeLoading } = useQuery({
-        enabled: !shopInfo,
-        queryKey: ["mint", "setup-code", walletStatus?.wallet ?? ""],
-        queryFn: async () => {
-            if (!walletStatus?.wallet) return null;
-
-            const url = `/api/mint?walletAddress=${encodeURIComponent(walletStatus.wallet)}`;
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw {
-                    error: `HTTP error ${response.status}`,
-                    details: await response.text(),
-                };
-            }
-
-            const setupCode: string = await response.json();
-            return setupCode;
-        },
+    const { setupCode, isSetupCodeLoading } = useSetupCode({
+        shopInfo,
     });
+    const { t } = useTranslation();
 
     // Check loading state for all queries
     const isLoading =

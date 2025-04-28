@@ -1,31 +1,52 @@
-import { Box, Button, Text } from "@shopify/polaris";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { BlockStack, Box, Spinner } from "@shopify/polaris";
+import { useOnChainShopInfo } from "app/hooks/useOnChainShopInfo";
+import { useSetupCode } from "app/hooks/useSetupCode";
+import { ConnectedShopInfo } from "../Status/ConnectedShopInfo";
+import { SetupCodeCard } from "../Status/SetupCodeCard";
+import { SetupInstructions } from "../Status/SetupInstructions";
+import { StatusBanner } from "../Status/StatusBanner";
 
 export function Step6() {
-    const { t } = useTranslation();
+    const {
+        shopInfo,
+        isLoading: isShopInfoLoading,
+        refetch: refetchShopInfo,
+    } = useOnChainShopInfo();
+    const { setupCode, isSetupCodeLoading } = useSetupCode({
+        shopInfo,
+    });
 
-    useEffect(() => {
-        window.localStorage.setItem("frak-onBoarding", "done");
-    }, []);
+    // Check loading state for all queries
+    const isLoading = isShopInfoLoading || isSetupCodeLoading;
+
+    if (isLoading) {
+        return (
+            <Box padding={"600"}>
+                <BlockStack gap="400" align="center">
+                    <Spinner size="large" />
+                </BlockStack>
+            </Box>
+        );
+    }
 
     return (
         <Box padding={"600"}>
-            <Text as="h2" variant="headingXl">
-                {t("stepper.step6.title")}
-            </Text>
-            <Box paddingBlockStart={"200"}>
-                <Text as="p">{t("stepper.step6.description")}</Text>
-                <Box paddingBlockStart={"200"}>
-                    <Button
-                        variant="primary"
-                        url={process.env.BUSINESS_URL}
-                        target="_blank"
-                    >
-                        {t("common.goToDashboard")}
-                    </Button>
-                </Box>
-            </Box>
+            <BlockStack gap="400" align="center">
+                <StatusBanner
+                    isConnected={!!shopInfo}
+                    isLoading={isLoading}
+                    refetch={refetchShopInfo}
+                />
+
+                {shopInfo ? (
+                    <ConnectedShopInfo product={shopInfo.product} />
+                ) : (
+                    <>
+                        <SetupCodeCard setupCode={setupCode} />
+                        <SetupInstructions setupCode={setupCode} />
+                    </>
+                )}
+            </BlockStack>
         </Box>
     );
 }

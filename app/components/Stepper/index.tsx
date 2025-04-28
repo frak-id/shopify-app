@@ -6,12 +6,13 @@ import { Step3 } from "app/components/Stepper/Step3";
 import { Step4 } from "app/components/Stepper/Step4";
 import { Step5 } from "app/components/Stepper/Step5";
 import { Step6 } from "app/components/Stepper/Step6";
+import { Step7 } from "app/components/Stepper/Step7";
 import { useVisibilityChange } from "app/hooks/useVisibilityChange";
 import type { loader } from "app/routes/app.onboarding.$step";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-const MAX_STEP = 6;
+const MAX_STEP = 7;
 
 export function Stepper({ step }: { step: number }) {
     const data = useLoaderData<typeof loader>();
@@ -47,6 +48,7 @@ export function Stepper({ step }: { step: number }) {
             {step === 4 && <Step4 />}
             {step === 5 && <Step5 />}
             {step === 6 && <Step6 />}
+            {step === 7 && <Step7 />}
 
             <div style={{ display: "flex" }}>
                 {step > 1 && (
