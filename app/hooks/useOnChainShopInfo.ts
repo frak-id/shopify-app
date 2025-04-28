@@ -7,7 +7,11 @@ import { indexerApi } from "../utils/indexerApi";
 export function useOnChainShopInfo() {
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 
-    const { data: shopInfo, isLoading } = useQuery({
+    const {
+        data: shopInfo,
+        isLoading,
+        refetch,
+    } = useQuery({
         enabled: !!rootData?.shop.myshopifyDomain,
         queryKey: ["shopInfo"],
         queryFn: async () => {
@@ -22,9 +26,12 @@ export function useOnChainShopInfo() {
                 return null;
             }
         },
+        refetchOnWindowFocus: true,
+        // Refetch every 30 seconds
+        refetchInterval: 30_000,
     });
 
-    return { shopInfo, isLoading };
+    return { shopInfo, isLoading, refetch };
 }
 
 export type GetProductInfoResponseDto = {

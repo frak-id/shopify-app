@@ -1,16 +1,4 @@
-import {
-    BlockStack,
-    Box,
-    Button,
-    Card,
-    Icon,
-    InlineStack,
-    Text,
-    TextField,
-    Toast,
-} from "@shopify/polaris";
-import { ClipboardIcon } from "@shopify/polaris-icons";
-import { useState } from "react";
+import { BlockStack, Box, Card, Text } from "@shopify/polaris";
 import { useTranslation } from "react-i18next";
 
 type SetupCodeCardProps = {
@@ -19,19 +7,6 @@ type SetupCodeCardProps = {
 
 export function SetupCodeCard({ setupCode }: SetupCodeCardProps) {
     const { t } = useTranslation();
-    const [copied, setCopied] = useState(false);
-
-    const handleCopy = () => {
-        if (setupCode) {
-            navigator.clipboard.writeText(setupCode);
-            setCopied(true);
-
-            // Auto-hide toast after 3 seconds
-            setTimeout(() => {
-                setCopied(false);
-            }, 3000);
-        }
-    };
 
     return (
         <Card>
@@ -45,38 +20,9 @@ export function SetupCodeCard({ setupCode }: SetupCodeCardProps) {
                 </Text>
 
                 <Box padding="200" background="bg-surface-secondary">
-                    <InlineStack align="space-between">
-                        <TextField
-                            label=""
-                            value={setupCode || ""}
-                            readOnly
-                            autoComplete="off"
-                            labelHidden
-                            monospaced
-                            disabled={!setupCode}
-                        />
-                        <Box padding="100">
-                            <Button
-                                icon={<Icon source={ClipboardIcon} />}
-                                onClick={handleCopy}
-                                disabled={!setupCode}
-                                variant="tertiary"
-                                accessibilityLabel={t(
-                                    "status.setupCode.copyButton"
-                                )}
-                            />
-                        </Box>
-                    </InlineStack>
+                    <pre>{setupCode}</pre>
                 </Box>
             </BlockStack>
-
-            {copied && (
-                <Toast
-                    content={t("status.setupCode.copied")}
-                    duration={3000}
-                    onDismiss={() => setCopied(false)}
-                />
-            )}
         </Card>
     );
 }

@@ -120,7 +120,6 @@
     "status": {
         "title": "Frak Connection Status",
         "connected": "Connected to Frak",
-        "notConnected": "Not Connected",
         "noWallet": {
             "title": "Wallet Connection Required",
             "message": "Please connect your wallet in the settings page to continue setup."
@@ -148,7 +147,7 @@
             "productName": "Choose a name that will be displayed to end users",
             "productType": "Select at least: 'Webshop', 'Referral', and 'Purchase'",
             "setupCode": "Copy and paste the setup code shown below",
-            "domainName": "Enter the same domain name configured for your Shopify store",
+            "domainName": "Enter the same domain name configured for your Shopify store: ",
             "goToFrak": "Go to Frak Business",
             "copyCode": "Copy Setup Code"
         },

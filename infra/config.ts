@@ -28,28 +28,29 @@ export function getStaticVariable({
 
 // Some simple config depending on the stack
 export const indexerUrl = isProd
-    ? "https://indexer.gcp.frak.id"
-    : "https://indexer.gcp-dev.frak.id";
+    ? "https://ponder.gcp.frak.id"
+    : "https://ponder.gcp-dev.frak.id";
 export const backendUrl = getStaticVariable({
     prod: "https://backend.frak.id",
     dev: "https://backend-dev.frak.id",
-    local: "http://localhost:3030",
+    local: "https://backend-dev.frak.id",
 });
 export const walletUrl = getStaticVariable({
     prod: "https://wallet.frak.id",
     dev: "https://wallet-dev.frak.id",
-    local: "https://localhost:3000",
+    local: "https://wallet-dev.frak.id",
 });
 export const businessUrl = getStaticVariable({
     prod: "https://business.frak.id",
     dev: "https://business-dev.frak.id",
-    local: "https://localhost:3001",
+    local: "https://business-dev.frak.id",
 });
 export const stage = $app.stage ?? "dev";
 
 // Some secrets
 export const postgresHost = new sst.Secret("POSTGRES_HOST");
 export const postgresPassword = new sst.Secret("POSTGRES_PASSWORD");
+export const productSetupCodeSalt = new sst.Secret("PRODUCT_SETUP_CODE_SALT");
 
 // Shopify
 export const shopifyAppUrl = isProd

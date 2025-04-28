@@ -1,3 +1,4 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Box,
@@ -9,6 +10,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import { ExternalIcon } from "@shopify/polaris-icons";
+import type { loader as rootLoader } from "app/routes/app";
 import { useTranslation } from "react-i18next";
 
 type SetupInstructionsProps = {
@@ -17,6 +19,7 @@ type SetupInstructionsProps = {
 
 export function SetupInstructions({ setupCode }: SetupInstructionsProps) {
     const { t } = useTranslation();
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 
     return (
         <BlockStack gap="400">
@@ -31,7 +34,10 @@ export function SetupInstructions({ setupCode }: SetupInstructionsProps) {
                     <List.Item>
                         {t("status.setupInstructions.step1")}{" "}
                         <Link
-                            url="https://business.frak.id"
+                            url={
+                                process.env.BUSINESS_URL ??
+                                "https://business.frak.id"
+                            }
                             target="_blank"
                             removeUnderline
                         >
@@ -75,7 +81,8 @@ export function SetupInstructions({ setupCode }: SetupInstructionsProps) {
                                     <Text as="span" fontWeight="bold">
                                         Domain name:
                                     </Text>{" "}
-                                    {t("status.setupInstructions.domainName")}
+                                    {t("status.setupInstructions.domainName")}{" "}
+                                    <pre>{rootData?.shop.myshopifyDomain}</pre>
                                 </List.Item>
                             </List>
                         </BlockStack>
@@ -86,7 +93,10 @@ export function SetupInstructions({ setupCode }: SetupInstructionsProps) {
             <Box paddingBlockStart="400">
                 <InlineStack gap="400" align="center">
                     <Button
-                        url="https://business.frak.id"
+                        url={
+                            process.env.BUSINESS_URL ??
+                            "https://business.frak.id"
+                        }
                         target="_blank"
                         variant="primary"
                     >

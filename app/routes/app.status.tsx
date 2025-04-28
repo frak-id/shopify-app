@@ -17,7 +17,11 @@ import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
 export default function StatusPage() {
     const { data: walletStatus, isLoading: isWalletLoading } =
         useWalletStatus();
-    const { shopInfo, isLoading: isShopInfoLoading } = useOnChainShopInfo();
+    const {
+        shopInfo,
+        isLoading: isShopInfoLoading,
+        refetch: refetchShopInfo,
+    } = useOnChainShopInfo();
     const { t } = useTranslation();
 
     const { data: setupCode, isLoading: isSetupCodeLoading } = useQuery({
@@ -85,6 +89,7 @@ export default function StatusPage() {
                         <StatusBanner
                             isConnected={!!shopInfo}
                             isLoading={isLoading}
+                            refetch={refetchShopInfo}
                         />
 
                         {shopInfo ? (

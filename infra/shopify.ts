@@ -5,6 +5,7 @@ import {
     isProd,
     postgresHost,
     postgresPassword,
+    productSetupCodeSalt,
     shopifyApiKey,
     shopifyApiSecret,
     shopifyAppUrl,
@@ -38,5 +39,10 @@ new sst.aws.Remix("Shopify", {
     },
     // Environment variables
     environment: shopifyEnv,
-    link: [postgresHost, postgresPassword, shopifyApiSecret],
+    link: [
+        postgresHost,
+        postgresPassword,
+        shopifyApiSecret,
+        productSetupCodeSalt,
+    ],
 });
