@@ -5,9 +5,16 @@ import {
     AppDistribution,
     shopifyApp,
 } from "@shopify/shopify-app-remix/server";
+import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memory";
 import { DrizzleSessionStorageAdapter } from "../db/adapter/sessionAdapter";
 import { sessionTable } from "../db/schema/sessionTable";
 import { drizzleDb } from "./db.server";
+
+// If the app is running locally, use the memory session storage
+// Otherwise, use the drizzle session storage
+const sessionStorageAdapter = process.env.SHOPIFY_APP_URL?.includes("localhost")
+    ? new MemorySessionStorage()
+    : new DrizzleSessionStorageAdapter(drizzleDb, sessionTable);
 
 // Create the Shopify app
 const shopify = shopifyApp({
@@ -17,7 +24,7 @@ const shopify = shopifyApp({
     scopes: process.env.SCOPES?.split(","),
     appUrl: process.env.SHOPIFY_APP_URL || "",
     authPathPrefix: "/auth",
-    sessionStorage: new DrizzleSessionStorageAdapter(drizzleDb, sessionTable),
+    sessionStorage: sessionStorageAdapter,
     distribution: AppDistribution.AppStore,
     restResources,
     future: {
