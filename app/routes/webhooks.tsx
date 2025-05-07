@@ -84,6 +84,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             "shop_domain": "{shop}.myshopify.com"
          }
          */
+        case "APP_PURCHASES_ONE_TIME_UPDATE":
+        /*
+         When a shop is uninstalled, the APP_PURCHASES_ONE_TIME_UPDATE webhook is sent to the app.
+         The app should use this information to delete any data that it has stored for the shop.
+
+         PAYLOAD app_purchases_one_time/update
+
+         {
+            "confirmation_url": "https://jsmith.myshopify.com/admin/charges/confirm_application_charge?id=1012637313&amp;signature=BAhpBIGeWzw%3D--17779c1efb4688e9cfa653a3245f923b4f1eb140",
+            "created_at": "2013-06-27T08:48:27-04:00",
+            "name": "Super Duper Expensive action",
+            "id": 675931192,
+            "return_url": "http://super-duper.shopifyapps.com",
+            "price": "100.00",
+            "test": null,
+            "status": "accepted",
+            "currency": "USD"
+            "updated_at": "2013-06-27T08:48:27-04:00",
+        }
+        */
     }
 
     return new Response();

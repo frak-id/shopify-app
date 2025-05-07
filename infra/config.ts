@@ -51,6 +51,7 @@ export const stage = $app.stage ?? "dev";
 export const postgresHost = new sst.Secret("POSTGRES_HOST");
 export const postgresPassword = new sst.Secret("POSTGRES_PASSWORD");
 export const productSetupCodeSalt = new sst.Secret("PRODUCT_SETUP_CODE_SALT");
+export const rpcSecret = new sst.Secret("RPC_SECRET");
 
 // Shopify
 export const shopifyAppUrl = isProd
