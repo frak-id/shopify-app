@@ -132,25 +132,14 @@
             "connected": "Your shop is successfully connected to the Frak ecosystem.",
             "notConnected": "Your shop is not yet connected to the Frak ecosystem. Follow the instructions below to complete setup."
         },
-        "setupCode": {
-            "title": "Your Setup Code",
-            "description": "Copy this code and paste it into the Frak Business platform when registering your product.",
-            "copyButton": "Copy setup code",
-            "copied": "Setup code copied to clipboard"
-        },
         "setupInstructions": {
-            "title": "How to set up your Frak integration",
-            "description": "Follow these steps to register your shop in the Frak ecosystem:",
-            "step1": "Visit the Frak Business platform",
-            "step2": "Login with the same wallet address you're using with this Shopify app",
-            "step3": "Click on the 'List a product' button",
-            "step4": "Fill in the required information:",
-            "productName": "Choose a name that will be displayed to end users",
-            "productType": "Select at least: 'Webshop', 'Referral', and 'Purchase'",
-            "setupCode": "Copy and paste the setup code shown below",
-            "domainName": "Enter the same domain name configured for your Shopify store: ",
-            "goToFrak": "Go to Frak Business",
-            "copyCode": "Copy Setup Code"
+            "title": "Set up your Frak integration",
+            "description": "Click the button below to register your shop in the Frak ecosystem"
+        },
+        "modal": {
+            "title": "Register your shop",
+            "button": "Register your shop in the Frak ecosystem",
+            "close": "Close"
         },
         "connectedShop": {
             "title": "Your Shop on Frak",

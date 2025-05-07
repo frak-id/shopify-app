@@ -1,18 +1,14 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
 import {
     BlockStack,
-    Button,
     EmptyState,
     Layout,
     Page,
     Spinner,
 } from "@shopify/polaris";
-import { useSetupCode } from "app/hooks/useSetupCode";
-import { useCallback } from "react";
+import { SetupInstructions } from "app/components/Status/SetupInstructions";
 import { useTranslation } from "react-i18next";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
-import { SetupCodeCard } from "../components/Status/SetupCodeCard";
-import { SetupInstructions } from "../components/Status/SetupInstructions";
 import { StatusBanner } from "../components/Status/StatusBanner";
 import { useMintProductLink } from "../hooks/useMintProductLink";
 import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
@@ -25,32 +21,14 @@ export default function StatusPage() {
         isLoading: isShopInfoLoading,
         refetch: refetchShopInfo,
     } = useOnChainShopInfo();
-    const { setupCode, isSetupCodeLoading } = useSetupCode({
-        shopInfo,
-    });
     const { t } = useTranslation();
 
     const { link } = useMintProductLink({
         shopInfo,
     });
 
-    const openModal = useCallback(() => {
-        if (!link) return;
-
-        const openedWindow = window.open(
-            link,
-            "frak-business",
-            "menubar=no,status=no,scrollbars=no,fullscreen=no,width=500, height=800"
-        );
-
-        if (openedWindow) {
-            openedWindow.focus();
-        }
-    }, [link]);
-
     // Check loading state for all queries
-    const isLoading =
-        isWalletLoading || isShopInfoLoading || isSetupCodeLoading;
+    const isLoading = isWalletLoading || isShopInfoLoading;
 
     // If we don't have a wallet yet
     if (!isLoading && !walletStatus?.wallet) {
@@ -98,11 +76,7 @@ export default function StatusPage() {
                         {shopInfo ? (
                             <ConnectedShopInfo product={shopInfo.product} />
                         ) : (
-                            <>
-                                <SetupCodeCard setupCode={setupCode} />
-                                <SetupInstructions setupCode={setupCode} />
-                                <Button onClick={openModal}>Open Modal</Button>
-                            </>
+                            <>{link && <SetupInstructions link={link} />}</>
                         )}
                     </BlockStack>
                 </Layout.Section>

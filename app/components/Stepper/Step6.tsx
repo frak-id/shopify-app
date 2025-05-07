@@ -1,8 +1,7 @@
 import { BlockStack, Box, Spinner } from "@shopify/polaris";
+import { useMintProductLink } from "app/hooks/useMintProductLink";
 import { useOnChainShopInfo } from "app/hooks/useOnChainShopInfo";
-import { useSetupCode } from "app/hooks/useSetupCode";
 import { ConnectedShopInfo } from "../Status/ConnectedShopInfo";
-import { SetupCodeCard } from "../Status/SetupCodeCard";
 import { SetupInstructions } from "../Status/SetupInstructions";
 import { StatusBanner } from "../Status/StatusBanner";
 
@@ -12,12 +11,13 @@ export function Step6() {
         isLoading: isShopInfoLoading,
         refetch: refetchShopInfo,
     } = useOnChainShopInfo();
-    const { setupCode, isSetupCodeLoading } = useSetupCode({
+
+    const { link } = useMintProductLink({
         shopInfo,
     });
 
     // Check loading state for all queries
-    const isLoading = isShopInfoLoading || isSetupCodeLoading;
+    const isLoading = isShopInfoLoading;
 
     if (isLoading) {
         return (
@@ -41,10 +41,7 @@ export function Step6() {
                 {shopInfo ? (
                     <ConnectedShopInfo product={shopInfo.product} />
                 ) : (
-                    <>
-                        <SetupCodeCard setupCode={setupCode} />
-                        <SetupInstructions setupCode={setupCode} />
-                    </>
+                    <>{link && <SetupInstructions link={link} />}</>
                 )}
             </BlockStack>
         </Box>

@@ -1,119 +1,45 @@
-import { useRouteLoaderData } from "@remix-run/react";
-import {
-    BlockStack,
-    Box,
-    Button,
-    Icon,
-    InlineStack,
-    Link,
-    List,
-    Text,
-} from "@shopify/polaris";
-import { ExternalIcon } from "@shopify/polaris-icons";
-import type { loader as rootLoader } from "app/routes/app";
+import { BlockStack, Box, Button, Card, Text } from "@shopify/polaris";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 type SetupInstructionsProps = {
-    setupCode?: string | null;
+    link: string;
 };
 
-export function SetupInstructions({ setupCode }: SetupInstructionsProps) {
+export function SetupInstructions({ link }: SetupInstructionsProps) {
     const { t } = useTranslation();
-    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+
+    const openModal = useCallback(() => {
+        const openedWindow = window.open(
+            link,
+            "frak-business",
+            "menubar=no,status=no,scrollbars=no,fullscreen=no,width=500, height=800"
+        );
+
+        if (openedWindow) {
+            openedWindow.focus();
+        }
+    }, [link]);
 
     return (
-        <BlockStack gap="400">
-            <Text as="h2" variant="headingMd">
-                {t("status.setupInstructions.title")}
-            </Text>
+        <Card>
+            <BlockStack gap="400">
+                <Text as="h2" variant="headingMd">
+                    {t("status.setupInstructions.title")}
+                </Text>
 
-            <BlockStack gap="200">
-                <Text as="p">{t("status.setupInstructions.description")}</Text>
+                <BlockStack gap="200">
+                    <Text as="p">
+                        {t("status.setupInstructions.description")}
+                    </Text>
+                </BlockStack>
 
-                <List type="number">
-                    <List.Item>
-                        {t("status.setupInstructions.step1")}{" "}
-                        <Link
-                            url={
-                                process.env.BUSINESS_URL ??
-                                "https://business.frak.id"
-                            }
-                            target="_blank"
-                            removeUnderline
-                        >
-                            <InlineStack gap="100" align="center">
-                                business.frak.id
-                                <Icon source={ExternalIcon} />
-                            </InlineStack>
-                        </Link>
-                    </List.Item>
-
-                    <List.Item>{t("status.setupInstructions.step2")}</List.Item>
-
-                    <List.Item>{t("status.setupInstructions.step3")}</List.Item>
-
-                    <List.Item>
-                        {t("status.setupInstructions.step4")}
-                        <BlockStack gap="200">
-                            <List type="bullet">
-                                <List.Item>
-                                    <Text as="span" fontWeight="bold">
-                                        Product name:
-                                    </Text>{" "}
-                                    {t("status.setupInstructions.productName")}
-                                </List.Item>
-
-                                <List.Item>
-                                    <Text as="span" fontWeight="bold">
-                                        Product type:
-                                    </Text>{" "}
-                                    {t("status.setupInstructions.productType")}
-                                </List.Item>
-
-                                <List.Item>
-                                    <Text as="span" fontWeight="bold">
-                                        Setup code:
-                                    </Text>{" "}
-                                    {t("status.setupInstructions.setupCode")}
-                                </List.Item>
-
-                                <List.Item>
-                                    <Text as="span" fontWeight="bold">
-                                        Domain name:
-                                    </Text>{" "}
-                                    {t("status.setupInstructions.domainName")}{" "}
-                                    <pre>{rootData?.shop.myshopifyDomain}</pre>
-                                </List.Item>
-                            </List>
-                        </BlockStack>
-                    </List.Item>
-                </List>
-            </BlockStack>
-
-            <Box paddingBlockStart="400">
-                <InlineStack gap="400" align="center">
-                    <Button
-                        url={
-                            process.env.BUSINESS_URL ??
-                            "https://business.frak.id"
-                        }
-                        target="_blank"
-                        variant="primary"
-                    >
-                        {t("status.setupInstructions.goToFrak")}
+                <Box>
+                    <Button onClick={openModal} variant="primary">
+                        {t("status.modal.button")}
                     </Button>
-
-                    {setupCode && (
-                        <Button
-                            onClick={() => {
-                                navigator.clipboard.writeText(setupCode);
-                            }}
-                        >
-                            {t("status.setupInstructions.copyCode")}
-                        </Button>
-                    )}
-                </InlineStack>
-            </Box>
-        </BlockStack>
+                </Box>
+            </BlockStack>
+        </Card>
     );
 }
