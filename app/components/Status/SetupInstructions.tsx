@@ -1,3 +1,4 @@
+import { useRevalidator } from "@remix-run/react";
 import { BlockStack, Box, Button, Card, Text } from "@shopify/polaris";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,6 +9,7 @@ type SetupInstructionsProps = {
 
 export function SetupInstructions({ link }: SetupInstructionsProps) {
     const { t } = useTranslation();
+    const { revalidate } = useRevalidator();
 
     const openModal = useCallback(() => {
         const openedWindow = window.open(
@@ -18,8 +20,17 @@ export function SetupInstructions({ link }: SetupInstructionsProps) {
 
         if (openedWindow) {
             openedWindow.focus();
+
+            // Check every 500ms if the window is closed
+            // If it is, revalidate the page
+            const timer = setInterval(() => {
+                if (openedWindow.closed) {
+                    clearInterval(timer);
+                    setTimeout(() => revalidate(), 1000);
+                }
+            }, 500);
         }
-    }, [link]);
+    }, [link, revalidate]);
 
     return (
         <Card>
