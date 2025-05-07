@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
-import { fundingTable } from "../../db/schema/fundingTable";
+import { purchaseTable } from "../../db/schema/purchaseTable";
 import { drizzleDb } from "../db.server";
 import type { AuthenticatedContext } from "../types/context";
 import { shopInfo } from "./shop";
 /**
- * Startup funding for a shop
+ * Startup purchase for a shop
  */
-export async function startupFunding(
+export async function startupPurchase(
     ctx: AuthenticatedContext,
     { amount }: { amount: number }
 ) {
@@ -20,10 +20,18 @@ export async function startupFunding(
 
     // Get the shop info and generate a name for this purchase
     const info = await shopInfo(ctx);
-    // todo: ensure the shop doesn't have another funding in progress
+
+    // Get the current purchases
+    const currentPurchases = await getCurrentPurchases(ctx);
+    const hasPendingPurchase = currentPurchases.some(
+        (p) => p.status === "pending"
+    );
+    if (hasPendingPurchase) {
+        throw new Error("Shop already has a pending purchase");
+    }
 
     // Start the one time purchase
-    const generatedName = `Frak bank funding - ${amount.toFixed(2)}usd - ${new Date().toISOString()}`;
+    const generatedName = `Frak bank - ${amount.toFixed(2)}usd - ${new Date().toISOString()}`;
     const response = await ctx.admin.graphql(
         `#graphql
         mutation AppPurchaseOneTimeCreate($name: String!, $price: MoneyInput!, $returnUrl: URL!) {
@@ -70,7 +78,7 @@ export async function startupFunding(
     }
 
     // Insert it into the database
-    await drizzleDb.insert(fundingTable).values({
+    await drizzleDb.insert(purchaseTable).values({
         id: generatedName,
         shopId: info.id,
         purchaseId: purchaseData.appPurchaseOneTimeCreate.appPurchaseOneTime.id,
@@ -86,14 +94,14 @@ export async function startupFunding(
 }
 
 /**
- * Get all the current fundings for a shop
+ * Get all the current purchases for a shop
  * @param ctx
  * @returns
  */
-export async function getCurrentFundings(ctx: AuthenticatedContext) {
+export async function getCurrentPurchases(ctx: AuthenticatedContext) {
     const info = await shopInfo(ctx);
     return await drizzleDb
         .select()
-        .from(fundingTable)
-        .where(eq(fundingTable.shopId, info.id));
+        .from(purchaseTable)
+        .where(eq(purchaseTable.shopId, info.id));
 }

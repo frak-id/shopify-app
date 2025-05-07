@@ -10,13 +10,16 @@ import {
 } from "@shopify/polaris";
 import { useMemo, useState } from "react";
 import { formatUnits } from "viem";
+import type { PurchaseTable } from "../../../db/schema/purchaseTable";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 import { useTokenInfoWithBalance } from "../../hooks/usetokenInfo";
 
 export function BankingStatus({
     shopInfo,
+    currentPurchases,
 }: {
     shopInfo: GetProductInfoResponseDto;
+    currentPurchases: PurchaseTable["$inferSelect"][];
 }) {
     const { banks } = shopInfo;
 
@@ -29,6 +32,8 @@ export function BankingStatus({
 
                 <FundBanks banks={banks} />
 
+                <ActivePurchases currentPurchases={currentPurchases} />
+
                 <Text as="h2" variant="headingMd">
                     Banks
                 </Text>
@@ -40,6 +45,39 @@ export function BankingStatus({
                 </InlineStack>
             </BlockStack>
         </Card>
+    );
+}
+
+function ActivePurchases({
+    currentPurchases,
+}: { currentPurchases: PurchaseTable["$inferSelect"][] }) {
+    return (
+        <BlockStack gap="200">
+            <Text as="h2" variant="headingMd">
+                Active Purchases
+            </Text>
+            {currentPurchases.map((purchase) => (
+                <PurchaseItem key={purchase.id} purchase={purchase} />
+            ))}
+        </BlockStack>
+    );
+}
+
+function PurchaseItem({
+    purchase,
+}: { purchase: PurchaseTable["$inferSelect"] }) {
+    return (
+        <BlockStack gap="200">
+            <Text as="span" variant="bodyMd">
+                {purchase.id}
+            </Text>
+            <Text as="span" variant="bodyMd">
+                {purchase.amount}
+            </Text>
+            <Text as="span" variant="bodyMd">
+                {purchase.status}
+            </Text>
+        </BlockStack>
     );
 }
 

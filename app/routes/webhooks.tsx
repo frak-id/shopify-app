@@ -2,7 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { drizzleDb } from "app/db.server";
 import { sessionTable } from "db/schema/sessionTable";
 import { eq } from "drizzle-orm";
-import { fundingTable } from "../../db/schema/fundingTable";
+import { purchaseTable } from "../../db/schema/purchaseTable";
 import { authenticate } from "../shopify.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -54,12 +54,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         */
             if (session) {
                 await drizzleDb
-                    .update(fundingTable)
+                    .update(purchaseTable)
                     .set({
                         status: payload.status,
                         confirmationUrl: payload.confirmation_url,
                     })
-                    .where(eq(fundingTable.purchaseId, payload.id));
+                    .where(eq(purchaseTable.purchaseId, payload.id));
             }
             break;
 

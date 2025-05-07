@@ -1,17 +1,14 @@
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-const shopifyStatus = pgEnum("shopifyTxStatus", [
+const shopifyStatus = pgEnum("shopifyPurchaseStatus", [
     "pending",
     "active",
     "declined",
     "expired",
 ]);
-const frakTxStatus = pgEnum("frakTxStatus", ["pending", "confirmed", "failed"]);
+const frakTxStatus = pgEnum("frakTxStatus", ["pending", "confirmed"]);
 
-/**
- * Same as the one from @shopify/shopify-app-session-storage-drizzle but using a recent version of drizzle-orm
- */
-export const fundingTable = pgTable("funding" as string, {
+export const purchaseTable = pgTable("purchase" as string, {
     id: text("id").primaryKey(),
     // Shop info
     shopId: text("shopId").notNull(),
@@ -29,4 +26,4 @@ export const fundingTable = pgTable("funding" as string, {
     txStatus: frakTxStatus("txStatus"),
 });
 
-export type FundingTable = typeof fundingTable;
+export type PurchaseTable = typeof purchaseTable;

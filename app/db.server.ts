@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { fundingTable } from "../db/schema/fundingTable";
+import { purchaseTable } from "../db/schema/purchaseTable";
 import { sessionTable } from "../db/schema/sessionTable";
 
 /**
@@ -18,5 +18,5 @@ const posgresDb = postgres({
  * Create our drizzle connector
  */
 export const drizzleDb = drizzle(posgresDb, {
-    schema: { sessionTable, fundingTable },
+    schema: { sessionTable, fundingTable: purchaseTable },
 });
