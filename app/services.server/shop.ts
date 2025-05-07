@@ -1,6 +1,7 @@
 import type { AuthenticatedContext } from "app/types/context";
 
 type ShopInfoReturnType = {
+    id: string;
     name: string;
     url: string;
     myshopifyDomain: string;
@@ -15,6 +16,7 @@ export async function shopInfo({
     const response = await graphql(`
 query shopInfo {
   shop {
+    id
     name
     url
     myshopifyDomain

@@ -2,10 +2,12 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { drizzleDb } from "app/db.server";
 import { sessionTable } from "db/schema/sessionTable";
 import { eq } from "drizzle-orm";
+import { fundingTable } from "../../db/schema/fundingTable";
 import { authenticate } from "../shopify.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-    const { shop, session, topic } = await authenticate.webhook(request);
+    const { shop, session, topic, payload } =
+        await authenticate.webhook(request);
 
     console.log(`Received ${topic} webhook for ${shop}`);
 
@@ -32,6 +34,34 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         Hooks can be tested using the Shopify CLI:
         shopify app webhook trigger --topic=customers/data_request --address=$SHOPIFY_URL/webhooks/app/compliance --api-version=2025-01
         */
+
+        case "APP_PURCHASES_ONE_TIME_UPDATE":
+            /*
+         PAYLOAD app_purchases_one_time/update
+
+         {
+            "confirmation_url": "https://jsmith.myshopify.com/admin/charges/confirm_application_charge?id=1012637313&amp;signature=BAhpBIGeWzw%3D--17779c1efb4688e9cfa653a3245f923b4f1eb140",
+            "created_at": "2013-06-27T08:48:27-04:00",
+            "name": "Super Duper Expensive action",
+            "id": 675931192,
+            "return_url": "http://super-duper.shopifyapps.com",
+            "price": "100.00",
+            "test": null,
+            "status": "accepted",
+            "currency": "USD"
+            "updated_at": "2013-06-27T08:48:27-04:00",
+        }
+        */
+            if (session) {
+                await drizzleDb
+                    .update(fundingTable)
+                    .set({
+                        status: payload.status,
+                        confirmationUrl: payload.confirmation_url,
+                    })
+                    .where(eq(fundingTable.purchaseId, payload.id));
+            }
+            break;
 
         case "CUSTOMERS_DATA_REQUEST":
         /*
@@ -84,26 +114,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             "shop_domain": "{shop}.myshopify.com"
          }
          */
-        case "APP_PURCHASES_ONE_TIME_UPDATE":
-        /*
-         When a shop is uninstalled, the APP_PURCHASES_ONE_TIME_UPDATE webhook is sent to the app.
-         The app should use this information to delete any data that it has stored for the shop.
-
-         PAYLOAD app_purchases_one_time/update
-
-         {
-            "confirmation_url": "https://jsmith.myshopify.com/admin/charges/confirm_application_charge?id=1012637313&amp;signature=BAhpBIGeWzw%3D--17779c1efb4688e9cfa653a3245f923b4f1eb140",
-            "created_at": "2013-06-27T08:48:27-04:00",
-            "name": "Super Duper Expensive action",
-            "id": 675931192,
-            "return_url": "http://super-duper.shopifyapps.com",
-            "price": "100.00",
-            "test": null,
-            "status": "accepted",
-            "currency": "USD"
-            "updated_at": "2013-06-27T08:48:27-04:00",
-        }
-        */
     }
 
     return new Response();
