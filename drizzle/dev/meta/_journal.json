@@ -8,6 +8,20 @@
             "when": 1732028754163,
             "tag": "0000_pink_network",
             "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1746694624337,
+            "tag": "0001_chunky_songbird",
+            "breakpoints": true
+        },
+        {
+            "idx": 2,
+            "version": "7",
+            "when": 1746698116923,
+            "tag": "0002_steep_barracuda",
+            "breakpoints": true
         }
     ]
 }

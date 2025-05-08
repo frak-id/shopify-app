@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { isAddress } from "viem";
 import { purchaseTable } from "../../db/schema/purchaseTable";
 import { drizzleDb } from "../db.server";
 import type { AuthenticatedContext } from "../types/context";
@@ -8,14 +9,21 @@ import { shopInfo } from "./shop";
  */
 export async function startupPurchase(
     ctx: AuthenticatedContext,
-    { amount }: { amount: number }
+    { amount: rawAmount, bank }: { amount: string; bank: string }
 ) {
     // Failsafe on the amount
+    const amount = Number(rawAmount);
+    if (Number.isNaN(amount)) {
+        throw new Error("Amount must be a number");
+    }
     if (amount < 10) {
         throw new Error("Amount must be greater than 10");
     }
     if (amount > 1000) {
         throw new Error("Amount must be less than 1000");
+    }
+    if (!isAddress(bank)) {
+        throw new Error("Bank must be a valid address");
     }
 
     // Get the shop info and generate a name for this purchase
@@ -23,19 +31,19 @@ export async function startupPurchase(
 
     // Get the current purchases
     const currentPurchases = await getCurrentPurchases(ctx);
-    const hasPendingPurchase = currentPurchases.some(
+    const pendingPurchases = currentPurchases.filter(
         (p) => p.status === "pending"
     );
-    if (hasPendingPurchase) {
-        throw new Error("Shop already has a pending purchase");
+    if (pendingPurchases.length > 2) {
+        throw new Error("Shop already has more than 2 pending purchases");
     }
 
     // Start the one time purchase
     const generatedName = `Frak bank - ${amount.toFixed(2)}usd - ${new Date().toISOString()}`;
     const response = await ctx.admin.graphql(
         `#graphql
-        mutation AppPurchaseOneTimeCreate($name: String!, $price: MoneyInput!, $returnUrl: URL!) {
-          appPurchaseOneTimeCreate(name: $name, returnUrl: $returnUrl, price: $price) {
+        mutation AppPurchaseOneTimeCreate($name: String!, $price: MoneyInput!, $returnUrl: URL!, $test: Boolean!) {
+          appPurchaseOneTimeCreate(name: $name, returnUrl: $returnUrl, price: $price, test: $test) {
             userErrors {
               field
               message
@@ -55,25 +63,26 @@ export async function startupPurchase(
                     amount: amount,
                     currencyCode: "USD",
                 },
+                test: process.env.STAGE !== "production",
             },
         }
     );
-    const purchaseData = (await response.json()) as {
-        appPurchaseOneTimeCreate: {
-            userErrors: string[];
-            appPurchaseOneTime?: {
-                createdAt: string;
-                id: string;
+    const result = (await response.json()) as {
+        data: {
+            appPurchaseOneTimeCreate: {
+                userErrors: string[];
+                appPurchaseOneTime?: {
+                    createdAt: string;
+                    id: string;
+                } | null;
+                confirmationUrl?: string | null;
             };
-            confirmationUrl: string;
         };
     };
+    const purchaseData = result?.data?.appPurchaseOneTimeCreate;
 
-    if (!purchaseData.appPurchaseOneTimeCreate.appPurchaseOneTime) {
-        console.error(
-            "Error creating purchase",
-            purchaseData.appPurchaseOneTimeCreate.userErrors
-        );
+    if (!purchaseData?.appPurchaseOneTime || !purchaseData.confirmationUrl) {
+        console.error("Error creating purchase", purchaseData.userErrors);
         throw new Error("Failed to create purchase");
     }
 
@@ -81,16 +90,17 @@ export async function startupPurchase(
     await drizzleDb.insert(purchaseTable).values({
         id: generatedName,
         shopId: info.id,
-        purchaseId: purchaseData.appPurchaseOneTimeCreate.appPurchaseOneTime.id,
-        confirmationUrl: purchaseData.appPurchaseOneTimeCreate.confirmationUrl,
+        purchaseId: purchaseData.appPurchaseOneTime.id,
+        confirmationUrl: purchaseData.confirmationUrl,
         shop: info.myshopifyDomain,
         amount: amount.toString(),
         currency: "usd",
         status: "pending",
+        bank,
     });
 
     // Return the confirmation url
-    return purchaseData.appPurchaseOneTimeCreate.confirmationUrl;
+    return purchaseData.confirmationUrl;
 }
 
 /**

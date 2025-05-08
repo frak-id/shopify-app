@@ -9,7 +9,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     const { shop, session, topic, payload } =
         await authenticate.webhook(request);
 
-    console.log(`Received ${topic} webhook for ${shop}`);
+    console.log(`Received ${topic} webhook for ${shop}`, payload);
 
     switch (topic) {
         /*
@@ -53,6 +53,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         }
         */
             if (session) {
+                console.log("Updating purchase", payload);
                 await drizzleDb
                     .update(purchaseTable)
                     .set({

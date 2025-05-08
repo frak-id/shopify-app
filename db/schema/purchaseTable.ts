@@ -1,12 +1,12 @@
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-const shopifyStatus = pgEnum("shopifyPurchaseStatus", [
+export const shopifyStatus = pgEnum("shopifyPurchaseStatus", [
     "pending",
     "active",
     "declined",
     "expired",
 ]);
-const frakTxStatus = pgEnum("frakTxStatus", ["pending", "confirmed"]);
+export const frakTxStatus = pgEnum("frakTxStatus", ["pending", "confirmed"]);
 
 export const purchaseTable = pgTable("purchase" as string, {
     id: text("id").primaryKey(),
@@ -24,6 +24,7 @@ export const purchaseTable = pgTable("purchase" as string, {
     // Frak side
     txHash: text("txHash"),
     txStatus: frakTxStatus("txStatus"),
+    bank: text("bank").notNull(),
 });
 
 export type PurchaseTable = typeof purchaseTable;

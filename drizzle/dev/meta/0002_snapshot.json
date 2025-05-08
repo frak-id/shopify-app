@@ -1,0 +1,187 @@
+{
+    "id": "837dd5fc-46b3-407f-9390-3496d6c1e5e5",
+    "prevId": "4ce16ba0-0146-480c-ade9-94ad4963108a",
+    "version": "7",
+    "dialect": "postgresql",
+    "tables": {
+        "public.purchase": {
+            "name": "purchase",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "text",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "shopId": {
+                    "name": "shopId",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "shop": {
+                    "name": "shop",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "purchaseId": {
+                    "name": "purchaseId",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "confirmationUrl": {
+                    "name": "confirmationUrl",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "amount": {
+                    "name": "amount",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "currency": {
+                    "name": "currency",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "status": {
+                    "name": "status",
+                    "type": "shopifyPurchaseStatus",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": "now()"
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false,
+                    "default": "now()"
+                },
+                "txHash": {
+                    "name": "txHash",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "txStatus": {
+                    "name": "txStatus",
+                    "type": "frakTxStatus",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "bank": {
+                    "name": "bank",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.session": {
+            "name": "session",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "text",
+                    "primaryKey": true,
+                    "notNull": true
+                },
+                "shop": {
+                    "name": "shop",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "state": {
+                    "name": "state",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "isOnline": {
+                    "name": "isOnline",
+                    "type": "boolean",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": false
+                },
+                "scope": {
+                    "name": "scope",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "expires": {
+                    "name": "expires",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "accessToken": {
+                    "name": "accessToken",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "userId": {
+                    "name": "userId",
+                    "type": "bigint",
+                    "primaryKey": false,
+                    "notNull": false
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        }
+    },
+    "enums": {
+        "public.frakTxStatus": {
+            "name": "frakTxStatus",
+            "schema": "public",
+            "values": ["pending", "confirmed"]
+        },
+        "public.shopifyPurchaseStatus": {
+            "name": "shopifyPurchaseStatus",
+            "schema": "public",
+            "values": ["pending", "active", "declined", "expired"]
+        }
+    },
+    "schemas": {},
+    "sequences": {},
+    "roles": {},
+    "policies": {},
+    "views": {},
+    "_meta": {
+        "columns": {},
+        "schemas": {},
+        "tables": {}
+    }
+}

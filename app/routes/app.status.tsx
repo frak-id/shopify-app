@@ -12,6 +12,7 @@ import { SetupInstructions } from "app/components/Status/SetupInstructions";
 import { useTranslation } from "react-i18next";
 import { BankingStatus } from "../components/Status/Bank";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
+import { PurchaseStatus } from "../components/Status/Purchase";
 import { StatusBanner } from "../components/Status/StatusBanner";
 import { useMintProductLink } from "../hooks/useMintProductLink";
 import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
@@ -88,7 +89,8 @@ export default function StatusPage() {
                         {shopInfo ? (
                             <>
                                 <ConnectedShopInfo product={shopInfo.product} />
-                                <BankingStatus
+                                <BankingStatus shopInfo={shopInfo} />
+                                <PurchaseStatus
                                     shopInfo={shopInfo}
                                     currentPurchases={currentPurchases}
                                 />
