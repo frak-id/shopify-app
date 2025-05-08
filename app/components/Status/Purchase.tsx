@@ -7,10 +7,10 @@ import {
     InlineStack,
     Link,
     Select,
-    Spinner,
     Text,
     TextField,
 } from "@shopify/polaris";
+import type { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import type { PurchaseTable } from "../../../db/schema/purchaseTable";
@@ -50,42 +50,29 @@ function ActivePurchases({
 }: { currentPurchases: PurchaseTable["$inferSelect"][] }) {
     const items = useMemo(
         () =>
-            currentPurchases.map((purchase) => [
-                `$${purchase.amount}`,
-                <Badge
-                    key={purchase.id}
-                    tone={
-                        purchase.status === "active"
-                            ? "success"
-                            : purchase.status === "pending"
-                              ? "info"
-                              : "warning"
-                    }
-                >
-                    {purchase.status}
-                </Badge>,
-                <Badge
-                    key={purchase.id}
-                    tone={
-                        purchase.txStatus === "confirmed" ? "success" : "info"
-                    }
-                >
-                    {purchase.txStatus ?? "pending"}
-                </Badge>,
-                purchase.txHash ?? "N/A",
-                purchase.createdAt?.toISOString(),
-                <InlineStack key={purchase.id}>
-                    {purchase.status === "pending" && (
-                        <Link
-                            url={purchase.confirmationUrl}
-                            key={purchase.id}
-                            target="_blank"
-                        >
-                            Confirm
-                        </Link>
-                    )}
-                </InlineStack>,
-            ]),
+            currentPurchases.map((purchase) => {
+                const { status, variant } = mapStatus(purchase);
+
+                return [
+                    `$${purchase.amount}`,
+                    <Badge key={purchase.id} tone={variant}>
+                        {status}
+                    </Badge>,
+                    purchase.txHash ?? "N/A",
+                    purchase.createdAt?.toISOString(),
+                    <InlineStack key={purchase.id}>
+                        {purchase.status === "pending" && (
+                            <Link
+                                url={purchase.confirmationUrl}
+                                key={purchase.id}
+                                target="_blank"
+                            >
+                                Confirm
+                            </Link>
+                        )}
+                    </InlineStack>,
+                ];
+            }),
         [currentPurchases]
     );
 
@@ -104,13 +91,11 @@ function ActivePurchases({
                     "text",
                     "text",
                     "text",
-                    "text",
                     "numeric",
                 ]}
                 headings={[
                     "Amount",
                     "Status",
-                    "Tx State",
                     "Tx Hash",
                     "Created At",
                     "Actions",
@@ -196,7 +181,6 @@ function CreatePurchase({
                     step={0.5}
                     disabled={isLoading || confirmationUrl}
                 />
-                {isLoading && <Spinner />}
                 <Button
                     onClick={handleSubmit}
                     loading={isLoading}
@@ -222,4 +206,47 @@ function CreatePurchase({
             )}
         </BlockStack>
     );
+}
+
+function mapStatus(purchase: PurchaseTable["$inferSelect"]): {
+    status: string;
+    variant: Tone;
+} {
+    if (purchase.txStatus === "confirmed") {
+        return {
+            status: "Done",
+            variant: "success",
+        };
+    }
+    if (purchase.txStatus === "pending" || purchase.status === "active") {
+        return {
+            status: "Pending processing",
+            variant: "new",
+        };
+    }
+
+    if (purchase.status === "declined") {
+        return {
+            status: "Declined",
+            variant: "warning",
+        };
+    }
+    if (purchase.status === "expired") {
+        return {
+            status: "Expired",
+            variant: "warning",
+        };
+    }
+
+    if (purchase.status === "pending") {
+        return {
+            status: "Waiting your confirmation",
+            variant: "info",
+        };
+    }
+
+    return {
+        status: "Pending",
+        variant: "info",
+    };
 }

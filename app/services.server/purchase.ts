@@ -58,7 +58,7 @@ export async function startupPurchase(
         {
             variables: {
                 name: generatedName,
-                returnUrl: "https://extension-shop.frak.id/status",
+                returnUrl: "https://extension-shop.frak.id/purchase",
                 price: {
                     amount: amount,
                     currencyCode: "USD",
@@ -86,11 +86,20 @@ export async function startupPurchase(
         throw new Error("Failed to create purchase");
     }
 
+    const trimmedShopId = Number.parseInt(
+        info.id.replace("gid://shopify/Shop/", "")
+    );
+    const trimmedPurchaseId = Number.parseInt(
+        purchaseData.appPurchaseOneTime.id.replace(
+            "gid://shopify/AppPurchaseOneTime/",
+            ""
+        )
+    );
+
     // Insert it into the database
     await drizzleDb.insert(purchaseTable).values({
-        id: generatedName,
-        shopId: info.id,
-        purchaseId: purchaseData.appPurchaseOneTime.id,
+        shopId: trimmedShopId,
+        purchaseId: trimmedPurchaseId,
         confirmationUrl: purchaseData.confirmationUrl,
         shop: info.myshopifyDomain,
         amount: amount.toString(),
@@ -110,8 +119,21 @@ export async function startupPurchase(
  */
 export async function getCurrentPurchases(ctx: AuthenticatedContext) {
     const info = await shopInfo(ctx);
+    const trimmedShopId = Number.parseInt(
+        info.id.replace("gid://shopify/Shop/", "")
+    );
     return await drizzleDb
         .select()
         .from(purchaseTable)
-        .where(eq(purchaseTable.shopId, info.id));
+        .where(eq(purchaseTable.shopId, trimmedShopId));
+}
+
+export async function getPurchase(id: number) {
+    const purchases = await drizzleDb
+        .select()
+        .from(purchaseTable)
+        .where(eq(purchaseTable.purchaseId, id));
+    if (purchases.length > 0) {
+        return purchases[0];
+    }
 }

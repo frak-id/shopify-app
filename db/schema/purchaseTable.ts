@@ -1,20 +1,30 @@
-import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+    bigint,
+    pgEnum,
+    pgTable,
+    serial,
+    text,
+    timestamp,
+} from "drizzle-orm/pg-core";
 
-export const shopifyStatus = pgEnum("shopifyPurchaseStatus", [
+export const shopifyStatus = pgEnum("shopify_purchase_status", [
     "pending",
     "active",
     "declined",
     "expired",
 ]);
-export const frakTxStatus = pgEnum("frakTxStatus", ["pending", "confirmed"]);
+export const frakTxStatus = pgEnum("frak_purchase_status", [
+    "pending",
+    "confirmed",
+]);
 
-export const purchaseTable = pgTable("purchase" as string, {
-    id: text("id").primaryKey(),
+export const purchaseTable = pgTable("purchase", {
+    id: serial("id").primaryKey(),
     // Shop info
-    shopId: text("shopId").notNull(),
+    shopId: bigint("shopId", { mode: "number" }).notNull(),
     shop: text("shop").notNull(),
     // Purchase info
-    purchaseId: text("purchaseId").notNull(),
+    purchaseId: bigint("purchaseId", { mode: "number" }).notNull(),
     confirmationUrl: text("confirmationUrl").notNull(),
     amount: text("amount").notNull(),
     currency: text("currency").notNull(),

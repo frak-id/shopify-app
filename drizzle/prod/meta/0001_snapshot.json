@@ -1,5 +1,5 @@
 {
-    "id": "8228824c-7c16-4299-a2ae-fcdd669154d4",
+    "id": "08409fc8-01f1-47e2-85c1-ed2f5af8b45c",
     "prevId": "0c23b867-ba96-4f27-9bb5-bedc27adf4b3",
     "version": "7",
     "dialect": "postgresql",
@@ -10,13 +10,13 @@
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "text",
+                    "type": "serial",
                     "primaryKey": true,
                     "notNull": true
                 },
                 "shopId": {
                     "name": "shopId",
-                    "type": "text",
+                    "type": "integer",
                     "primaryKey": false,
                     "notNull": true
                 },
@@ -28,7 +28,7 @@
                 },
                 "purchaseId": {
                     "name": "purchaseId",
-                    "type": "text",
+                    "type": "integer",
                     "primaryKey": false,
                     "notNull": true
                 },
@@ -52,7 +52,7 @@
                 },
                 "status": {
                     "name": "status",
-                    "type": "shopifyPurchaseStatus",
+                    "type": "shopify_purchase_status",
                     "typeSchema": "public",
                     "primaryKey": false,
                     "notNull": true
@@ -79,7 +79,7 @@
                 },
                 "txStatus": {
                     "name": "txStatus",
-                    "type": "frakTxStatus",
+                    "type": "frak_purchase_status",
                     "typeSchema": "public",
                     "primaryKey": false,
                     "notNull": false
@@ -163,13 +163,13 @@
         }
     },
     "enums": {
-        "public.frakTxStatus": {
-            "name": "frakTxStatus",
+        "public.frak_purchase_status": {
+            "name": "frak_purchase_status",
             "schema": "public",
             "values": ["pending", "confirmed"]
         },
-        "public.shopifyPurchaseStatus": {
-            "name": "shopifyPurchaseStatus",
+        "public.shopify_purchase_status": {
+            "name": "shopify_purchase_status",
             "schema": "public",
             "values": ["pending", "active", "declined", "expired"]
         }

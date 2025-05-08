@@ -1,5 +1,5 @@
 {
-    "id": "4ce16ba0-0146-480c-ade9-94ad4963108a",
+    "id": "2359f9ef-08c1-4a07-ba80-58885a2be670",
     "prevId": "6c170acb-6304-4286-85b8-5c59253429cd",
     "version": "7",
     "dialect": "postgresql",
@@ -10,13 +10,13 @@
             "columns": {
                 "id": {
                     "name": "id",
-                    "type": "text",
+                    "type": "serial",
                     "primaryKey": true,
                     "notNull": true
                 },
                 "shopId": {
                     "name": "shopId",
-                    "type": "text",
+                    "type": "integer",
                     "primaryKey": false,
                     "notNull": true
                 },
@@ -28,7 +28,7 @@
                 },
                 "purchaseId": {
                     "name": "purchaseId",
-                    "type": "text",
+                    "type": "integer",
                     "primaryKey": false,
                     "notNull": true
                 },
@@ -52,7 +52,7 @@
                 },
                 "status": {
                     "name": "status",
-                    "type": "shopifyPurchaseStatus",
+                    "type": "shopify_purchase_status",
                     "typeSchema": "public",
                     "primaryKey": false,
                     "notNull": true
@@ -79,10 +79,16 @@
                 },
                 "txStatus": {
                     "name": "txStatus",
-                    "type": "frakTxStatus",
+                    "type": "frak_purchase_status",
                     "typeSchema": "public",
                     "primaryKey": false,
                     "notNull": false
+                },
+                "bank": {
+                    "name": "bank",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
                 }
             },
             "indexes": {},
@@ -157,13 +163,13 @@
         }
     },
     "enums": {
-        "public.frakTxStatus": {
-            "name": "frakTxStatus",
+        "public.frak_purchase_status": {
+            "name": "frak_purchase_status",
             "schema": "public",
             "values": ["pending", "confirmed"]
         },
-        "public.shopifyPurchaseStatus": {
-            "name": "shopifyPurchaseStatus",
+        "public.shopify_purchase_status": {
+            "name": "shopify_purchase_status",
             "schema": "public",
             "values": ["pending", "active", "declined", "expired"]
         }

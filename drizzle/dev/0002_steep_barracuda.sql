@@ -1,1 +1,0 @@
-ALTER TABLE "purchase" ADD COLUMN "bank" text NOT NULL;

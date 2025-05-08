@@ -40,27 +40,34 @@ export const action = async ({ request }: ActionFunctionArgs) => {
          PAYLOAD app_purchases_one_time/update
 
          {
-            "confirmation_url": "https://jsmith.myshopify.com/admin/charges/confirm_application_charge?id=1012637313&amp;signature=BAhpBIGeWzw%3D--17779c1efb4688e9cfa653a3245f923b4f1eb140",
-            "created_at": "2013-06-27T08:48:27-04:00",
-            "name": "Super Duper Expensive action",
-            "id": 675931192,
-            "return_url": "http://super-duper.shopifyapps.com",
-            "price": "100.00",
-            "test": null,
-            "status": "accepted",
-            "currency": "USD"
-            "updated_at": "2013-06-27T08:48:27-04:00",
+            admin_graphql_api_id: 'gid://shopify/AppPurchaseOneTime/3843850573',
+            name: 'Frak bank - 15.00usd - 2025-05-08T15:25:17.829Z',
+            status: 'ACTIVE',
+            admin_graphql_api_shop_id: 'gid://shopify/Shop/85403009357',
+            created_at: '2025-05-08T11:25:18-04:00',
+            updated_at: '2025-05-08T11:25:29-04:00'
         }
         */
-            if (session) {
-                console.log("Updating purchase", payload);
+            try {
+                console.log("Received purchase update", payload);
+                const purchaseId = Number.parseInt(
+                    payload.app_purchase_one_time.admin_graphql_api_id.replace(
+                        "gid://shopify/AppPurchaseOneTime/",
+                        ""
+                    )
+                );
+                console.log("Updating purchase", purchaseId);
                 await drizzleDb
                     .update(purchaseTable)
                     .set({
-                        status: payload.status,
-                        confirmationUrl: payload.confirmation_url,
+                        status: payload.app_purchase_one_time.status.toLowerCase(),
+                        updatedAt: new Date(
+                            payload.app_purchase_one_time.updated_at
+                        ),
                     })
-                    .where(eq(purchaseTable.purchaseId, payload.id));
+                    .where(eq(purchaseTable.purchaseId, purchaseId));
+            } catch (e) {
+                console.error("Error updating purchase", e);
             }
             break;
 
