@@ -8,6 +8,13 @@
             "when": 1745336450097,
             "tag": "0000_daily_skullbuster",
             "breakpoints": true
+        },
+        {
+            "idx": 1,
+            "version": "7",
+            "when": 1746709780376,
+            "tag": "0001_sweet_goblin_queen",
+            "breakpoints": true
         }
     ]
 }
