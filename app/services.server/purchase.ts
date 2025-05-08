@@ -34,8 +34,8 @@ export async function startupPurchase(
     const pendingPurchases = currentPurchases.filter(
         (p) => p.status === "pending"
     );
-    if (pendingPurchases.length > 2) {
-        throw new Error("Shop already has more than 2 pending purchases");
+    if (pendingPurchases.length > 9) {
+        throw new Error("Shop already has more than 10 pending purchases");
     }
 
     // Start the one time purchase

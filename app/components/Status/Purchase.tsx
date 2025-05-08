@@ -7,6 +7,7 @@ import {
     InlineStack,
     Link,
     Select,
+    Spinner,
     Text,
     TextField,
 } from "@shopify/polaris";
@@ -75,7 +76,11 @@ function ActivePurchases({
                 purchase.createdAt?.toISOString(),
                 <InlineStack key={purchase.id}>
                     {purchase.status === "pending" && (
-                        <Link url={purchase.confirmationUrl} key={purchase.id}>
+                        <Link
+                            url={purchase.confirmationUrl}
+                            key={purchase.id}
+                            target="_blank"
+                        >
                             Confirm
                         </Link>
                     )}
@@ -92,22 +97,6 @@ function ActivePurchases({
         <BlockStack gap="200">
             <Text as="h2" variant="headingMd">
                 Active Purchases
-            </Text>
-            <Text variant="bodyMd" as="p">
-                {currentPurchases.map((p) => (
-                    <Badge
-                        key={p.id}
-                        tone={
-                            p.status === "active"
-                                ? "success"
-                                : p.status === "pending"
-                                  ? "info"
-                                  : "warning"
-                        }
-                    >
-                        {p.confirmationUrl}
-                    </Badge>
-                ))}
             </Text>
             <DataTable
                 columnContentTypes={[
@@ -193,7 +182,9 @@ function CreatePurchase({
                     }))}
                     value={selectedBank}
                     onChange={(value) => setSelectedBank(value)}
-                    disabled={banks.length === 1 || isLoading}
+                    disabled={
+                        banks.length === 1 || isLoading || confirmationUrl
+                    }
                 />
                 <TextField
                     label="Amount to fund (USD)"
@@ -203,11 +194,15 @@ function CreatePurchase({
                     autoComplete="off"
                     min={0}
                     step={0.5}
+                    disabled={isLoading || confirmationUrl}
                 />
+                {isLoading && <Spinner />}
                 <Button
                     onClick={handleSubmit}
                     loading={isLoading}
-                    disabled={!amount || !selectedBank || isLoading}
+                    disabled={
+                        !amount || !selectedBank || isLoading || confirmationUrl
+                    }
                     variant="primary"
                 >
                     Fund bank
@@ -221,9 +216,9 @@ function CreatePurchase({
             )}
 
             {confirmationUrl && (
-                <Text as="span" tone="success">
-                    Confirmation: {confirmationUrl}
-                </Text>
+                <Link url={confirmationUrl} target="_blank">
+                    <Button variant="primary">Confirm the purchase</Button>
+                </Link>
             )}
         </BlockStack>
     );
