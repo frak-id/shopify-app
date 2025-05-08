@@ -6,6 +6,7 @@ import {
     postgresHost,
     postgresPassword,
     productSetupCodeSalt,
+    rpcSecret,
     shopifyApiKey,
     shopifyApiSecret,
     shopifyAppUrl,
@@ -19,7 +20,6 @@ const shopifyEnv = {
     BUSINESS_URL: businessUrl,
     BACKEND_URL: backendUrl,
     INDEXER_URL: indexerUrl,
-
     POSTGRES_SHOPIFY_DB: isProd ? "shopify_prod" : "shopify_dev",
     POSTGRES_USER: isProd ? "shopify-prod" : "shopify-dev",
 
@@ -44,5 +44,6 @@ new sst.aws.Remix("Shopify", {
         postgresPassword,
         shopifyApiSecret,
         productSetupCodeSalt,
+        rpcSecret,
     ],
 });

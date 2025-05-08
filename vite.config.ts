@@ -48,6 +48,7 @@ const wantedFromConfig: (keyof typeof Resource)[] = [
     "POSTGRES_PASSWORD",
     "SHOPIFY_API_SECRET",
     "PRODUCT_SETUP_CODE_SALT",
+    "RPC_SECRET",
 ];
 
 declare module "@remix-run/node" {

@@ -2,12 +2,14 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { drizzleDb } from "app/db.server";
 import { sessionTable } from "db/schema/sessionTable";
 import { eq } from "drizzle-orm";
+import { purchaseTable } from "../../db/schema/purchaseTable";
 import { authenticate } from "../shopify.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-    const { shop, session, topic } = await authenticate.webhook(request);
+    const { shop, session, topic, payload } =
+        await authenticate.webhook(request);
 
-    console.log(`Received ${topic} webhook for ${shop}`);
+    console.log(`Received ${topic} webhook for ${shop}`, payload);
 
     switch (topic) {
         /*
@@ -32,6 +34,42 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         Hooks can be tested using the Shopify CLI:
         shopify app webhook trigger --topic=customers/data_request --address=$SHOPIFY_URL/webhooks/app/compliance --api-version=2025-01
         */
+
+        case "APP_PURCHASES_ONE_TIME_UPDATE":
+            /*
+         PAYLOAD app_purchases_one_time/update
+
+         {
+            admin_graphql_api_id: 'gid://shopify/AppPurchaseOneTime/3843850573',
+            name: 'Frak bank - 15.00usd - 2025-05-08T15:25:17.829Z',
+            status: 'ACTIVE',
+            admin_graphql_api_shop_id: 'gid://shopify/Shop/85403009357',
+            created_at: '2025-05-08T11:25:18-04:00',
+            updated_at: '2025-05-08T11:25:29-04:00'
+        }
+        */
+            try {
+                console.log("Received purchase update", payload);
+                const purchaseId = Number.parseInt(
+                    payload.app_purchase_one_time.admin_graphql_api_id.replace(
+                        "gid://shopify/AppPurchaseOneTime/",
+                        ""
+                    )
+                );
+                console.log("Updating purchase", purchaseId);
+                await drizzleDb
+                    .update(purchaseTable)
+                    .set({
+                        status: payload.app_purchase_one_time.status.toLowerCase(),
+                        updatedAt: new Date(
+                            payload.app_purchase_one_time.updated_at
+                        ),
+                    })
+                    .where(eq(purchaseTable.purchaseId, purchaseId));
+            } catch (e) {
+                console.error("Error updating purchase", e);
+            }
+            break;
 
         case "CUSTOMERS_DATA_REQUEST":
         /*

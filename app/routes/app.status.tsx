@@ -1,4 +1,6 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     EmptyState,
@@ -8,10 +10,20 @@ import {
 } from "@shopify/polaris";
 import { SetupInstructions } from "app/components/Status/SetupInstructions";
 import { useTranslation } from "react-i18next";
+import { BankingStatus } from "../components/Status/Bank";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
+import { PurchaseStatus } from "../components/Status/Purchase";
 import { StatusBanner } from "../components/Status/StatusBanner";
 import { useMintProductLink } from "../hooks/useMintProductLink";
 import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
+import { getCurrentPurchases } from "../services.server/purchase";
+import { authenticate } from "../shopify.server";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+    const context = await authenticate.admin(request);
+    const currentPurchases = await getCurrentPurchases(context);
+    return { currentPurchases };
+};
 
 export default function StatusPage() {
     const { data: walletStatus, isLoading: isWalletLoading } =
@@ -22,6 +34,7 @@ export default function StatusPage() {
         refetch: refetchShopInfo,
     } = useOnChainShopInfo();
     const { t } = useTranslation();
+    const { currentPurchases } = useLoaderData<typeof loader>();
 
     const { link } = useMintProductLink({
         shopInfo,
@@ -74,7 +87,14 @@ export default function StatusPage() {
                         />
 
                         {shopInfo ? (
-                            <ConnectedShopInfo product={shopInfo.product} />
+                            <>
+                                <ConnectedShopInfo product={shopInfo.product} />
+                                <BankingStatus shopInfo={shopInfo} />
+                                <PurchaseStatus
+                                    shopInfo={shopInfo}
+                                    currentPurchases={currentPurchases}
+                                />
+                            </>
                         ) : (
                             <>{link && <SetupInstructions link={link} />}</>
                         )}
