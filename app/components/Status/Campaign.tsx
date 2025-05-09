@@ -5,6 +5,7 @@ import {
     Card,
     Collapsible,
     DescriptionList,
+    InlineGrid,
     InlineStack,
     RangeSlider,
     Select,
@@ -13,9 +14,8 @@ import {
     TextField,
 } from "@shopify/polaris";
 import { ChevronDownIcon, ChevronUpIcon } from "@shopify/polaris-icons";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { formatUnits } from "viem";
 import { useOnChainCampaignInfo } from "../../hooks/useOnChainCampaignInfo";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 import { useTokenInfoWithBalance } from "../../hooks/usetokenInfo";
@@ -115,6 +115,7 @@ function CampaignCreation({
 }: { banks: GetProductInfoResponseDto["banks"] }) {
     const { t } = useTranslation();
     const appBridge = useAppBridge();
+
     const [selectedBankId, setSelectedBankId] = useState(
         banks.length === 1 ? banks[0].id : ""
     );
@@ -124,9 +125,12 @@ function CampaignCreation({
             token: selectedBank?.tokenId,
             wallet: selectedBank?.id,
         });
+
     const [weeklyBudget, setWeeklyBudget] = useState("");
     const [rawCAC, setRawCAC] = useState("");
     const [ratio, setRatio] = useState(90); // 90% referrer, 10% referee
+    const [name, setName] = useState("");
+
     const disabled = !selectedBank || tokenInfoLoading;
 
     // Breakdown calculations
@@ -151,11 +155,7 @@ function CampaignCreation({
         };
     }, [rawCAC, ratio, weeklyBudget]);
 
-    // Bank balance
     const tokenSymbol = tokenInfo?.symbol || "";
-    const bankBalance = tokenInfo
-        ? `${formatUnits(tokenInfo.balance ?? 0n, tokenInfo.decimals ?? 18)} ${tokenInfo?.symbol}`
-        : undefined;
 
     // Bank select options (just show id, show balance separately)
     const bankOptions = banks.map((bank) => ({
@@ -164,15 +164,21 @@ function CampaignCreation({
     }));
 
     // Toast
-    const handleCreate = () => {
+    const handleCreate = useCallback(() => {
         appBridge.toast.show(t("status.campaign.toastCreated"), {
             isError: false,
         });
-    };
+    }, [appBridge, t]);
 
     return (
         <BlockStack gap="400">
-            <InlineStack gap="200">
+            <InlineGrid gap="200" columns={2}>
+                <TextField
+                    label={t("status.campaign.nameInput")}
+                    value={name}
+                    onChange={setName}
+                    autoComplete="off"
+                />
                 <Select
                     label={t("status.campaign.bankSelect")}
                     options={bankOptions}
@@ -180,40 +186,42 @@ function CampaignCreation({
                     onChange={setSelectedBankId}
                     disabled={banks.length === 0 || banks.length === 1}
                 />
-                {bankBalance && (
-                    <Text variant="bodyMd" as="span">
-                        {t("status.campaign.bankBalance")}: {bankBalance}
+            </InlineGrid>
+            <InlineGrid gap="200" columns={2}>
+                <BlockStack gap="200">
+                    <TextField
+                        label={t("status.campaign.weeklyBudget")}
+                        type="number"
+                        value={weeklyBudget}
+                        onChange={setWeeklyBudget}
+                        autoComplete="off"
+                        min={0}
+                        step={0.01}
+                        suffix={tokenSymbol}
+                        disabled={disabled}
+                    />
+                    <Text variant="bodySm" as="p">
+                        {t("status.campaign.rawCACInfo")}
                     </Text>
-                )}
-            </InlineStack>
-            <TextField
-                label={t("status.campaign.weeklyBudget")}
-                type="number"
-                value={weeklyBudget}
-                onChange={setWeeklyBudget}
-                autoComplete="off"
-                min={0}
-                step={0.01}
-                suffix={tokenSymbol}
-                disabled={disabled}
-            />
-            <BlockStack gap="200">
-                <TextField
-                    label={t("status.campaign.rawCAC")}
-                    type="number"
-                    value={rawCAC}
-                    onChange={setRawCAC}
-                    autoComplete="off"
-                    min={0}
-                    step={0.01}
-                    suffix={tokenSymbol}
-                    disabled={disabled}
-                />
-                <Text variant="bodySm" as="p">
-                    {t("status.campaign.rawCACInfo")}
-                </Text>
-            </BlockStack>
-            <InlineStack gap="400" blockAlign="center" align="space-between">
+                </BlockStack>
+                <BlockStack gap="200">
+                    <TextField
+                        label={t("status.campaign.rawCAC")}
+                        type="number"
+                        value={rawCAC}
+                        onChange={setRawCAC}
+                        autoComplete="off"
+                        min={0}
+                        step={0.01}
+                        suffix={tokenSymbol}
+                        disabled={disabled}
+                    />
+                    <Text variant="bodySm" as="p">
+                        {t("status.campaign.rawCACInfo")}
+                    </Text>
+                </BlockStack>
+            </InlineGrid>
+            <InlineStack gap="400" blockAlign="center" align="space-around">
                 <Text variant="bodyMd" as="span">
                     {t("status.campaign.ratioReferrer")}
                 </Text>
