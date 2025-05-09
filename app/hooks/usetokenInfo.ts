@@ -9,10 +9,19 @@ import { viemClient } from "../utils/viemClient";
 export function useTokenInfoWithBalance({
     token,
     wallet,
-}: { token: Address; wallet: Address }) {
+}: { token?: Address; wallet?: Address }) {
     return useQuery({
-        queryKey: ["tokenInfo", token],
+        enabled: !!token && !!wallet,
+        queryKey: ["tokenInfo", token, wallet],
         queryFn: async () => {
+            if (!token || !wallet) {
+                return {
+                    name: undefined,
+                    symbol: undefined,
+                    decimals: undefined,
+                    balance: undefined,
+                };
+            }
             const [name, symbol, decimals, balance] = await multicall(
                 viemClient,
                 {

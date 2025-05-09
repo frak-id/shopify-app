@@ -7,6 +7,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { formatUnits } from "viem";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 import { useTokenInfoWithBalance } from "../../hooks/usetokenInfo";
@@ -17,17 +18,17 @@ export function BankingStatus({
     shopInfo: GetProductInfoResponseDto;
 }) {
     const { banks } = shopInfo;
+    const { t } = useTranslation();
 
     return (
         <Card>
-            <BlockStack gap="400">
+            <BlockStack gap="400" align="center" inlineAlign="stretch">
                 <Text as="h2" variant="headingMd">
-                    Banks
+                    {t("status.bank.title")}
                 </Text>
 
                 <Text variant="bodyMd" as="p">
-                    The banks are the source of cash that will be used to
-                    distribute rewards to end users.
+                    {t("status.bank.description")}
                 </Text>
 
                 <InlineStack gap="400">
@@ -70,6 +71,7 @@ function BankItem({
             claimed: formatUnits(BigInt(bank.totalClaimed), tokenInfo.decimals),
         };
     }, [tokenInfo, bank]);
+    const { t } = useTranslation();
 
     if (tokenInfoLoading || !tokenInfo) {
         return <SkeletonDisplayText size="small" />;
@@ -78,7 +80,13 @@ function BankItem({
     return (
         <DataTable
             columnContentTypes={["text", "text", "text", "text", "text"]}
-            headings={["Token", "Balance", "Distributed", "Claimed", "Address"]}
+            headings={[
+                t("status.bank.token"),
+                t("status.bank.balance"),
+                t("status.bank.distributed"),
+                t("status.bank.claimed"),
+                t("status.bank.address"),
+            ]}
             rows={[
                 [
                     `${tokenInfo.name} (${tokenInfo.symbol})`,

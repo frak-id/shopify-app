@@ -146,6 +146,68 @@
             "productName": "Product Name",
             "createdOn": "Created On",
             "description": "Your shop is successfully connected to the Frak ecosystem and ready to use all features."
+        },
+        "campaign": {
+            "title": "Campaigns",
+            "description": "The campaigns are the core parts of your monetization strategy with Frak. It will define what rewards will be distributed to end users.",
+            "name": "Name",
+            "type": "Type",
+            "active": "Active",
+            "running": "Running",
+            "yes": "Yes",
+            "no": "No",
+            "bankSelect": "Select bank",
+            "bankBalance": "Bank balance",
+            "weeklyBudget": "Weekly budget",
+            "rawCAC": "Raw CAC per new user",
+            "rawCACInfo": "This is the raw amount that will be distributed to referrer and referee.",
+            "ratio": "Referrer/Referee ratio",
+            "ratioHelp": "Adjust the split between referrer and referee (max 90-10%)",
+            "ratioReferrer": "Referrer",
+            "ratioReferee": "Referee",
+            "breakdown": {
+                "rawCAC": "Raw CAC",
+                "commission": "Frak commission (20%)",
+                "referrer": "Amount for referrer",
+                "referee": "Amount for referee",
+                "newUser": "New user"
+            },
+            "createOpen": "Campaign creation form",
+            "createButton": "Create campaign",
+            "toastCreated": "Campaign creation (mock): Success!"
+        },
+        "bank": {
+            "title": "Banks",
+            "description": "The banks are the source of cash that will be used to distribute rewards to end users.",
+            "token": "Token",
+            "balance": "Balance",
+            "distributed": "Distributed",
+            "claimed": "Claimed",
+            "address": "Address"
+        },
+        "purchase": {
+            "title": "Purchase",
+            "description": "By making a Purchase you will add funds to the bank. The fund will be be used to distribute rewards to end users.",
+            "activePurchases": "Active Purchases",
+            "amount": "Amount",
+            "status": "Status",
+            "txHash": "Tx Hash",
+            "createdAt": "Created At",
+            "actions": "Actions",
+            "selectBank": "Select bank to fund",
+            "amountToFund": "Amount to fund (USD)",
+            "fundBank": "Fund bank",
+            "confirm": "Confirm",
+            "confirmPurchase": "Confirm the purchase",
+            "errorInvalidAmount": "Please enter a valid amount.",
+            "errorSelectBank": "Please select a bank.",
+            "errorBilling": "Failed to start billing process.",
+            "done": "Done",
+            "pendingProcessing": "Pending processing",
+            "declined": "Declined",
+            "expired": "Expired",
+            "waitingConfirmation": "Waiting your confirmation",
+            "pending": "Pending"
         }
     }
 }

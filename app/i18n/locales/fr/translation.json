@@ -146,6 +146,68 @@
             "productName": "Nom du produit",
             "createdOn": "Créé le",
             "description": "Votre boutique est correctement connectée à l'écosystème Frak et prête à utiliser toutes les fonctionnalités."
+        },
+        "campaign": {
+            "title": "Campagnes",
+            "description": "Les campagnes sont le cœur de votre stratégie de monétisation avec Frak. Elles définissent les récompenses qui seront distribuées aux utilisateurs finaux.",
+            "name": "Nom",
+            "type": "Type",
+            "active": "Active",
+            "running": "En cours",
+            "yes": "Oui",
+            "no": "Non",
+            "bankSelect": "Sélectionner la banque",
+            "bankBalance": "Solde de la banque",
+            "weeklyBudget": "Budget hebdomadaire",
+            "rawCAC": "CAC brut par nouvel utilisateur",
+            "rawCACInfo": "Ceci est le montant brut qui sera distribué au parrain et au filleul.",
+            "ratio": "Ratio Parrain/Filleul",
+            "ratioHelp": "Ajustez la répartition entre parrain et filleul (max 90-10%)",
+            "ratioReferrer": "Parrain",
+            "ratioReferee": "Filleul",
+            "breakdown": {
+                "rawCAC": "CAC brut",
+                "commission": "Commission Frak (20%)",
+                "referrer": "Montant pour le parrain",
+                "referee": "Montant pour le filleul",
+                "newUser": "Nouveau client"
+            },
+            "createOpen": "Formulaire de création de campagne",
+            "createButton": "Créer la campagne",
+            "toastCreated": "Création de campagne (mock) : Succès !"
+        },
+        "bank": {
+            "title": "Banques",
+            "description": "Les banques sont la source de fonds qui seront utilisés pour distribuer des récompenses aux utilisateurs finaux.",
+            "token": "Token",
+            "balance": "Solde",
+            "distributed": "Distribué",
+            "claimed": "Réclamé",
+            "address": "Adresse"
+        },
+        "purchase": {
+            "title": "Achat",
+            "description": "En effectuant un achat, vous ajoutez des fonds à la banque. Les fonds seront utilisés pour distribuer des récompenses aux utilisateurs finaux.",
+            "activePurchases": "Achats actifs",
+            "amount": "Montant",
+            "status": "Statut",
+            "txHash": "Hash Tx",
+            "createdAt": "Créé le",
+            "actions": "Actions",
+            "selectBank": "Sélectionner la banque à alimenter",
+            "amountToFund": "Montant à alimenter (USD)",
+            "fundBank": "Alimenter la banque",
+            "confirm": "Confirmer",
+            "confirmPurchase": "Confirmer l'achat",
+            "errorInvalidAmount": "Veuillez entrer un montant valide.",
+            "errorSelectBank": "Veuillez sélectionner une banque.",
+            "errorBilling": "Échec du démarrage du processus de facturation.",
+            "done": "Terminé",
+            "pendingProcessing": "Traitement en cours",
+            "declined": "Refusé",
+            "expired": "Expiré",
+            "waitingConfirmation": "En attente de votre confirmation",
+            "pending": "En attente"
         }
     }
 }

@@ -8,9 +8,12 @@ import {
     Page,
     Spinner,
 } from "@shopify/polaris";
+import { useQueryClient } from "@tanstack/react-query";
 import { SetupInstructions } from "app/components/Status/SetupInstructions";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { BankingStatus } from "../components/Status/Bank";
+import { CampaignStatus } from "../components/Status/Campaign";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
 import { PurchaseStatus } from "../components/Status/Purchase";
 import { StatusBanner } from "../components/Status/StatusBanner";
@@ -35,6 +38,13 @@ export default function StatusPage() {
     } = useOnChainShopInfo();
     const { t } = useTranslation();
     const { currentPurchases } = useLoaderData<typeof loader>();
+    const queryClient = useQueryClient();
+    const refetch = useCallback(() => {
+        // Refetch the shop info
+        refetchShopInfo();
+        // Refetch all the other queries
+        queryClient.refetchQueries();
+    }, [queryClient, refetchShopInfo]);
 
     const { link } = useMintProductLink({
         shopInfo,
@@ -83,12 +93,13 @@ export default function StatusPage() {
                         <StatusBanner
                             isConnected={!!shopInfo}
                             isLoading={isLoading}
-                            refetch={refetchShopInfo}
+                            refetch={refetch}
                         />
 
                         {shopInfo ? (
                             <>
                                 <ConnectedShopInfo product={shopInfo.product} />
+                                <CampaignStatus shopInfo={shopInfo} />
                                 <BankingStatus shopInfo={shopInfo} />
                                 <PurchaseStatus
                                     shopInfo={shopInfo}

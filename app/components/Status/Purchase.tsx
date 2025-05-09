@@ -13,6 +13,7 @@ import {
 import type { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import { useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { PurchaseTable } from "../../../db/schema/purchaseTable";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 
@@ -24,17 +25,17 @@ export function PurchaseStatus({
     currentPurchases: PurchaseTable["$inferSelect"][];
 }) {
     const { banks } = shopInfo;
+    const { t } = useTranslation();
 
     return (
         <Card>
             <BlockStack gap="400">
                 <Text as="h2" variant="headingMd">
-                    Purchase
+                    {t("status.purchase.title")}
                 </Text>
 
                 <Text variant="bodyMd" as="p">
-                    By making a Purchase you will add funds to the bank. The
-                    fund will be be used to distribute rewards to end users.
+                    {t("status.purchase.description")}
                 </Text>
 
                 <CreatePurchase banks={banks} />
@@ -48,10 +49,11 @@ export function PurchaseStatus({
 function ActivePurchases({
     currentPurchases,
 }: { currentPurchases: PurchaseTable["$inferSelect"][] }) {
+    const { t } = useTranslation();
     const items = useMemo(
         () =>
             currentPurchases.map((purchase) => {
-                const { status, variant } = mapStatus(purchase);
+                const { status, variant } = mapStatus(purchase, t);
 
                 return [
                     `$${purchase.amount}`,
@@ -67,13 +69,13 @@ function ActivePurchases({
                                 key={purchase.id}
                                 target="_blank"
                             >
-                                Confirm
+                                {t("status.purchase.confirm")}
                             </Link>
                         )}
                     </InlineStack>,
                 ];
             }),
-        [currentPurchases]
+        [currentPurchases, t]
     );
 
     if (currentPurchases.length === 0) {
@@ -83,7 +85,7 @@ function ActivePurchases({
     return (
         <BlockStack gap="200">
             <Text as="h2" variant="headingMd">
-                Active Purchases
+                {t("status.purchase.activePurchases")}
             </Text>
             <DataTable
                 columnContentTypes={[
@@ -94,11 +96,11 @@ function ActivePurchases({
                     "numeric",
                 ]}
                 headings={[
-                    "Amount",
-                    "Status",
-                    "Tx Hash",
-                    "Created At",
-                    "Actions",
+                    t("status.purchase.amount"),
+                    t("status.purchase.status"),
+                    t("status.purchase.txHash"),
+                    t("status.purchase.createdAt"),
+                    t("status.purchase.actions"),
                 ]}
                 rows={items}
             />
@@ -120,6 +122,7 @@ function CreatePurchase({
         banks.length === 1 ? banks[0].id : ""
     );
     const [error, setError] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     const {
         data: confirmationUrl,
@@ -131,11 +134,11 @@ function CreatePurchase({
             setError(null);
             const amountNumber = Number(amount);
             if (!amount || Number.isNaN(amountNumber) || amountNumber <= 0) {
-                setError("Please enter a valid amount.");
+                setError(t("status.purchase.errorInvalidAmount"));
                 return;
             }
             if (!selectedBank) {
-                setError("Please select a bank.");
+                setError(t("status.purchase.errorSelectBank"));
                 return;
             }
             try {
@@ -147,7 +150,7 @@ function CreatePurchase({
                 return await response.json();
             } catch (e) {
                 console.warn("Unable to start billing process", e);
-                setError("Failed to start billing process.");
+                setError(t("status.purchase.errorBilling"));
             }
         },
     });
@@ -160,7 +163,7 @@ function CreatePurchase({
         <BlockStack gap="200">
             <InlineStack gap="200" align="space-evenly">
                 <Select
-                    label="Select bank to fund"
+                    label={t("status.purchase.selectBank")}
                     options={banks.map((bank) => ({
                         label: bank.id,
                         value: bank.id,
@@ -172,7 +175,7 @@ function CreatePurchase({
                     }
                 />
                 <TextField
-                    label="Amount to fund (USD)"
+                    label={t("status.purchase.amountToFund")}
                     type="number"
                     value={amount}
                     onChange={setAmount}
@@ -189,7 +192,7 @@ function CreatePurchase({
                     }
                     variant="primary"
                 >
-                    Fund bank
+                    {t("status.purchase.fundBank")}
                 </Button>
             </InlineStack>
 
@@ -201,52 +204,57 @@ function CreatePurchase({
 
             {confirmationUrl && (
                 <Link url={confirmationUrl} target="_blank">
-                    <Button variant="primary">Confirm the purchase</Button>
+                    <Button variant="primary">
+                        {t("status.purchase.confirmPurchase")}
+                    </Button>
                 </Link>
             )}
         </BlockStack>
     );
 }
 
-function mapStatus(purchase: PurchaseTable["$inferSelect"]): {
+function mapStatus(
+    purchase: PurchaseTable["$inferSelect"],
+    t: (key: string) => string
+): {
     status: string;
     variant: Tone;
 } {
     if (purchase.txStatus === "confirmed") {
         return {
-            status: "Done",
+            status: t("status.purchase.done"),
             variant: "success",
         };
     }
     if (purchase.txStatus === "pending" || purchase.status === "active") {
         return {
-            status: "Pending processing",
+            status: t("status.purchase.pendingProcessing"),
             variant: "new",
         };
     }
 
     if (purchase.status === "declined") {
         return {
-            status: "Declined",
+            status: t("status.purchase.declined"),
             variant: "warning",
         };
     }
     if (purchase.status === "expired") {
         return {
-            status: "Expired",
+            status: t("status.purchase.expired"),
             variant: "warning",
         };
     }
 
     if (purchase.status === "pending") {
         return {
-            status: "Waiting your confirmation",
+            status: t("status.purchase.waitingConfirmation"),
             variant: "info",
         };
     }
 
     return {
-        status: "Pending",
+        status: t("status.purchase.pending"),
         variant: "info",
     };
 }
