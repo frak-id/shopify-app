@@ -154,8 +154,6 @@
             "type": "Type",
             "active": "Active",
             "running": "En cours",
-            "yes": "Oui",
-            "no": "Non",
             "nameInput": "Nom de la campagne",
             "bankSelect": "Sélectionner la banque",
             "bankBalance": "Solde de la banque",
@@ -170,9 +168,9 @@
             "breakdown": {
                 "rawCAC": "CAC brut",
                 "commission": "Commission Frak (20%)",
-                "referrer": "Montant pour le parrain",
-                "referee": "Montant pour le filleul",
-                "newUser": "Nouveau client"
+                "referrer": "Récompense pour le parrain/marraine",
+                "referee": "Récompense pour le-a filleul-e",
+                "newUser": "Nombre de nouveaux clients par semaine"
             },
             "createOpen": "Formulaire de création de campagne",
             "createButton": "Créer la campagne",

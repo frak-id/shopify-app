@@ -154,8 +154,6 @@
             "type": "Type",
             "active": "Active",
             "running": "Running",
-            "yes": "Yes",
-            "no": "No",
             "nameInput": "Campaign name",
             "bankSelect": "Select bank",
             "bankBalance": "Bank balance",

@@ -1,10 +1,10 @@
-import { useAppBridge } from "@shopify/app-bridge-react";
 import {
+    Badge,
     BlockStack,
     Button,
     Card,
     Collapsible,
-    DescriptionList,
+    DataTable,
     InlineGrid,
     InlineStack,
     RangeSlider,
@@ -16,8 +16,10 @@ import {
 import { ChevronDownIcon, ChevronUpIcon } from "@shopify/polaris-icons";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCreateCampaignLink } from "../../hooks/useCreateCampaignLink";
 import { useOnChainCampaignInfo } from "../../hooks/useOnChainCampaignInfo";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
+import { useRefreshData } from "../../hooks/useRefreshData";
 import { useTokenInfoWithBalance } from "../../hooks/usetokenInfo";
 
 export function CampaignStatus({
@@ -40,11 +42,7 @@ export function CampaignStatus({
                     {t("status.campaign.description")}
                 </Text>
 
-                <BlockStack gap="200">
-                    {campaigns.map((campaign) => (
-                        <CampaignItem key={campaign.id} campaign={campaign} />
-                    ))}
-                </BlockStack>
+                <CampaignTable campaigns={campaigns} />
 
                 <Button
                     icon={creationOpen ? ChevronUpIcon : ChevronDownIcon}
@@ -68,10 +66,28 @@ export function CampaignStatus({
     );
 }
 
-/**
- * Display each bank items
- */
-function CampaignItem({
+function CampaignTable({
+    campaigns,
+}: { campaigns: GetProductInfoResponseDto["campaigns"] }) {
+    const { t } = useTranslation();
+    return (
+        <DataTable
+            columnContentTypes={["text", "text", "text"]}
+            headings={[
+                t("status.campaign.name"),
+                t("status.campaign.type"),
+                t("status.campaign.active"),
+            ]}
+            rows={campaigns.map((campaign) => [
+                campaign.name,
+                campaign.type,
+                <CampaignStatusBadge key={campaign.id} campaign={campaign} />,
+            ])}
+        />
+    );
+}
+
+function CampaignStatusBadge({
     campaign,
 }: { campaign: GetProductInfoResponseDto["campaigns"][number] }) {
     const { data: campaignInfo, isLoading: campaignInfoLoading } =
@@ -83,30 +99,14 @@ function CampaignItem({
     }
 
     return (
-        <DescriptionList
-            items={[
-                {
-                    term: t("status.campaign.name"),
-                    description: campaign.name,
-                },
-                {
-                    term: t("status.campaign.type"),
-                    description: campaign.type,
-                },
-                {
-                    term: t("status.campaign.active"),
-                    description: campaignInfo.isActive
-                        ? t("status.campaign.yes")
-                        : t("status.campaign.no"),
-                },
-                {
-                    term: t("status.campaign.running"),
-                    description: campaignInfo.isRunning
-                        ? t("status.campaign.yes")
-                        : t("status.campaign.no"),
-                },
-            ]}
-        />
+        <InlineStack gap="200">
+            <Badge tone={campaignInfo.isActive ? "success" : "warning"}>
+                {t("status.campaign.active")}
+            </Badge>
+            <Badge tone={campaignInfo.isRunning ? "success" : "warning"}>
+                {t("status.campaign.running")}
+            </Badge>
+        </InlineStack>
     );
 }
 
@@ -114,7 +114,6 @@ function CampaignCreation({
     banks,
 }: { banks: GetProductInfoResponseDto["banks"] }) {
     const { t } = useTranslation();
-    const appBridge = useAppBridge();
 
     const [selectedBankId, setSelectedBankId] = useState(
         banks.length === 1 ? banks[0].id : ""
@@ -131,7 +130,16 @@ function CampaignCreation({
     const [ratio, setRatio] = useState(90); // 90% referrer, 10% referee
     const [name, setName] = useState("");
 
-    const disabled = !selectedBank || tokenInfoLoading;
+    const isFormDisabled = useMemo(() => {
+        return !selectedBank || tokenInfoLoading;
+    }, [selectedBank, tokenInfoLoading]);
+    const isCreationDisabled = useMemo(() => {
+        if (isFormDisabled) return true;
+        if (!weeklyBudget || !rawCAC) return true;
+        if (!selectedBank) return true;
+
+        return false;
+    }, [isFormDisabled, weeklyBudget, rawCAC, selectedBank]);
 
     // Breakdown calculations
     const breakdown = useMemo(() => {
@@ -163,12 +171,38 @@ function CampaignCreation({
         value: bank.id,
     }));
 
-    // Toast
+    // The creation link
+    const creationLink = useCreateCampaignLink({
+        bankId: selectedBank?.id ?? "0x",
+        weeklyBudget: Number(weeklyBudget),
+        rawCAC: Number(rawCAC),
+        ratio,
+        name,
+    });
+    const refresh = useRefreshData();
+
+    // Open creation link
     const handleCreate = useCallback(() => {
-        appBridge.toast.show(t("status.campaign.toastCreated"), {
-            isError: false,
-        });
-    }, [appBridge, t]);
+        console.log("creationLink", creationLink);
+        const openedWindow = window.open(
+            creationLink,
+            "frak-business",
+            "menubar=no,status=no,scrollbars=no,fullscreen=no,width=500, height=800"
+        );
+
+        if (openedWindow) {
+            openedWindow.focus();
+
+            // Check every 500ms if the window is closed
+            // If it is, revalidate the page
+            const timer = setInterval(() => {
+                if (openedWindow.closed) {
+                    clearInterval(timer);
+                    setTimeout(() => refresh(), 1000);
+                }
+            }, 500);
+        }
+    }, [creationLink, refresh]);
 
     return (
         <BlockStack gap="400">
@@ -198,7 +232,7 @@ function CampaignCreation({
                         min={0}
                         step={0.01}
                         suffix={tokenSymbol}
-                        disabled={disabled}
+                        disabled={isFormDisabled}
                     />
                     <Text variant="bodySm" as="p">
                         {t("status.campaign.rawCACInfo")}
@@ -214,7 +248,7 @@ function CampaignCreation({
                         min={0}
                         step={0.01}
                         suffix={tokenSymbol}
-                        disabled={disabled}
+                        disabled={isFormDisabled}
                     />
                     <Text variant="bodySm" as="p">
                         {t("status.campaign.rawCACInfo")}
@@ -234,7 +268,7 @@ function CampaignCreation({
                     onChange={(value) => setRatio(value as number)}
                     output
                     helpText={t("status.campaign.ratioHelp")}
-                    disabled={disabled}
+                    disabled={isFormDisabled}
                 />
                 <Text variant="bodyMd" as="span">
                     {t("status.campaign.ratioReferee")}
@@ -260,7 +294,7 @@ function CampaignCreation({
             <Button
                 variant="primary"
                 onClick={handleCreate}
-                disabled={disabled || !weeklyBudget || !rawCAC}
+                disabled={isCreationDisabled}
             >
                 {t("status.campaign.createButton")}
             </Button>

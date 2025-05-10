@@ -11,19 +11,21 @@ import { useVisibilityChange } from "app/hooks/useVisibilityChange";
 import type { loader } from "app/routes/app.onboarding.$step";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useRefreshData } from "../../hooks/useRefreshData";
 
 const MAX_STEP = 7;
 
 export function Stepper({ step }: { step: number }) {
     const data = useLoaderData<typeof loader>();
-    const { revalidate, state } = useRevalidator();
+    const { state } = useRevalidator();
+    const refresh = useRefreshData();
     const { t } = useTranslation();
     const navigate = useNavigate();
 
     useVisibilityChange(
         useCallback(() => {
-            revalidate();
-        }, [revalidate])
+            refresh();
+        }, [refresh])
     );
 
     return (

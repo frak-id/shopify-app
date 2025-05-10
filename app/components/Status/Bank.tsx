@@ -63,12 +63,18 @@ function BankItem({
         }
 
         return {
-            balance: formatUnits(tokenInfo.balance, tokenInfo.decimals),
+            balance: formatUnits(
+                tokenInfo.balance ?? 0n,
+                tokenInfo.decimals ?? 18
+            ),
             distributed: formatUnits(
                 BigInt(bank.totalDistributed),
-                tokenInfo.decimals
+                tokenInfo.decimals ?? 18
             ),
-            claimed: formatUnits(BigInt(bank.totalClaimed), tokenInfo.decimals),
+            claimed: formatUnits(
+                BigInt(bank.totalClaimed),
+                tokenInfo.decimals ?? 18
+            ),
         };
     }, [tokenInfo, bank]);
     const { t } = useTranslation();
