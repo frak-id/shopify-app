@@ -10,19 +10,31 @@ import {
     Text,
 } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
-import { type IntentWebhook, Webhook } from "app/components/Webhook";
+import {
+    FrakWebhook,
+    type IntentWebhook,
+    ShopifyWebhook,
+} from "app/components/Webhook";
+import { shopInfo } from "app/services.server/shop";
 import {
     createWebhook,
     deleteWebhook,
+    frakWebhookStatus,
     getWebhooks,
 } from "app/services.server/webhook";
+import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
+    const shop = await shopInfo(context);
+    const productId = productIdFromDomain(shop.myshopifyDomain);
+    const frakWebhook = await frakWebhookStatus({
+        productId: String(productId),
+    });
     const webhooks = await getWebhooks(context);
-    return { webhooks };
+    return { webhooks, frakWebhook, productId };
 };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -49,7 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function WebHookPage() {
     const data = useLoaderData<typeof loader>();
-    const { webhooks } = data;
+    const { webhooks, frakWebhook, productId } = data;
     const isWebhookExists = webhooks.edges.length > 0;
     const { t } = useTranslation();
 
@@ -83,8 +95,37 @@ export default function WebHookPage() {
                                         t("webhook.needConnection")}
                                 </Text>
                                 <Text as="p" variant="bodyMd">
-                                    <Webhook
+                                    <ShopifyWebhook
                                         id={webhooks?.edges[0]?.node?.id}
+                                    />
+                                </Text>
+                                <Box
+                                    paddingBlockStart={"200"}
+                                    paddingBlockEnd={"200"}
+                                >
+                                    {frakWebhook.setup && (
+                                        <Badge tone="success" icon={CheckIcon}>
+                                            {t("webhook.frakConnected")}
+                                        </Badge>
+                                    )}
+                                    {!frakWebhook.setup && (
+                                        <Badge
+                                            tone="critical"
+                                            icon={XSmallIcon}
+                                        >
+                                            {t("webhook.frakNotConnected")}
+                                        </Badge>
+                                    )}
+                                </Box>
+                                {!frakWebhook.setup && (
+                                    <Text as="p" variant="bodyMd">
+                                        {t("webhook.needFrakConnection")}
+                                    </Text>
+                                )}
+                                <Text as="p" variant="bodyMd">
+                                    <FrakWebhook
+                                        setup={frakWebhook.setup}
+                                        productId={productId}
                                     />
                                 </Text>
                             </BlockStack>

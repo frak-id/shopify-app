@@ -33,7 +33,9 @@
             "title": "Webhook",
             "description": "Ensuite, nous avons besoin de mettre en place un webhook afin de transmettre les informations concernant les commandes.",
             "success": "Webhook connecté avec succès",
-            "notActivated": "Webhook non connecté"
+            "notActivated": "Webhook non connecté",
+            "frakActivated": "Tracker de commande Frak activé",
+            "frakNotActivated": "Tracker de commande Frak non activé"
         },
         "step4": {
             "title": "Configurer l'application Frak intégrée dans votre thème",
@@ -81,18 +83,23 @@
     },
     "webhook": {
         "title": "Webhook",
-        "connected": "Votre webhook est connecté à votre boutique.",
-        "notConnected": "Votre webhook n'est pas connecté à votre boutique.",
-        "needConnection": "Vous devez connecter votre webhook à votre boutique pour suivre les achats de vos clients.",
+        "connected": "Votre webhook Shopify est connecté à votre boutique.",
+        "notConnected": "Votre webhook Shopify n'est pas connecté à votre boutique.",
+        "frakConnected": "Le tracker de commande Frak est configuré",
+        "frakNotConnected": "Le tracker de commande Frak n'est pas configuré",
+        "needConnection": "Vous devez connecter votre webhook Shopify à votre boutique pour suivre les achats de vos clients.",
+        "needFrakConnection": "Vous devez connecter votre tracker de commande Frak à votre boutique pour suivre les achats de vos clients.",
         "actions": {
             "cta": {
-                "connect": "Connecter le webhook",
-                "disconnect": "Déconnecter le webhook"
+                "connect": "Connecter le webhook Shopify",
+                "disconnect": "Déconnecter le webhook Shopify",
+                "frakConnect": "Connecter le tracker de commande Frak"
             },
             "messages": {
-                "connect": "Webhook connecté avec succès",
-                "disconnect": "Webhook déconnecté avec succès",
-                "error": "Erreur de suppression du webhook"
+                "connect": "Webhook Shopify connecté avec succès",
+                "disconnect": "Webhook Shopify déconnecté avec succès",
+                "error": "Erreur de suppression du webhook",
+                "setup": "Le tracker de commande Frak est configuré"
             }
         }
     },

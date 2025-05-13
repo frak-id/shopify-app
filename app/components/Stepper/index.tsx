@@ -92,7 +92,8 @@ type StepValidation = {
 const stepValidations: StepValidation = {
     1: () => true,
     2: (data) => Boolean(data?.webPixel?.id),
-    3: (data) => Boolean(data?.webhooks?.edges?.length),
+    3: (data) =>
+        Boolean(data?.webhooks?.edges?.length && data?.frakWebhook?.setup),
     4: (data) => Boolean(data?.isThemeHasFrakActivated),
     5: (data) => Boolean(data?.isThemeHasFrakButton || data?.themeWalletButton),
 };

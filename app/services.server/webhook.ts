@@ -144,3 +144,31 @@ mutation webhookSubscriptionDelete($id: ID!) {
 
     return webhookSubscriptionDelete;
 }
+
+export type FrakWebhookStatusReturnType = {
+    userErrors: {
+        message: string;
+    }[];
+    setup: boolean;
+};
+
+/**
+ * Get the frak webhook status
+ */
+export async function frakWebhookStatus({
+    productId,
+}: {
+    productId: string;
+}): Promise<FrakWebhookStatusReturnType> {
+    try {
+        const webhookUrl = `${process.env.BACKEND_URL}/oracle/${productId}/status`;
+        const response = await fetch(webhookUrl);
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return {
+            userErrors: [{ message: "Error fetching frak webhook status" }],
+            setup: false,
+        };
+    }
+}

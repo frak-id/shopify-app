@@ -33,7 +33,9 @@
             "title": "Webhook",
             "description": "Next, we need to set up a webhook to pass information about the orders.",
             "success": "Webhook connected successfully",
-            "notActivated": "Webhook not connected"
+            "notActivated": "Webhook not connected",
+            "frakActivated": "Frak purchase tracker is activated",
+            "frakNotActivated": "Frak purchase tracker is not activated"
         },
         "step4": {
             "title": "Setup Frak embedded app within your theme",
@@ -81,18 +83,23 @@
     },
     "webhook": {
         "title": "Webhook",
-        "connected": "Your webhook is connected to your store.",
-        "notConnected": "Your webhook is not connected to your store.",
-        "needConnection": "You need to connect your webhook to your store to track your customers purchases.",
+        "connected": "Your Shopify webhook is connected to your store.",
+        "notConnected": "Your Shopify webhook is not connected to your store.",
+        "frakConnected": "Your Frak purchase tracker is connected to your store.",
+        "frakNotConnected": "Your Frak purchase tracker is not connected to your store.",
+        "needConnection": "You need to connect your Shopify webhook to your store to track your customers purchases.",
+        "needFrakConnection": "You need to connect your Frak purchase tracker to your store to track your customers purchases.",
         "actions": {
             "cta": {
-                "connect": "Connect webhook",
-                "disconnect": "Disconnect webhook"
+                "connect": "Connect Shopify webhook",
+                "disconnect": "Disconnect Shopify webhook",
+                "frakConnect": "Connect Frak purchase tracker"
             },
             "messages": {
-                "connect": "Webhook connected successfully",
-                "disconnect": "Webhook disconnected successfully",
-                "error": "Webhook deletion error"
+                "connect": "Shopify webhook connected successfully",
+                "disconnect": "Shopify webhook disconnected successfully",
+                "error": "Webhook deletion error",
+                "setup": "Frak purchase tracker is setup"
             }
         }
     },

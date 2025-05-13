@@ -1,18 +1,20 @@
 import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button } from "@shopify/polaris";
+import { useFrakWebhookLink } from "app/hooks/useFrakWebhookLink";
+import { useRefreshData } from "app/hooks/useRefreshData";
 import type { loader as rootLoader } from "app/routes/app";
 import type {
     CreateWebhookSubscriptionReturnType,
     DeleteWebhookSubscriptionReturnType,
 } from "app/services.server/webhook";
 import { productIdFromDomain } from "app/utils/productIdFromDomain";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 
-export function Webhook({ id }: { id?: string }) {
+export function ShopifyWebhook({ id }: { id?: string }) {
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const shopify = useAppBridge();
     const fetcher = useFetcher<
@@ -79,6 +81,52 @@ export function Webhook({ id }: { id?: string }) {
                     onClick={() => handleAction("deleteWebhook")}
                 >
                     {t("webhook.actions.cta.disconnect")}
+                </Button>
+            )}
+        </>
+    );
+}
+
+export function FrakWebhook({
+    setup,
+    productId,
+}: { setup: boolean; productId: string }) {
+    const { t } = useTranslation();
+
+    // The webhook link
+    const webhookLink = useFrakWebhookLink({
+        productId,
+    });
+
+    const refresh = useRefreshData();
+
+    // Open webhook link
+    const handleSetupWebhook = useCallback(() => {
+        const openedWindow = window.open(
+            webhookLink,
+            "frak-business",
+            "menubar=no,status=no,scrollbars=no,fullscreen=no,width=500, height=800"
+        );
+
+        if (openedWindow) {
+            openedWindow.focus();
+
+            // Check every 500ms if the window is closed
+            // If it is, revalidate the page
+            const timer = setInterval(() => {
+                if (openedWindow.closed) {
+                    clearInterval(timer);
+                    setTimeout(() => refresh(), 1000);
+                }
+            }, 500);
+        }
+    }, [webhookLink, refresh]);
+
+    return (
+        <>
+            {!setup && (
+                <Button variant="primary" onClick={handleSetupWebhook}>
+                    {t("webhook.actions.cta.frakConnect")}
                 </Button>
             )}
         </>

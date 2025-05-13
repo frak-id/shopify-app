@@ -5,6 +5,7 @@ import { Stepper } from "app/components/Stepper";
 import {
     type FirstProductPublishedReturnType,
     firstProductPublished,
+    shopInfo,
 } from "app/services.server/shop";
 import {
     type GetMainThemeIdReturnType,
@@ -19,10 +20,12 @@ import {
 } from "app/services.server/webPixel";
 import {
     type GetWebhooksSubscriptionsReturnType,
+    frakWebhookStatus,
     getWebhooks,
 } from "app/services.server/webhook";
 import { authenticate } from "app/shopify.server";
 import type { AuthenticatedContext } from "app/types/context";
+import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -42,6 +45,10 @@ type StepData = {
     theme?: GetMainThemeIdReturnType;
     firstProduct?: FirstProductPublishedReturnType;
     themeWalletButton?: string | null;
+    frakWebhook?: {
+        setup: boolean;
+    };
+    productId?: string;
 };
 
 /**
@@ -60,7 +67,12 @@ const stepHandlers = {
 
     3: async (context: AuthenticatedContext): Promise<StepData> => {
         const webhooks = await getWebhooks(context);
-        return { webhooks };
+        const shop = await shopInfo(context);
+        const productId = productIdFromDomain(shop.myshopifyDomain);
+        const frakWebhook = await frakWebhookStatus({
+            productId: String(productId),
+        });
+        return { webhooks, frakWebhook, productId };
     },
 
     4: async (context: AuthenticatedContext): Promise<StepData> => {
