@@ -55,7 +55,7 @@ type StepData = {
  * Handlers for each step that will fetch the data needed
  */
 const stepHandlers = {
-    2: async (context: AuthenticatedContext): Promise<StepData> => {
+    3: async (context: AuthenticatedContext): Promise<StepData> => {
         try {
             const webPixel = await getWebPixel(context);
             return { webPixel };
@@ -65,7 +65,7 @@ const stepHandlers = {
         }
     },
 
-    3: async (context: AuthenticatedContext): Promise<StepData> => {
+    4: async (context: AuthenticatedContext): Promise<StepData> => {
         const webhooks = await getWebhooks(context);
         const shop = await shopInfo(context);
         const productId = productIdFromDomain(shop.myshopifyDomain);
@@ -75,7 +75,7 @@ const stepHandlers = {
         return { webhooks, frakWebhook, productId };
     },
 
-    4: async (context: AuthenticatedContext): Promise<StepData> => {
+    5: async (context: AuthenticatedContext): Promise<StepData> => {
         const [isThemeHasFrakActivated, theme] = await Promise.all([
             doesThemeHasFrakActivated(context),
             getMainThemeId(context.admin.graphql),
@@ -83,7 +83,7 @@ const stepHandlers = {
         return { isThemeHasFrakActivated, theme };
     },
 
-    5: async (context: AuthenticatedContext): Promise<StepData> => {
+    6: async (context: AuthenticatedContext): Promise<StepData> => {
         const [isThemeHasFrakButton, firstProduct, themeWalletButton] =
             await Promise.all([
                 doesThemeHasFrakButton(context),

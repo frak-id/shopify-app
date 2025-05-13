@@ -1,43 +1,49 @@
-import { useLoaderData } from "@remix-run/react";
-import { Badge, Box, Text } from "@shopify/polaris";
-import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
-import { Pixel } from "app/components/Pixel";
-import type { loader } from "app/routes/app.onboarding.$step";
-import { useTranslation } from "react-i18next";
+import { BlockStack, Box, Spinner } from "@shopify/polaris";
+import { useMintProductLink } from "app/hooks/useMintProductLink";
+import { useOnChainShopInfo } from "app/hooks/useOnChainShopInfo";
+import { ConnectedShopInfo } from "../Status/ConnectedShopInfo";
+import { SetupInstructions } from "../Status/SetupInstructions";
+import { StatusBanner } from "../Status/StatusBanner";
 
 export function Step2() {
-    const data = useLoaderData<typeof loader>();
-    const { t } = useTranslation();
+    const {
+        shopInfo,
+        isLoading: isShopInfoLoading,
+        refetch: refetchShopInfo,
+    } = useOnChainShopInfo();
+
+    const { link } = useMintProductLink({
+        shopInfo,
+    });
+
+    // Check loading state for all queries
+    const isLoading = isShopInfoLoading;
+
+    if (isLoading) {
+        return (
+            <Box padding={"600"}>
+                <BlockStack gap="400" align="center">
+                    <Spinner size="large" />
+                </BlockStack>
+            </Box>
+        );
+    }
 
     return (
         <Box padding={"600"}>
-            <Text as="h2" variant="headingXl">
-                {t("stepper.step2.title")}
-            </Text>
-            <Box paddingBlockStart={"200"}>
-                <Text as="p">{t("stepper.step2.description")}</Text>
-            </Box>
-            <Box paddingBlockStart={"200"}>
-                {data?.webPixel?.id && (
-                    <Text as="p" variant="bodyMd">
-                        <Badge tone="success" icon={CheckIcon}>
-                            {t("stepper.step2.success")}
-                        </Badge>
-                    </Text>
+            <BlockStack gap="400" align="center">
+                <StatusBanner
+                    isConnected={!!shopInfo}
+                    isLoading={isLoading}
+                    refetch={refetchShopInfo}
+                />
+
+                {shopInfo ? (
+                    <ConnectedShopInfo product={shopInfo.product} />
+                ) : (
+                    <>{link && <SetupInstructions link={link} />}</>
                 )}
-                {!data?.webPixel?.id && (
-                    <>
-                        <Text as="p" variant="bodyMd">
-                            <Badge tone="critical" icon={XSmallIcon}>
-                                {t("stepper.step2.notActivated")}
-                            </Badge>
-                        </Text>
-                        <Box paddingBlockStart={"200"}>
-                            <Pixel id={data?.webPixel?.id} />
-                        </Box>
-                    </>
-                )}
-            </Box>
+            </BlockStack>
         </Box>
     );
 }

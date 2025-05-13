@@ -4,7 +4,7 @@ import { BlockStack, Box, Card, Link, Page } from "@shopify/polaris";
 import {
     Step5Activated,
     Step5NotActivated,
-} from "app/components/Stepper/Step5";
+} from "app/components/Stepper/Step6";
 import type { loader as rootLoader } from "app/routes/app";
 import { firstProductPublished } from "app/services.server/shop";
 import { doesThemeHasFrakButton } from "app/services.server/theme";

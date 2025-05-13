@@ -4,7 +4,7 @@ import { BlockStack, Box, Card, Link, Page } from "@shopify/polaris";
 import {
     Step5Activated,
     WalletNotActivated,
-} from "app/components/Stepper/Step5";
+} from "app/components/Stepper/Step6";
 import type { loader as rootLoader } from "app/routes/app";
 import { doesThemeHasFrakWalletButton } from "app/services.server/theme";
 import { authenticate } from "app/shopify.server";
