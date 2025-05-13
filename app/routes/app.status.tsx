@@ -17,7 +17,6 @@ import { CampaignStatus } from "../components/Status/Campaign";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
 import { PurchaseStatus } from "../components/Status/Purchase";
 import { StatusBanner } from "../components/Status/StatusBanner";
-import { useMintProductLink } from "../hooks/useMintProductLink";
 import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
 import { getCurrentPurchases } from "../services.server/purchase";
 import { authenticate } from "../shopify.server";
@@ -45,10 +44,6 @@ export default function StatusPage() {
         // Refetch all the other queries
         queryClient.refetchQueries();
     }, [queryClient, refetchShopInfo]);
-
-    const { link } = useMintProductLink({
-        shopInfo,
-    });
 
     // Check loading state for all queries
     const isLoading = isWalletLoading || isShopInfoLoading;
@@ -107,7 +102,7 @@ export default function StatusPage() {
                                 />
                             </>
                         ) : (
-                            <>{link && <SetupInstructions link={link} />}</>
+                            <SetupInstructions />
                         )}
                     </BlockStack>
                 </Layout.Section>

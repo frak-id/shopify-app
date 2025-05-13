@@ -1,5 +1,4 @@
 import { BlockStack, Box, Spinner } from "@shopify/polaris";
-import { useMintProductLink } from "app/hooks/useMintProductLink";
 import { useOnChainShopInfo } from "app/hooks/useOnChainShopInfo";
 import { ConnectedShopInfo } from "../Status/ConnectedShopInfo";
 import { SetupInstructions } from "../Status/SetupInstructions";
@@ -11,10 +10,6 @@ export function Step2() {
         isLoading: isShopInfoLoading,
         refetch: refetchShopInfo,
     } = useOnChainShopInfo();
-
-    const { link } = useMintProductLink({
-        shopInfo,
-    });
 
     // Check loading state for all queries
     const isLoading = isShopInfoLoading;
@@ -41,7 +36,7 @@ export function Step2() {
                 {shopInfo ? (
                     <ConnectedShopInfo product={shopInfo.product} />
                 ) : (
-                    <>{link && <SetupInstructions link={link} />}</>
+                    <SetupInstructions />
                 )}
             </BlockStack>
         </Box>

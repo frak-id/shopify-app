@@ -1,36 +1,72 @@
-import { useRevalidator } from "@remix-run/react";
+import { useWalletStatus } from "@frak-labs/react-sdk";
+import { useRevalidator, useRouteLoaderData } from "@remix-run/react";
 import { BlockStack, Box, Button, Card, Text } from "@shopify/polaris";
-import { useCallback } from "react";
+import { useMutation } from "@tanstack/react-query";
+import type { loader as rootLoader } from "app/routes/app";
 import { useTranslation } from "react-i18next";
 
-type SetupInstructionsProps = {
-    link: string;
-};
-
-export function SetupInstructions({ link }: SetupInstructionsProps) {
+export function SetupInstructions() {
     const { t } = useTranslation();
     const { revalidate } = useRevalidator();
+    const { data: walletStatus } = useWalletStatus();
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 
-    const openModal = useCallback(() => {
-        const openedWindow = window.open(
-            link,
-            "frak-business",
-            "menubar=no,status=no,scrollbars=no,fullscreen=no,width=500, height=800"
-        );
+    const {
+        mutate: openMintEmbed,
+        isPending,
+        error: openMintEmbedError,
+    } = useMutation({
+        mutationKey: ["setup", "mint-embed"],
+        mutationFn: async () => {
+            if (!walletStatus?.wallet) return null;
 
-        if (openedWindow) {
-            openedWindow.focus();
+            const url = `/api/mint?walletAddress=${encodeURIComponent(walletStatus.wallet)}`;
+            const response = await fetch(url);
 
-            // Check every 500ms if the window is closed
-            // If it is, revalidate the page
-            const timer = setInterval(() => {
-                if (openedWindow.closed) {
-                    clearInterval(timer);
-                    setTimeout(() => revalidate(), 1000);
-                }
-            }, 500);
-        }
-    }, [link, revalidate]);
+            if (!response.ok) {
+                throw {
+                    error: `HTTP error ${response.status}`,
+                    details: await response.text(),
+                };
+            }
+
+            const setupCode: string = await response.json();
+
+            // Build the url
+            const mintUrl = new URL(
+                process.env.BUSINESS_URL ?? "https://business.frak.id"
+            );
+            mintUrl.pathname = "/embedded/mint";
+            mintUrl.searchParams.append("sc", setupCode);
+            mintUrl.searchParams.append(
+                "d",
+                rootData?.shop?.myshopifyDomain ?? ""
+            );
+            mintUrl.searchParams.append("n", rootData?.shop?.name ?? "");
+            mintUrl.searchParams.append("pt", "webshop,referral,purchase");
+
+            const link = mintUrl.toString();
+
+            const openedWindow = window.open(
+                link,
+                "frak-business",
+                "menubar=no,status=no,scrollbars=no,fullscreen=no,width=500, height=800"
+            );
+
+            if (openedWindow) {
+                openedWindow.focus();
+
+                // Check every 500ms if the window is closed
+                // If it is, revalidate the page
+                const timer = setInterval(() => {
+                    if (openedWindow.closed) {
+                        clearInterval(timer);
+                        setTimeout(() => revalidate(), 1000);
+                    }
+                }, 500);
+            }
+        },
+    });
 
     return (
         <Card>
@@ -45,8 +81,19 @@ export function SetupInstructions({ link }: SetupInstructionsProps) {
                     </Text>
                 </BlockStack>
 
+                {openMintEmbedError && (
+                    <Text as="p" variant="bodyMd" tone="critical">
+                        {t("status.setupInstructions.error")}
+                    </Text>
+                )}
+
                 <Box>
-                    <Button onClick={openModal} variant="primary">
+                    <Button
+                        onClick={openMintEmbed}
+                        variant="primary"
+                        loading={isPending}
+                        disabled={walletStatus?.wallet === undefined}
+                    >
                         {t("status.modal.button")}
                     </Button>
                 </Box>
