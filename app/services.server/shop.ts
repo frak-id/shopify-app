@@ -5,6 +5,12 @@ type ShopInfoReturnType = {
     name: string;
     url: string;
     myshopifyDomain: string;
+    primaryDomain: {
+        id: string;
+        host: string;
+        url: string;
+    };
+    domain: string;
 };
 
 /**
@@ -20,13 +26,17 @@ query shopInfo {
     name
     url
     myshopifyDomain
+    primaryDomain { id, host, url }
   }
 }`);
     const {
         data: { shop },
     } = await response.json();
 
-    return shop;
+    return {
+        ...shop,
+        domain: shop.primaryDomain?.host ?? shop.myshopifyDomain,
+    };
 }
 
 export type FirstProductPublishedReturnType = {

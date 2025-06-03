@@ -101,7 +101,7 @@ export async function startupPurchase(
         shopId: trimmedShopId,
         purchaseId: trimmedPurchaseId,
         confirmationUrl: purchaseData.confirmationUrl,
-        shop: info.myshopifyDomain,
+        shop: info.domain,
         amount: amount.toString(),
         currency: "usd",
         status: "pending",

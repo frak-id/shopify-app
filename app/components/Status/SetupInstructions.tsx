@@ -38,10 +38,7 @@ export function SetupInstructions() {
             );
             mintUrl.pathname = "/embedded/mint";
             mintUrl.searchParams.append("sc", setupCode);
-            mintUrl.searchParams.append(
-                "d",
-                rootData?.shop?.myshopifyDomain ?? ""
-            );
+            mintUrl.searchParams.append("d", rootData?.shop?.domain ?? "");
             mintUrl.searchParams.append("n", rootData?.shop?.name ?? "");
             mintUrl.searchParams.append("pt", "webshop,referral,purchase");
 

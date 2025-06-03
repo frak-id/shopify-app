@@ -65,7 +65,7 @@ export function ShopifyWebhook({ id }: { id?: string }) {
                     onClick={() => {
                         if (!rootData?.shop) return;
                         const productId = productIdFromDomain(
-                            rootData.shop.myshopifyDomain
+                            rootData.shop.domain
                         );
                         handleAction("createWebhook", productId);
                     }}

@@ -68,7 +68,7 @@ const stepHandlers = {
     4: async (context: AuthenticatedContext): Promise<StepData> => {
         const webhooks = await getWebhooks(context);
         const shop = await shopInfo(context);
-        const productId = productIdFromDomain(shop.myshopifyDomain);
+        const productId = productIdFromDomain(shop.domain);
         const frakWebhook = await frakWebhookStatus({
             productId: String(productId),
         });

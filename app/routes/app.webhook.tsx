@@ -29,7 +29,7 @@ import { authenticate } from "../shopify.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
     const shop = await shopInfo(context);
-    const productId = productIdFromDomain(shop.myshopifyDomain);
+    const productId = productIdFromDomain(shop.domain);
     const frakWebhook = await frakWebhookStatus({
         productId: String(productId),
     });

@@ -27,21 +27,11 @@ export function useCreateCampaignLink({
 
         createUrl.searchParams.append("n", name);
         createUrl.searchParams.append("bid", bankId);
-        createUrl.searchParams.append(
-            "d",
-            rootData?.shop?.myshopifyDomain ?? ""
-        );
+        createUrl.searchParams.append("d", rootData?.shop?.domain ?? "");
         createUrl.searchParams.append("wb", weeklyBudget.toString());
         createUrl.searchParams.append("cac", rawCAC.toString());
         createUrl.searchParams.append("r", ratio.toString());
 
         return createUrl.toString();
-    }, [
-        rawCAC,
-        ratio,
-        weeklyBudget,
-        name,
-        rootData?.shop?.myshopifyDomain,
-        bankId,
-    ]);
+    }, [rawCAC, ratio, weeklyBudget, name, rootData?.shop?.domain, bankId]);
 }

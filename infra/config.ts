@@ -57,5 +57,7 @@ export const rpcSecret = new sst.Secret("RPC_SECRET");
 export const shopifyAppUrl = isProd
     ? "https://extension-shop.frak.id"
     : "https://extension-shop-dev.frak.id";
-export const shopifyApiKey = isProd ? "87da8338f40c95301b4881ca4bfb23db" : "de34932679bc2a2c5a8dddb21a216247";
+export const shopifyApiKey = isProd
+    ? "87da8338f40c95301b4881ca4bfb23db"
+    : "de34932679bc2a2c5a8dddb21a216247";
 export const shopifyApiSecret = new sst.Secret("SHOPIFY_API_SECRET");

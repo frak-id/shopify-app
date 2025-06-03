@@ -12,14 +12,12 @@ export function useOnChainShopInfo() {
         isLoading,
         refetch,
     } = useQuery({
-        enabled: !!rootData?.shop.myshopifyDomain,
-        queryKey: ["shopInfo"],
+        enabled: !!rootData?.shop.domain,
+        queryKey: ["shopInfo", rootData?.shop.domain],
         queryFn: async () => {
             try {
                 return (await indexerApi
-                    .get(
-                        `products/info?domain=${rootData?.shop.myshopifyDomain}`
-                    )
+                    .get(`products/info?domain=${rootData?.shop.domain}`)
                     .json()) as GetProductInfoResponseDto | null;
             } catch (e) {
                 console.warn("Error fetching shop info", e);
