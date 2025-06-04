@@ -47,7 +47,7 @@ export function Step4NotActivated() {
     const data = useLoaderData<typeof loader>();
     const { id } = data?.theme || {};
     const { t } = useTranslation();
-    const editorUrl = `https://${rootData?.shop?.domain}/admin/themes/current/editor`;
+    const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
 
     return (
         <>

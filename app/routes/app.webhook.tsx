@@ -22,19 +22,17 @@ import {
     frakWebhookStatus,
     getWebhooks,
 } from "app/services.server/webhook";
-import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
     const shop = await shopInfo(context);
-    const productId = productIdFromDomain(shop.domain);
     const frakWebhook = await frakWebhookStatus({
-        productId: String(productId),
+        productId: shop.productId,
     });
     const webhooks = await getWebhooks(context);
-    return { webhooks, frakWebhook, productId };
+    return { webhooks, frakWebhook, productId: shop.productId };
 };
 
 export async function action({ request }: ActionFunctionArgs) {

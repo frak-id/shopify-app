@@ -161,7 +161,7 @@ export async function frakWebhookStatus({
     productId: string;
 }): Promise<FrakWebhookStatusReturnType> {
     try {
-        const webhookUrl = `${process.env.BACKEND_URL}/oracle/${productId}/status`;
+        const webhookUrl = `${process.env.BACKEND_URL}/business/product/${productId}/oracleWebhook/status`;
         const response = await fetch(webhookUrl);
         return await response.json();
     } catch (error) {

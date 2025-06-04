@@ -9,10 +9,7 @@ export async function getProductSetupCode(
     ctx: AuthenticatedContext,
     walletAddress: Address
 ) {
-    const { domain: baseDomain } = await shopInfo(ctx);
-
-    // Get the domain from the shopifyDomain (strip down www.)
-    const domain = baseDomain.replace("www.", "");
+    const { normalizedDomain: domain } = await shopInfo(ctx);
 
     // Generate the setup code
     return keccak256(

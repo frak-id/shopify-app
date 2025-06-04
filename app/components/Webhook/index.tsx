@@ -8,7 +8,6 @@ import type {
     CreateWebhookSubscriptionReturnType,
     DeleteWebhookSubscriptionReturnType,
 } from "app/services.server/webhook";
-import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -64,10 +63,7 @@ export function ShopifyWebhook({ id }: { id?: string }) {
                     disabled={fetcher.state !== "idle"}
                     onClick={() => {
                         if (!rootData?.shop) return;
-                        const productId = productIdFromDomain(
-                            rootData.shop.domain
-                        );
-                        handleAction("createWebhook", productId);
+                        handleAction("createWebhook", rootData.shop.productId);
                     }}
                 >
                     {t("webhook.actions.cta.connect")}

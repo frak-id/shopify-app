@@ -25,7 +25,6 @@ import {
 } from "app/services.server/webhook";
 import { authenticate } from "app/shopify.server";
 import type { AuthenticatedContext } from "app/types/context";
-import { productIdFromDomain } from "app/utils/productIdFromDomain";
 import { useTranslation } from "react-i18next";
 
 /**
@@ -68,11 +67,10 @@ const stepHandlers = {
     4: async (context: AuthenticatedContext): Promise<StepData> => {
         const webhooks = await getWebhooks(context);
         const shop = await shopInfo(context);
-        const productId = productIdFromDomain(shop.domain);
         const frakWebhook = await frakWebhookStatus({
-            productId: String(productId),
+            productId: shop.productId,
         });
-        return { webhooks, frakWebhook, productId };
+        return { webhooks, frakWebhook, productId: shop.productId };
     },
 
     5: async (context: AuthenticatedContext): Promise<StepData> => {

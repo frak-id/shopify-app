@@ -1,4 +1,6 @@
 import type { AuthenticatedContext } from "app/types/context";
+import type { Hex } from "viem";
+import { productIdFromDomain } from "../utils/productIdFromDomain";
 
 type ShopInfoReturnType = {
     id: string;
@@ -11,6 +13,8 @@ type ShopInfoReturnType = {
         url: string;
     };
     domain: string;
+    normalizedDomain: string;
+    productId: Hex;
 };
 
 /**
@@ -33,9 +37,17 @@ query shopInfo {
         data: { shop },
     } = await response.json();
 
+    const finalDomain = shop.primaryDomain?.host ?? shop.myshopifyDomain;
+    const normalizedDomain = finalDomain
+        .replace("https://", "")
+        .replace("http://", "")
+        .replace("www.", "");
+
     return {
         ...shop,
         domain: shop.primaryDomain?.host ?? shop.myshopifyDomain,
+        normalizedDomain,
+        productId: productIdFromDomain(normalizedDomain),
     };
 }
 
