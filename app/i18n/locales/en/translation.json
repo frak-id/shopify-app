@@ -89,11 +89,19 @@
         "frakNotConnected": "Your Frak purchase tracker is not connected to your store.",
         "needConnection": "You need to connect your Shopify webhook to your store to track your customers purchases.",
         "needFrakConnection": "You need to connect your Frak purchase tracker to your store to track your customers purchases.",
+        "noWebhooks": "No webhooks configured.",
+        "list": {
+            "title": "Active Webhooks",
+            "topic": "Topic",
+            "endpoint": "Endpoint",
+            "noEndpoint": "No endpoint configured"
+        },
         "actions": {
             "cta": {
                 "connect": "Connect Shopify webhook",
                 "disconnect": "Disconnect Shopify webhook",
-                "frakConnect": "Connect Frak purchase tracker"
+                "frakConnect": "Connect Frak purchase tracker",
+                "delete": "Delete"
             },
             "messages": {
                 "connect": "Shopify webhook connected successfully",

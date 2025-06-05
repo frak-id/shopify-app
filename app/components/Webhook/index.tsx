@@ -1,20 +1,19 @@
-import { useFetcher, useRouteLoaderData } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
-import { Button } from "@shopify/polaris";
+import { BlockStack, Button, Card, InlineStack, Text } from "@shopify/polaris";
 import { useFrakWebhookLink } from "app/hooks/useFrakWebhookLink";
 import { useRefreshData } from "app/hooks/useRefreshData";
-import type { loader as rootLoader } from "app/routes/app";
 import type {
     CreateWebhookSubscriptionReturnType,
     DeleteWebhookSubscriptionReturnType,
+    GetWebhooksSubscriptionsReturnType,
 } from "app/services.server/webhook";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 
-export function ShopifyWebhook({ id }: { id?: string }) {
-    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+export function CreateShopifyWebhook() {
     const shopify = useAppBridge();
     const fetcher = useFetcher<
         | CreateWebhookSubscriptionReturnType
@@ -47,38 +46,22 @@ export function ShopifyWebhook({ id }: { id?: string }) {
         }
     }, [fetcher.data, shopify.toast, t]);
 
-    const handleAction = async (intent: IntentWebhook, productId?: string) => {
-        fetcher.submit(
-            { intent, productId: productId ?? null },
-            { method: "POST", action: "/app/webhook" }
-        );
+    const handleAction = async (intent: IntentWebhook) => {
+        fetcher.submit({ intent }, { method: "POST", action: "/app/webhook" });
     };
 
     return (
         <>
-            {!id && (
-                <Button
-                    variant="primary"
-                    loading={fetcher.state !== "idle"}
-                    disabled={fetcher.state !== "idle"}
-                    onClick={() => {
-                        if (!rootData?.shop) return;
-                        handleAction("createWebhook", rootData.shop.productId);
-                    }}
-                >
-                    {t("webhook.actions.cta.connect")}
-                </Button>
-            )}
-            {id && (
-                <Button
-                    variant="primary"
-                    loading={fetcher.state !== "idle"}
-                    disabled={fetcher.state !== "idle"}
-                    onClick={() => handleAction("deleteWebhook")}
-                >
-                    {t("webhook.actions.cta.disconnect")}
-                </Button>
-            )}
+            <Button
+                variant="primary"
+                loading={fetcher.state !== "idle"}
+                disabled={fetcher.state !== "idle"}
+                onClick={() => {
+                    handleAction("createWebhook");
+                }}
+            >
+                {t("webhook.actions.cta.connect")}
+            </Button>
         </>
     );
 }
@@ -126,5 +109,81 @@ export function FrakWebhook({
                 </Button>
             )}
         </>
+    );
+}
+
+export function WebhookList({
+    webhooks,
+}: { webhooks: GetWebhooksSubscriptionsReturnType["edges"] }) {
+    const { t } = useTranslation();
+    const shopify = useAppBridge();
+    const fetcher = useFetcher<DeleteWebhookSubscriptionReturnType>();
+
+    useEffect(() => {
+        if (!fetcher.data) return;
+
+        const data = fetcher.data;
+        const { userErrors } = data;
+        const deletedWebhookId = data.deletedWebhookSubscriptionId;
+
+        if (userErrors?.length > 0) {
+            shopify.toast.show(t("webhook.actions.messages.error"), {
+                isError: true,
+            });
+        }
+
+        if (deletedWebhookId) {
+            shopify.toast.show(t("webhook.actions.messages.disconnect"));
+        }
+    }, [fetcher.data, shopify.toast, t]);
+
+    const handleDeleteWebhook = (webhookId: string) => {
+        fetcher.submit(
+            { intent: "deleteWebhook", webhookId },
+            { method: "POST", action: "/app/webhook" }
+        );
+    };
+
+    if (webhooks.length === 0) {
+        return (
+            <Text as="p" variant="bodyMd" tone="subdued">
+                {t("webhook.noWebhooks")}
+            </Text>
+        );
+    }
+
+    return (
+        <BlockStack gap="300">
+            <Text as="h3" variant="headingMd">
+                {t("webhook.list.title")}
+            </Text>
+            {webhooks.map(({ node }) => (
+                <Card key={node.id}>
+                    <BlockStack gap="200">
+                        <Text as="p" variant="bodyMd">
+                            <strong>{t("webhook.list.topic")}:</strong>{" "}
+                            {node.topic}
+                        </Text>
+                        <Text as="p" variant="bodyMd">
+                            <strong>{t("webhook.list.endpoint")}:</strong>{" "}
+                            {node.endpoint.callbackUrl ||
+                                t("webhook.list.noEndpoint")}
+                        </Text>
+                        <InlineStack align="end">
+                            <Button
+                                variant="primary"
+                                tone="critical"
+                                size="slim"
+                                loading={fetcher.state !== "idle"}
+                                disabled={fetcher.state !== "idle"}
+                                onClick={() => handleDeleteWebhook(node.id)}
+                            >
+                                {t("webhook.actions.cta.delete")}
+                            </Button>
+                        </InlineStack>
+                    </BlockStack>
+                </Card>
+            ))}
+        </BlockStack>
     );
 }

@@ -89,11 +89,19 @@
         "frakNotConnected": "Le tracker de commande Frak n'est pas configuré",
         "needConnection": "Vous devez connecter votre webhook Shopify à votre boutique pour suivre les achats de vos clients.",
         "needFrakConnection": "Vous devez connecter votre tracker de commande Frak à votre boutique pour suivre les achats de vos clients.",
+        "noWebhooks": "Aucun webhook configuré.",
+        "list": {
+            "title": "Webhooks Actifs",
+            "topic": "Sujet",
+            "endpoint": "Point de terminaison",
+            "noEndpoint": "Aucun point de terminaison configuré"
+        },
         "actions": {
             "cta": {
                 "connect": "Connecter le webhook Shopify",
                 "disconnect": "Déconnecter le webhook Shopify",
-                "frakConnect": "Connecter le tracker de commande Frak"
+                "frakConnect": "Connecter le tracker de commande Frak",
+                "delete": "Supprimer"
             },
             "messages": {
                 "connect": "Webhook Shopify connecté avec succès",

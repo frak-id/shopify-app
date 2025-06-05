@@ -38,7 +38,7 @@ function parseStepNumber(step?: string) {
 
 type StepData = {
     webPixel?: GetWebPixelReturnType;
-    webhooks?: GetWebhooksSubscriptionsReturnType;
+    webhooks?: GetWebhooksSubscriptionsReturnType["edges"];
     isThemeHasFrakActivated?: boolean;
     isThemeHasFrakButton?: boolean;
     theme?: GetMainThemeIdReturnType;

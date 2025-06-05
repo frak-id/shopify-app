@@ -1,4 +1,5 @@
 import type { AuthenticatedContext } from "app/types/context";
+import { shopInfo } from "./shop";
 
 type WebhookItem = {
     id: string;
@@ -39,10 +40,10 @@ export type DeleteWebhookSubscriptionReturnType = {
  */
 export async function getWebhooks({
     admin: { graphql },
-}: AuthenticatedContext): Promise<GetWebhooksSubscriptionsReturnType> {
+}: AuthenticatedContext): Promise<GetWebhooksSubscriptionsReturnType["edges"]> {
     const response = await graphql(`
 query {
-  webhookSubscriptions(first: 1, topics: ORDERS_UPDATED) {
+  webhookSubscriptions(first: 20, topics: ORDERS_UPDATED) {
     edges {
       node {
         id
@@ -60,20 +61,28 @@ query {
     const {
         data: { webhookSubscriptions },
     } = await response.json();
+    const parsedWebhooks =
+        webhookSubscriptions as GetWebhooksSubscriptionsReturnType;
 
-    return webhookSubscriptions;
+    // Filter for the webhook containing the backend url
+    return parsedWebhooks.edges.filter((webhook) => {
+        return (
+            webhook.node.endpoint.callbackUrl?.includes(
+                process.env.BACKEND_URL ?? ""
+            ) ?? false
+        );
+    });
 }
 
 /**
  * Create a webhook subscription
  */
-export async function createWebhook({
-    admin: { graphql },
-    productId,
-}: AuthenticatedContext & {
-    productId: string;
-}): Promise<CreateWebhookSubscriptionReturnType> {
-    const webhookUrl = `${process.env.BACKEND_URL}/oracle/shopify/${productId}/hook`;
+export async function createWebhook(
+    context: AuthenticatedContext
+): Promise<CreateWebhookSubscriptionReturnType> {
+    const shop = await shopInfo(context);
+    const { graphql } = context.admin;
+    const webhookUrl = `${process.env.BACKEND_URL}/ext/products/${shop.productId}/webhook/oracle/shopify`;
     const response = await graphql(
         `
 mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {

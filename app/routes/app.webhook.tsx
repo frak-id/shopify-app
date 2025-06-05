@@ -11,9 +11,10 @@ import {
 } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import {
+    CreateShopifyWebhook,
     FrakWebhook,
     type IntentWebhook,
-    ShopifyWebhook,
+    WebhookList,
 } from "app/components/Webhook";
 import { shopInfo } from "app/services.server/shop";
 import {
@@ -42,17 +43,20 @@ export async function action({ request }: ActionFunctionArgs) {
 
     switch (intent) {
         case "createWebhook": {
-            const productId = formData.get("productId");
-            if (!productId)
-                return { userErrors: [{ message: "productId is missing" }] };
-            return createWebhook({ ...context, productId: String(productId) });
+            return createWebhook(context);
         }
 
         case "deleteWebhook": {
+            const webhookId = formData.get("webhookId");
+            if (webhookId) {
+                // Delete specific webhook by ID
+                return deleteWebhook({ ...context, id: String(webhookId) });
+            }
+            // Delete first webhook (legacy behavior)
             const webhooks = await getWebhooks(context);
-            if (!webhooks.edges[0]?.node?.id)
+            if (!webhooks[0]?.node?.id)
                 return { userErrors: [{ message: "Webhook does not exists" }] };
-            return deleteWebhook({ ...context, id: webhooks.edges[0].node.id });
+            return deleteWebhook({ ...context, id: webhooks[0].node.id });
         }
     }
 }
@@ -60,7 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function WebHookPage() {
     const data = useLoaderData<typeof loader>();
     const { webhooks, frakWebhook, productId } = data;
-    const isWebhookExists = webhooks.edges.length > 0;
+    const isWebhookExists = webhooks.length > 0;
     const { t } = useTranslation();
 
     return (
@@ -92,11 +96,15 @@ export default function WebHookPage() {
                                     {!isWebhookExists &&
                                         t("webhook.needConnection")}
                                 </Text>
-                                <Text as="p" variant="bodyMd">
-                                    <ShopifyWebhook
-                                        id={webhooks?.edges[0]?.node?.id}
-                                    />
-                                </Text>
+                                {!isWebhookExists && (
+                                    <Text as="p" variant="bodyMd">
+                                        <CreateShopifyWebhook />
+                                    </Text>
+                                )}
+
+                                {/* Display all webhooks */}
+                                <WebhookList webhooks={webhooks} />
+
                                 <Box
                                     paddingBlockStart={"200"}
                                     paddingBlockEnd={"200"}

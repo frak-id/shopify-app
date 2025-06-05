@@ -1,13 +1,13 @@
 import { useLoaderData } from "@remix-run/react";
 import { Badge, Box, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
-import { FrakWebhook, ShopifyWebhook } from "app/components/Webhook";
+import { CreateShopifyWebhook, FrakWebhook } from "app/components/Webhook";
 import type { loader } from "app/routes/app.onboarding.$step";
 import { useTranslation } from "react-i18next";
 
 export function Step4() {
     const data = useLoaderData<typeof loader>();
-    const isWebhookExists = Boolean(data?.webhooks?.edges?.length);
+    const isWebhookExists = Boolean(data?.webhooks?.length);
     const isFrakWebhookExists = data?.frakWebhook?.setup;
     const { t } = useTranslation();
 
@@ -35,9 +35,7 @@ export function Step4() {
                             </Badge>
                         </Text>
                         <Box paddingBlockStart={"200"}>
-                            <ShopifyWebhook
-                                id={data?.webhooks?.edges[0]?.node?.id}
-                            />
+                            <CreateShopifyWebhook />
                         </Box>
                     </>
                 )}
