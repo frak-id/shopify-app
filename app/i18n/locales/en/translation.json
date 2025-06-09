@@ -13,6 +13,7 @@
         "theme": "Theme",
         "button": "Share button",
         "buttonWallet": "Wallet button",
+        "customizations": "Customizations",
         "status": "Status"
     },
     "stepper": {
@@ -223,6 +224,23 @@
             "expired": "Expired",
             "waitingConfirmation": "Waiting your confirmation",
             "pending": "Pending"
+        }
+    },
+    "customizations": {
+        "title": "Customizations",
+        "description": "Customize the text displayed in Frak modals for different languages. These customizations will override the default text for your store.",
+        "save": "Save Customizations",
+        "saved": "Customizations saved successfully!",
+        "error": "Error saving customizations",
+        "french": "French (fr) Translations",
+        "english": "English (en) Translations",
+        "keys": {
+            "sharing.title": "Title for the system sharing modal",
+            "sharing.text": "Text content for sharing",
+            "sdk.wallet.login.text": "Default modal login text for end user",
+            "sdk.wallet.login.primaryAction": "Default modal login button text",
+            "sdk.wallet.login.text_sharing": "Modal login text when in sharing context",
+            "sdk.wallet.login.text_referred": "Modal login text for users who opened a sharing link"
         }
     }
 }
