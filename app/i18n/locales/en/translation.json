@@ -13,6 +13,7 @@
         "theme": "Theme",
         "button": "Share button",
         "buttonWallet": "Wallet button",
+        "customizations": "Customizations",
         "status": "Status"
     },
     "stepper": {
@@ -223,6 +224,62 @@
             "expired": "Expired",
             "waitingConfirmation": "Waiting your confirmation",
             "pending": "Pending"
+        }
+    },
+    "customizations": {
+        "title": "Customizations",
+        "description": "Customize the text displayed in Frak modals for different languages. These customizations will override the default text for your store.",
+        "save": "Save Customizations",
+        "saved": "Customizations saved successfully!",
+        "error": "Error saving customizations",
+        "french": "French (fr) Translations",
+        "english": "English (en) Translations",
+        "languageMode": {
+            "title": "Language Configuration",
+            "choiceTitle": "Choose your language setup",
+            "single": {
+                "label": "Single Language",
+                "helpText": "Use the same text for all users regardless of their location"
+            },
+            "multi": {
+                "label": "Multiple Languages",
+                "helpText": "Provide different text for French and English. Users will see text based on their browser language or location"
+            }
+        },
+        "sharing": {
+            "title": "Sharing Customization",
+            "description": "Customize the text displayed when sharing your store."
+        },
+        "modal": {
+            "title": "Frak Modal Customization",
+            "description": "Customize the text displayed in Frak modals for different languages."
+        },
+        "fields": {
+            "sharing.title": {
+                "label": "Sharing Modal Title",
+                "description": "The title that appears when users share your content on social media or messaging apps",
+                "placeholder": "Example: 'Share this amazing product with your friends!'"
+            },
+            "sharing.text": {
+                "label": "Sharing Message Text",
+                "description": "The default message that will be shared along with your product link",
+                "placeholder": "Example: 'Check out this amazing product I found!'"
+            },
+            "sdk.wallet.login.primaryAction": {
+                "label": "Wallet Login Button Text",
+                "description": "The text displayed on the main action button in the wallet login modal",
+                "placeholder": "Example: 'Create your wallet in 2 seconds!'"
+            },
+            "sdk.wallet.login.text_sharing": {
+                "label": "Login Text for Sharing",
+                "description": "Message shown to users when they need to login to share content and earn rewards",
+                "placeholder": "Example: 'Share, Refer, Earn up to **{{ estimatedReward }}** per successful referral'"
+            },
+            "sdk.wallet.login.text_referred": {
+                "label": "Welcome Text for Referred Users",
+                "description": "Message shown to users who clicked on a shared link",
+                "placeholder": "Example: 'Welcome! Receive **{{ estimatedReward }}** when you make a purchase'"
+            }
         }
     }
 }

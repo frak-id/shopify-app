@@ -9,6 +9,7 @@ import { Step6 } from "app/components/Stepper/Step6";
 import { Step7 } from "app/components/Stepper/Step7";
 import { useVisibilityChange } from "app/hooks/useVisibilityChange";
 import type { loader } from "app/routes/app.onboarding.$step";
+import { validateStep } from "app/utils/onboarding";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useRefreshData } from "../../hooks/useRefreshData";
@@ -70,7 +71,7 @@ export function Stepper({ step }: { step: number }) {
                                 navigate(`/app/onboarding/step${step + 1}`)
                             }
                             loading={state === "loading"}
-                            disabled={validateSteps(step, data)}
+                            disabled={validateStep(step, data)}
                         >
                             {t("stepper.next")}
                         </Button>
@@ -79,32 +80,4 @@ export function Stepper({ step }: { step: number }) {
             </div>
         </>
     );
-}
-
-type RouteLoaderData = ReturnType<typeof useLoaderData<typeof loader>>;
-type StepValidation = {
-    [key: number]: (data: RouteLoaderData) => boolean;
-};
-
-/**
- * Validation functions for each step
- */
-const stepValidations: StepValidation = {
-    1: () => true,
-    2: () => true,
-    3: (data) => Boolean(data?.webPixel?.id),
-    4: (data) => Boolean(data?.webhooks?.length && data?.frakWebhook?.setup),
-    5: (data) => Boolean(data?.isThemeHasFrakActivated),
-    6: (data) => Boolean(data?.isThemeHasFrakButton || data?.themeWalletButton),
-};
-
-/**
- * Validates if a specific step is completed based on the provided data
- * @param step - The step number to validate
- * @param data - The route loader data
- * @returns boolean indicating if the step is valid
- */
-function validateSteps(step: number, data: RouteLoaderData): boolean {
-    const validator = stepValidations[step];
-    return validator ? !validator(data) : false;
 }

@@ -13,6 +13,7 @@
         "theme": "Thème",
         "button": "Bouton de partage",
         "buttonWallet": "Bouton porte-monnaie",
+        "customizations": "Personnalisations",
         "status": "Statut"
     },
     "stepper": {
@@ -223,6 +224,70 @@
             "expired": "Expiré",
             "waitingConfirmation": "En attente de votre confirmation",
             "pending": "En attente"
+        }
+    },
+    "customizations": {
+        "title": "Personnalisations",
+        "description": "Personnalisez les textes affichés dans les modales Frak pour différentes langues. Ces personnalisations remplaceront les textes par défaut de votre boutique.",
+        "save": "Enregistrer les personnalisations",
+        "saved": "Personnalisations enregistrées avec succès !",
+        "error": "Erreur lors de l'enregistrement des personnalisations",
+        "french": "Traductions françaises (fr)",
+        "english": "Traductions anglaises (en)",
+        "languageMode": {
+            "title": "Configuration des langues",
+            "choiceTitle": "Choisissez votre configuration linguistique",
+            "single": {
+                "label": "Langue unique",
+                "helpText": "Utilisez le même texte pour tous les utilisateurs, quelle que soit leur localisation"
+            },
+            "multi": {
+                "label": "Langues multiples",
+                "helpText": "Fournissez différents textes en français et en anglais. Les utilisateurs verront le texte basé sur la langue de leur navigateur ou leur localisation"
+            }
+        },
+        "keys": {
+            "sharing.title": "Titre de la modale de partage système",
+            "sharing.text": "Contenu du texte de partage",
+            "sdk.wallet.login.text": "Texte de connexion par défaut pour l'utilisateur final",
+            "sdk.wallet.login.primaryAction": "Texte du bouton de connexion par défaut",
+            "sdk.wallet.login.text_sharing": "Texte de connexion dans le contexte de partage",
+            "sdk.wallet.login.text_referred": "Texte de connexion pour les utilisateurs qui ont ouvert un lien de partage"
+        },
+        "sharing": {
+            "title": "Personnalisation du partage",
+            "description": "Personnalisez le texte affiché lors du partage de votre boutique."
+        },
+        "modal": {
+            "title": "Personnalisation des modales Frak",
+            "description": "Personnalisez les textes affichés dans les modales Frak pour différentes langues."
+        },
+        "fields": {
+            "sharing.title": {
+                "label": "Titre de la modale de partage",
+                "description": "Le titre qui apparaît lorsque les utilisateurs partagent votre contenu sur les réseaux sociaux ou les applications de messagerie",
+                "placeholder": "Exemple : 'Partagez ce produit incroyable avec vos amis !'"
+            },
+            "sharing.text": {
+                "label": "Texte du message de partage",
+                "description": "Le message par défaut qui sera partagé avec le lien de votre produit",
+                "placeholder": "Exemple : 'Découvrez ce produit incroyable que j'ai trouvé !'"
+            },
+            "sdk.wallet.login.primaryAction": {
+                "label": "Texte du bouton de connexion au portefeuille",
+                "description": "Le texte affiché sur le bouton d'action principal dans la modale de connexion au portefeuille",
+                "placeholder": "Exemple : 'Créez votre portefeuille en 2 secondes !'"
+            },
+            "sdk.wallet.login.text_sharing": {
+                "label": "Texte de connexion pour le partage",
+                "description": "Message affiché aux utilisateurs lorsqu'ils doivent se connecter pour partager du contenu et gagner des récompenses",
+                "placeholder": "Exemple : 'Partagez, Parrainez, Gagnez jusqu'à **{{ estimatedReward }}** par parrainage réussi'"
+            },
+            "sdk.wallet.login.text_referred": {
+                "label": "Texte de bienvenue pour les utilisateurs référés",
+                "description": "Message affiché aux utilisateurs qui ont cliqué sur un lien partagé",
+                "placeholder": "Exemple : 'Bienvenue ! Recevez **{{ estimatedReward }}** lors de votre achat'"
+            }
         }
     }
 }
