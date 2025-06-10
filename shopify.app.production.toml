@@ -30,6 +30,3 @@ redirect_urls = [
 
 [pos]
 embedded = false
-
-[build]
-automatically_update_urls_on_dev = false
