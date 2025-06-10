@@ -161,6 +161,7 @@ export function validateCompleteOnboarding(data: OnboardingStepData): {
     isComplete: boolean;
     failedSteps: number[];
     completedSteps: number[];
+    firstMissingStep: number | undefined;
 } {
     const failedSteps: number[] = [];
     const completedSteps: number[] = [];
@@ -177,10 +178,15 @@ export function validateCompleteOnboarding(data: OnboardingStepData): {
         }
     }
 
+    // Get the first missing step
+    const firstMissingStep =
+        failedSteps.length > 0 ? failedSteps[0] : undefined;
+
     return {
         isComplete: failedSteps.length === 0,
         failedSteps,
         completedSteps,
+        firstMissingStep,
     };
 }
 

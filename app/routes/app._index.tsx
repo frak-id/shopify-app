@@ -111,6 +111,7 @@ function ThemeSupported({
             isComplete: boolean;
             failedSteps: number[];
             completedSteps: number[];
+            firstMissingStep: number | undefined;
         };
         onboardingStatus: {
             status: "complete" | "incomplete";
@@ -136,11 +137,19 @@ function ThemeSupported({
             // Clear the localStorage since it's not actually complete
             window.localStorage.removeItem("frak-onBoarding");
             setLocalOnBoarding(false);
-            navigate("/app/onboarding/step1");
+            navigate(
+                `/app/onboarding/step${onboardingData.onboardingValidation.firstMissingStep ?? 1}`
+            );
         } else if (frakOnboarding !== "done") {
-            navigate("/app/onboarding/step1");
+            navigate(
+                `/app/onboarding/step${onboardingData.onboardingValidation.firstMissingStep ?? 1}`
+            );
         }
-    }, [navigate, onboardingData.onboardingValidation.isComplete]);
+    }, [
+        navigate,
+        onboardingData.onboardingValidation.isComplete,
+        onboardingData.onboardingValidation.firstMissingStep,
+    ]);
 
     const isOnboardingComplete =
         localOnBoarding && onboardingData.onboardingValidation.isComplete;
