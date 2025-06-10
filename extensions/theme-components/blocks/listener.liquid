@@ -16,8 +16,6 @@
   {% if i18n_metafield.value %}
     try {
       customI18n = {{ i18n_metafield.value | json }};
-      
-      console.log('Custom metafields', customI18n);
     } catch (error) {
       console.error('Error parsing i18n customizations:', error);
     }
