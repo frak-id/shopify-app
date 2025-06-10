@@ -1,6 +1,13 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
 import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
+import {
+    Await,
+    Link,
+    Outlet,
+    defer,
+    useLoaderData,
+    useRouteError,
+} from "@remix-run/react";
 import { NavMenu } from "@shopify/app-bridge-react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
@@ -8,6 +15,7 @@ import { boundary } from "@shopify/shopify-app-remix/server";
 import { WalletGated } from "app/components/WalletGated";
 import { shopInfo } from "app/services.server/shop";
 import { doesThemeSupportBlock } from "app/services.server/theme";
+import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
@@ -16,29 +24,36 @@ export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const [isThemeSupported, shop] = await Promise.all([
-        doesThemeSupportBlock(context),
-        shopInfo(context),
-    ]);
+    const [shop] = await Promise.all([shopInfo(context)]);
 
-    return {
+    return defer({
         apiKey: process.env.SHOPIFY_API_KEY || "",
-        isThemeSupported,
+        isThemeSupportedPromise: doesThemeSupportBlock(context),
         shop,
-    };
+    });
 };
 
 export default function App() {
-    const { apiKey } = useLoaderData<typeof loader>();
+    const { apiKey, isThemeSupportedPromise } = useLoaderData<typeof loader>();
 
     return (
         <AppProvider isEmbeddedApp apiKey={apiKey}>
-            <RootProvider>
-                <Navigation />
-                <WalletGated>
-                    <Outlet />
-                </WalletGated>
-            </RootProvider>
+            <Suspense>
+                <Await resolve={isThemeSupportedPromise}>
+                    {(isThemeSupported) => {
+                        return (
+                            <RootProvider>
+                                <Navigation
+                                    isThemeSupported={isThemeSupported}
+                                />
+                                <WalletGated>
+                                    <Outlet />
+                                </WalletGated>
+                            </RootProvider>
+                        );
+                    }}
+                </Await>
+            </Suspense>
         </AppProvider>
     );
 }
@@ -56,8 +71,7 @@ export const headers: HeadersFunction = (headersArgs) => {
  * Show the navigation menu only if theme supports the block and wallet is connected
  * @param isThemeSupported
  */
-function Navigation() {
-    const { isThemeSupported } = useLoaderData<typeof loader>();
+function Navigation({ isThemeSupported }: { isThemeSupported: boolean }) {
     const { data: walletStatus } = useWalletStatus();
     const { t } = useTranslation();
 

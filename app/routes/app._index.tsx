@@ -1,5 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import {
+    Await,
+    defer,
     useLoaderData,
     useNavigate,
     useRouteLoaderData,
@@ -22,8 +24,16 @@ import {
     getOnboardingStatusMessage,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+export const headers = () => {
+    return {
+        "Cache-Control":
+            "public, max-age=1800, s-maxage=3600, stale-while-revalidate=86400",
+        Vary: "Accept-Encoding",
+    };
+};
 
 /**
  * Loader function that validates complete onboarding status
@@ -32,17 +42,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
 
     // Fetch all onboarding data to validate completion
-    const onboardingData = await fetchAllOnboardingData(context);
-
-    // Validate if onboarding is truly complete
-    const validationResult = validateCompleteOnboarding(onboardingData);
-    const statusMessage = getOnboardingStatusMessage(validationResult);
-
-    return {
-        onboardingValidation: validationResult,
-        onboardingStatus: statusMessage,
-        onboardingData,
-    };
+    return defer({
+        onboardingDataPromise: fetchAllOnboardingData(context),
+    });
 };
 
 /**
@@ -58,9 +60,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
  * @param request
  */
 export default function Index() {
-    const data = useLoaderData<typeof loader>();
+    const { onboardingDataPromise } = useLoaderData<typeof loader>();
     const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
-    const isThemeSupported = rootData?.isThemeSupported;
+    const isThemeSupportedPromise = rootData?.isThemeSupportedPromise;
     const { t } = useTranslation();
 
     return (
@@ -78,10 +80,34 @@ export default function Index() {
         >
             <BlockStack gap="500">
                 <Layout>
-                    {!isThemeSupported && <ThemeNotSupported />}
-                    {isThemeSupported && (
-                        <ThemeSupported onboardingData={data} />
-                    )}
+                    <Suspense>
+                        <Await resolve={isThemeSupportedPromise}>
+                            {(isThemeSupported) => {
+                                return (
+                                    <>
+                                        {!isThemeSupported && (
+                                            <ThemeNotSupported />
+                                        )}
+                                        {isThemeSupported && (
+                                            <Await
+                                                resolve={onboardingDataPromise}
+                                            >
+                                                {(resolved) =>
+                                                    resolved && (
+                                                        <ThemeSupported
+                                                            onboardingData={
+                                                                resolved
+                                                            }
+                                                        />
+                                                    )
+                                                }
+                                            </Await>
+                                        )}
+                                    </>
+                                );
+                            }}
+                        </Await>
+                    </Suspense>
                 </Layout>
             </BlockStack>
         </Page>
@@ -106,21 +132,11 @@ function ThemeNotSupported() {
 function ThemeSupported({
     onboardingData,
 }: {
-    onboardingData: {
-        onboardingValidation: {
-            isComplete: boolean;
-            failedSteps: number[];
-            completedSteps: number[];
-            firstMissingStep: number | undefined;
-        };
-        onboardingStatus: {
-            status: "complete" | "incomplete";
-            message: string;
-            failedSteps: number[];
-        };
-        onboardingData: OnboardingStepData;
-    };
+    onboardingData: OnboardingStepData;
 }) {
+    // Validate if onboarding is truly complete
+    const validationResult = validateCompleteOnboarding(onboardingData);
+    const statusMessage = getOnboardingStatusMessage(validationResult);
     const { t } = useTranslation();
     const [localOnBoarding, setLocalOnBoarding] = useState(false);
     const navigate = useNavigate();
@@ -130,54 +146,47 @@ function ThemeSupported({
         setLocalOnBoarding(frakOnboarding === "done");
 
         // If localStorage says onboarding is done but server validation fails, redirect to onboarding
-        if (
-            frakOnboarding === "done" &&
-            !onboardingData.onboardingValidation.isComplete
-        ) {
+        if (frakOnboarding === "done" && !validationResult.isComplete) {
             // Clear the localStorage since it's not actually complete
             window.localStorage.removeItem("frak-onBoarding");
             setLocalOnBoarding(false);
             navigate(
-                `/app/onboarding/step${onboardingData.onboardingValidation.firstMissingStep ?? 1}`
+                `/app/onboarding/step${validationResult.firstMissingStep ?? 1}`
             );
         } else if (frakOnboarding !== "done") {
             navigate(
-                `/app/onboarding/step${onboardingData.onboardingValidation.firstMissingStep ?? 1}`
+                `/app/onboarding/step${validationResult.firstMissingStep ?? 1}`
             );
         }
     }, [
         navigate,
-        onboardingData.onboardingValidation.isComplete,
-        onboardingData.onboardingValidation.firstMissingStep,
+        validationResult.isComplete,
+        validationResult.firstMissingStep,
     ]);
 
-    const isOnboardingComplete =
-        localOnBoarding && onboardingData.onboardingValidation.isComplete;
+    const isOnboardingComplete = localOnBoarding && validationResult.isComplete;
 
     return (
         <Layout.Section>
             <Card>
                 <BlockStack gap="500">
                     {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
-                    {localOnBoarding &&
-                        !onboardingData.onboardingValidation.isComplete && (
-                            <Banner tone="warning">
-                                <Text as="p">
-                                    {onboardingData.onboardingStatus.message}
-                                </Text>
-                                <Text as="p" variant="bodySm">
-                                    Please complete the missing steps to
-                                    activate all features.
-                                </Text>
-                            </Banner>
-                        )}
+                    {localOnBoarding && !validationResult.isComplete && (
+                        <Banner tone="warning">
+                            <Text as="p">{statusMessage.message}</Text>
+                            <Text as="p" variant="bodySm">
+                                Please complete the missing steps to activate
+                                all features.
+                            </Text>
+                        </Banner>
+                    )}
 
                     {isOnboardingComplete ? (
                         <BlockStack gap="300">
                             <Banner tone="success">
                                 <Text as="p">{t("common.allSet")}</Text>
                                 <Text as="p" variant="bodySm">
-                                    {onboardingData.onboardingStatus.message}
+                                    {statusMessage.message}
                                 </Text>
                             </Banner>
                         </BlockStack>
