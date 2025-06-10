@@ -234,6 +234,18 @@
         "error": "Erreur lors de l'enregistrement des personnalisations",
         "french": "Traductions françaises (fr)",
         "english": "Traductions anglaises (en)",
+        "languageMode": {
+            "title": "Configuration des langues",
+            "choiceTitle": "Choisissez votre configuration linguistique",
+            "single": {
+                "label": "Langue unique",
+                "helpText": "Utilisez le même texte pour tous les utilisateurs, quelle que soit leur localisation"
+            },
+            "multi": {
+                "label": "Langues multiples",
+                "helpText": "Fournissez différents textes en français et en anglais. Les utilisateurs verront le texte basé sur la langue de leur navigateur ou leur localisation"
+            }
+        },
         "keys": {
             "sharing.title": "Titre de la modale de partage système",
             "sharing.text": "Contenu du texte de partage",

@@ -1,35 +1,43 @@
 import { BlockStack, Card, ChoiceList, Text } from "@shopify/polaris";
+import { useTranslation } from "react-i18next";
 
 type LanguageMode = "single" | "multi";
 
-// Language Mode Selector Component
+interface LanguageModeSelectorProps {
+    mode: LanguageMode;
+    onModeChange: (mode: LanguageMode) => void;
+}
+
 export function LanguageModeSelector({
     mode,
     onModeChange,
-}: {
-    mode: LanguageMode;
-    onModeChange: (mode: LanguageMode) => void;
-}) {
+}: LanguageModeSelectorProps) {
+    const { t } = useTranslation();
+
     return (
         <Card>
             <BlockStack gap="400">
                 <Text as="h3" variant="headingMd">
-                    Language Configuration
+                    {t("customizations.languageMode.title")}
                 </Text>
                 <ChoiceList
-                    title="Choose your language setup"
+                    title={t("customizations.languageMode.choiceTitle")}
                     choices={[
                         {
-                            label: "Single Language",
+                            label: t(
+                                "customizations.languageMode.single.label"
+                            ),
                             value: "single",
-                            helpText:
-                                "Use the same text for all users regardless of their location",
+                            helpText: t(
+                                "customizations.languageMode.single.helpText"
+                            ),
                         },
                         {
-                            label: "Multiple Languages",
+                            label: t("customizations.languageMode.multi.label"),
                             value: "multi",
-                            helpText:
-                                "Provide different text for French and English. Users will see text based on their browser language or location",
+                            helpText: t(
+                                "customizations.languageMode.multi.helpText"
+                            ),
                         },
                     ]}
                     selected={[mode]}

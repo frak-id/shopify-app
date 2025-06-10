@@ -10,7 +10,6 @@ import {
     Layout,
     Page,
     Text,
-    Toast,
 } from "@shopify/polaris";
 import { CheckIcon } from "@shopify/polaris-icons";
 import {

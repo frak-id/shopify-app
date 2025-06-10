@@ -234,6 +234,18 @@
         "error": "Error saving customizations",
         "french": "French (fr) Translations",
         "english": "English (en) Translations",
+        "languageMode": {
+            "title": "Language Configuration",
+            "choiceTitle": "Choose your language setup",
+            "single": {
+                "label": "Single Language",
+                "helpText": "Use the same text for all users regardless of their location"
+            },
+            "multi": {
+                "label": "Multiple Languages",
+                "helpText": "Provide different text for French and English. Users will see text based on their browser language or location"
+            }
+        },
         "sharing": {
             "title": "Sharing Customization",
             "description": "Customize the text displayed when sharing your store."
