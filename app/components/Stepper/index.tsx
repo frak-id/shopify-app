@@ -81,5 +81,3 @@ export function Stepper({ step }: { step: number }) {
         </>
     );
 }
-
-

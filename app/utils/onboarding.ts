@@ -1,4 +1,3 @@
-import type { AuthenticatedContext } from "app/types/context";
 import {
     type FirstProductPublishedReturnType,
     firstProductPublished,
@@ -20,6 +19,7 @@ import {
     frakWebhookStatus,
     getWebhooks,
 } from "app/services.server/webhook";
+import type { AuthenticatedContext } from "app/types/context";
 
 export type OnboardingStepData = {
     webPixel?: GetWebPixelReturnType;
@@ -131,17 +131,13 @@ export async function fetchAllOnboardingData(
 ): Promise<OnboardingStepData> {
     try {
         // Fetch all data in parallel for efficiency
-        const [
-            webPixelData,
-            webhookData, 
-            themeData,
-            buttonData
-        ] = await Promise.all([
-            stepDataFetchers[3](context),
-            stepDataFetchers[4](context),
-            stepDataFetchers[5](context),
-            stepDataFetchers[6](context),
-        ]);
+        const [webPixelData, webhookData, themeData, buttonData] =
+            await Promise.all([
+                stepDataFetchers[3](context),
+                stepDataFetchers[4](context),
+                stepDataFetchers[5](context),
+                stepDataFetchers[6](context),
+            ]);
 
         // Merge all data
         return {
@@ -212,13 +208,13 @@ export function getOnboardingStatusMessage(validationResult: {
 
     const stepNames = {
         3: "Web Pixel",
-        4: "Webhooks", 
+        4: "Webhooks",
         5: "Theme Activation",
         6: "Frak Buttons",
     };
 
     const failedStepNames = validationResult.failedSteps
-        .map(step => stepNames[step as keyof typeof stepNames])
+        .map((step) => stepNames[step as keyof typeof stepNames])
         .filter(Boolean);
 
     return {
@@ -226,4 +222,4 @@ export function getOnboardingStatusMessage(validationResult: {
         message: `Onboarding incomplete. Missing: ${failedStepNames.join(", ")}`,
         failedSteps: validationResult.failedSteps,
     };
-} 
+}

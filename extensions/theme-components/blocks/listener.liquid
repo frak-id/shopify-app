@@ -16,7 +16,8 @@
   {% if i18n_metafield.value %}
     try {
       customI18n = {{ i18n_metafield.value | json }};
-      console.log('Custom metafields', customI18n)
+      
+      console.log('Custom metafields', customI18n);
     } catch (error) {
       console.error('Error parsing i18n customizations:', error);
     }
@@ -34,13 +35,12 @@
     },
     customizations: {
       css: "{{ 'customizations.css' | asset_url }}",
-      i18n: customI18n || {},
+      i18n: customI18n,
     },
     domain: window.location.host,
   };
 
-  // Configure base modal info that will be displayed when a user can receive a reward or want to share
-  // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/types/DisplayModalType
+  // Base config for the modals (not rly used for client side stuff)
   const baseModalConfig = {
     login: {
       allowSso: true,
@@ -51,16 +51,8 @@
     },
   };
 
-  // Configure the info that will be sent via the sharing link
-  // All the modal customisation options can be found here: https://docs.frak.id/wallet-sdk/api/actions/displayModal#full-flow
-  const sharingConfig = {
-    // Title that will be displayed on the system sharing modal  (optional)
-    popupTitle: '{{ block.settings.sharing_popup_text }}',
-    // The text that will be shared with the link (optional)
-    text: '{{ block.settings.sharing_text }}',
-    // The link that will be shared (optional, default to the current page)
-    link: window.location.href,
-  };
+  // Sharing config 
+  const sharingConfig = { link: window.location.href };
 
   const modalWalletConfig = {
     metadata: {
@@ -114,18 +106,6 @@
         }
       ],
       "default": "default"
-    },
-    {
-      "type": "text",
-      "id": "sharing_text",
-      "label": "Sharing text",
-      "info": "The text that will be shared alongside the product url"
-    },
-    {
-      "type": "text",
-      "id": "sharing_popup_text",
-      "label": "Sharing popup text",
-      "info": "The text that will appear on the user system sharing popup"
     },
     {
       "type": "select",

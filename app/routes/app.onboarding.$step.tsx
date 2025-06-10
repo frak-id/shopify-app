@@ -18,7 +18,8 @@ function parseStepNumber(step?: string) {
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
     const stepNumber = parseStepNumber(params.step);
-    const stepHandler = stepDataFetchers[stepNumber as keyof typeof stepDataFetchers];
+    const stepHandler =
+        stepDataFetchers[stepNumber as keyof typeof stepDataFetchers];
     const stepData = stepHandler ? await stepHandler(context) : {};
 
     return {

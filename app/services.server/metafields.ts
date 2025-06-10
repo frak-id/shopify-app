@@ -4,9 +4,16 @@ const FRAK_NAMESPACE = "frak";
 const MODAL_I18N_KEY = "modal_i18n";
 
 export type I18nCustomizations = {
-    fr?: Record<string, string>;
-    en?: Record<string, string>;
+    fr?: SingleLanguageI18nCustomizations;
+    en?: SingleLanguageI18nCustomizations;
 };
+
+export type MultiLanguageI18nCustomizations = {
+    fr?: SingleLanguageI18nCustomizations;
+    en?: SingleLanguageI18nCustomizations;
+};
+
+export type SingleLanguageI18nCustomizations = Record<string, string>;
 
 /**
  * Get the i18n customizations from shop metafields

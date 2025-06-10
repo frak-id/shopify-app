@@ -1,6 +1,11 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import {
+    useLoaderData,
+    useNavigate,
+    useRouteLoaderData,
+} from "@remix-run/react";
+import {
+    Banner,
     BlockStack,
     Button,
     Card,
@@ -8,15 +13,14 @@ import {
     Link,
     Page,
     Text,
-    Banner,
 } from "@shopify/polaris";
 import type { loader as appLoader } from "app/routes/app";
 import { authenticate } from "app/shopify.server";
 import {
-    fetchAllOnboardingData,
-    validateCompleteOnboarding,
-    getOnboardingStatusMessage,
     type OnboardingStepData,
+    fetchAllOnboardingData,
+    getOnboardingStatusMessage,
+    validateCompleteOnboarding,
 } from "app/utils/onboarding";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -26,14 +30,14 @@ import { useTranslation } from "react-i18next";
  */
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    
+
     // Fetch all onboarding data to validate completion
     const onboardingData = await fetchAllOnboardingData(context);
-    
+
     // Validate if onboarding is truly complete
     const validationResult = validateCompleteOnboarding(onboardingData);
     const statusMessage = getOnboardingStatusMessage(validationResult);
-    
+
     return {
         onboardingValidation: validationResult,
         onboardingStatus: statusMessage,
@@ -75,7 +79,9 @@ export default function Index() {
             <BlockStack gap="500">
                 <Layout>
                     {!isThemeSupported && <ThemeNotSupported />}
-                    {isThemeSupported && <ThemeSupported onboardingData={data} />}
+                    {isThemeSupported && (
+                        <ThemeSupported onboardingData={data} />
+                    )}
                 </Layout>
             </BlockStack>
         </Page>
@@ -97,14 +103,22 @@ function ThemeNotSupported() {
     );
 }
 
-function ThemeSupported({ 
-    onboardingData 
-}: { 
+function ThemeSupported({
+    onboardingData,
+}: {
     onboardingData: {
-        onboardingValidation: { isComplete: boolean; failedSteps: number[]; completedSteps: number[]; };
-        onboardingStatus: { status: "complete" | "incomplete"; message: string; failedSteps: number[]; };
+        onboardingValidation: {
+            isComplete: boolean;
+            failedSteps: number[];
+            completedSteps: number[];
+        };
+        onboardingStatus: {
+            status: "complete" | "incomplete";
+            message: string;
+            failedSteps: number[];
+        };
         onboardingData: OnboardingStepData;
-    } 
+    };
 }) {
     const { t } = useTranslation();
     const [localOnBoarding, setLocalOnBoarding] = useState(false);
@@ -115,7 +129,10 @@ function ThemeSupported({
         setLocalOnBoarding(frakOnboarding === "done");
 
         // If localStorage says onboarding is done but server validation fails, redirect to onboarding
-        if (frakOnboarding === "done" && !onboardingData.onboardingValidation.isComplete) {
+        if (
+            frakOnboarding === "done" &&
+            !onboardingData.onboardingValidation.isComplete
+        ) {
             // Clear the localStorage since it's not actually complete
             window.localStorage.removeItem("frak-onBoarding");
             setLocalOnBoarding(false);
@@ -125,22 +142,27 @@ function ThemeSupported({
         }
     }, [navigate, onboardingData.onboardingValidation.isComplete]);
 
-    const isOnboardingComplete = localOnBoarding && onboardingData.onboardingValidation.isComplete;
+    const isOnboardingComplete =
+        localOnBoarding && onboardingData.onboardingValidation.isComplete;
 
     return (
         <Layout.Section>
             <Card>
                 <BlockStack gap="500">
                     {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
-                    {localOnBoarding && !onboardingData.onboardingValidation.isComplete && (
-                        <Banner tone="warning">
-                            <Text as="p">{onboardingData.onboardingStatus.message}</Text>
-                            <Text as="p" variant="bodySm">
-                                Please complete the missing steps to activate all features.
-                            </Text>
-                        </Banner>
-                    )}
-                    
+                    {localOnBoarding &&
+                        !onboardingData.onboardingValidation.isComplete && (
+                            <Banner tone="warning">
+                                <Text as="p">
+                                    {onboardingData.onboardingStatus.message}
+                                </Text>
+                                <Text as="p" variant="bodySm">
+                                    Please complete the missing steps to
+                                    activate all features.
+                                </Text>
+                            </Banner>
+                        )}
+
                     {isOnboardingComplete ? (
                         <BlockStack gap="300">
                             <Banner tone="success">
