@@ -1,5 +1,10 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
+import {
+    Form,
+    useFetcher,
+    useLoaderData,
+    useNavigation,
+} from "@remix-run/react";
 import {
     Badge,
     BlockStack,
@@ -95,7 +100,7 @@ type LanguageMode = "single" | "multi";
 export default function CustomizationsPage() {
     const { customizations: initialCustomizations } =
         useLoaderData<typeof loader>();
-    const actionData = useActionData<typeof action>();
+    const fetcher = useFetcher<typeof action>();
     const navigation = useNavigation();
     const { t } = useTranslation();
 
@@ -121,10 +126,9 @@ export default function CustomizationsPage() {
     }, [customizations.fr, customizations.en]);
 
     useEffect(() => {
-        if (actionData?.success) {
-            shopify.toast.show(actionData.message);
-        }
-    }, [actionData]);
+        if (!fetcher.data?.success) return;
+        shopify.toast.show(fetcher.data.message);
+    }, [fetcher.data]);
 
     // Handle single language updates
     const handleSingleLanguageUpdate = (key: string, value: string) => {
@@ -174,32 +178,18 @@ export default function CustomizationsPage() {
         }
     };
 
-    const handleSubmit = () => {
-        const form = document.querySelector("form") as HTMLFormElement;
-        if (form) {
-            const hiddenInput = form.querySelector(
-                'input[name="customizations"]'
-            ) as HTMLInputElement;
-            if (hiddenInput) {
-                hiddenInput.value = JSON.stringify(customizations);
-            }
-            form.submit();
-        }
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.target as HTMLFormElement);
+        if (!formData) return;
+        fetcher.submit(formData, {
+            method: "post",
+            action: "/app/customizations",
+        });
     };
 
     return (
-        <Page
-            title={t("customizations.title")}
-            primaryAction={
-                <Button
-                    variant="primary"
-                    onClick={handleSubmit}
-                    loading={isLoading}
-                >
-                    {t("customizations.save")}
-                </Button>
-            }
-        >
+        <Page title={t("customizations.title")}>
             <Layout>
                 <Layout.Section>
                     <BlockStack gap="500">
@@ -224,7 +214,7 @@ export default function CustomizationsPage() {
                             onModeChange={handleLanguageModeChange}
                         />
 
-                        <form method="post">
+                        <Form onSubmit={handleSubmit}>
                             <input type="hidden" name="intent" value="save" />
                             <input
                                 type="hidden"
@@ -248,8 +238,11 @@ export default function CustomizationsPage() {
                                         onUpdate={handleMultiLanguageUpdate}
                                     />
                                 )}
+                                <Button submit loading={isLoading}>
+                                    {t("customizations.save")}
+                                </Button>
                             </FormLayout>
-                        </form>
+                        </Form>
                     </BlockStack>
                 </Layout.Section>
             </Layout>
