@@ -14,6 +14,8 @@ import {
 import { CheckIcon } from "@shopify/polaris-icons";
 import {
     type I18nCustomizations,
+    type MultiLanguageI18nCustomizations,
+    type SingleLanguageI18nCustomizations,
     getI18nCustomizations,
     updateI18nCustomizations,
 } from "app/services.server/metafields";
