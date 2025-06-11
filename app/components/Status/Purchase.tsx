@@ -61,7 +61,9 @@ function ActivePurchases({
                         {status}
                     </Badge>,
                     purchase.txHash ?? "N/A",
-                    purchase.createdAt?.toISOString(),
+                    purchase.createdAt
+                        ? new Date(purchase.createdAt).toLocaleString()
+                        : "N/A",
                     <InlineStack key={purchase.id}>
                         {purchase.status === "pending" && (
                             <Link
