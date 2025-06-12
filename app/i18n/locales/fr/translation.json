@@ -288,6 +288,24 @@
                 "description": "Message affiché aux utilisateurs qui ont cliqué sur un lien partagé",
                 "placeholder": "Exemple : 'Bienvenue ! Recevez **{{ estimatedReward }}** lors de votre achat'"
             }
+        },
+        "preview": {
+            "sharing": {
+                "title": "Aperçu",
+                "description": "Aperçu du texte affiché dans les modales Frak.",
+                "placeholder": "Partagez, Parrainez, Gagnez jusqu'à **{{ estimatedReward }}** par parrainage réussi",
+                "button": "Créer votre portefeuille en 2 secondes !"
+            },
+            "referred": {
+                "title": "Aperçu",
+                "description": "Aperçu du texte affiché dans les modales Frak.",
+                "placeholder": "Bienvenue ! Recevez **{{ estimatedReward }}** lors de votre achat",
+                "button": "Créer votre portefeuille en 2 secondes !"
+            },
+            "social": {
+                "title": "Tu connais le site Example ? 😊",
+                "description": "J'ai un produit incroyable à te partager ! 😉"
+            }
         }
     }
 }

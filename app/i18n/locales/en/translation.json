@@ -280,6 +280,26 @@
                 "description": "Message shown to users who clicked on a shared link",
                 "placeholder": "Example: 'Welcome! Receive **{{ estimatedReward }}** when you make a purchase'"
             }
+        },
+        "preview": {
+            "sharing": {
+                "title": "Preview sharing modal",
+                "description": "Preview the text displayed in Frak modals.",
+                "placeholder": "Share, Refer, Earn up to **{{ estimatedReward }}** per successful referral",
+                "button": "Create your wallet in 2 seconds!"
+            },
+            "referred": {
+                "title": "Preview referred modal",
+                "description": "Preview the text displayed in Frak modals.",
+                "placeholder": "Welcome! Receive **{{ estimatedReward }}** when you make a purchase",
+                "button": "Create your wallet in 2 seconds!"
+            },
+            "social": {
+                "title": "Preview social sharing",
+                "description": "Preview the text displayed in social sharing.",
+                "sharingTitle": "Do you know the Example site ? 😊",
+                "sharingText": "I have an amazing product to share with you ! 😉"
+            }
         }
     }
 }

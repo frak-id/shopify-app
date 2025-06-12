@@ -24,7 +24,7 @@ import {
     getI18nCustomizations,
     updateI18nCustomizations,
 } from "app/services.server/metafields";
-import { useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     MultiLanguageFields,
@@ -178,7 +178,7 @@ export default function CustomizationsPage() {
         }
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.target as HTMLFormElement);
         if (!formData) return;
@@ -238,9 +238,11 @@ export default function CustomizationsPage() {
                                         onUpdate={handleMultiLanguageUpdate}
                                     />
                                 )}
-                                <Button submit loading={isLoading}>
-                                    {t("customizations.save")}
-                                </Button>
+                                <Box paddingBlockEnd="400">
+                                    <Button submit loading={isLoading}>
+                                        {t("customizations.save")}
+                                    </Button>
+                                </Box>
                             </FormLayout>
                         </Form>
                     </BlockStack>
