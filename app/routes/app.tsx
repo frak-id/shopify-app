@@ -15,7 +15,12 @@ import { boundary } from "@shopify/shopify-app-remix/server";
 import { WalletGated } from "app/components/WalletGated";
 import { shopInfo } from "app/services.server/shop";
 import { doesThemeSupportBlock } from "app/services.server/theme";
-import { Suspense } from "react";
+import {
+    type OnboardingStepData,
+    fetchAllOnboardingData,
+    validateCompleteOnboarding,
+} from "app/utils/onboarding";
+import { type ReactNode, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
@@ -30,11 +35,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         apiKey: process.env.SHOPIFY_API_KEY || "",
         isThemeSupportedPromise: doesThemeSupportBlock(context),
         shop,
+        onboardingDataPromise: fetchAllOnboardingData(context),
     });
 };
 
 export default function App() {
-    const { apiKey, isThemeSupportedPromise } = useLoaderData<typeof loader>();
+    const { apiKey, isThemeSupportedPromise, onboardingDataPromise } =
+        useLoaderData<typeof loader>();
 
     return (
         <AppProvider isEmbeddedApp apiKey={apiKey}>
@@ -45,6 +52,9 @@ export default function App() {
                             <RootProvider>
                                 <Navigation
                                     isThemeSupported={isThemeSupported}
+                                    onboardingDataPromise={
+                                        onboardingDataPromise
+                                    }
                                 />
                                 <WalletGated>
                                     <Outlet />
@@ -71,30 +81,58 @@ export const headers: HeadersFunction = (headersArgs) => {
  * Show the navigation menu only if theme supports the block and wallet is connected
  * @param isThemeSupported
  */
-function Navigation({ isThemeSupported }: { isThemeSupported: boolean }) {
+function Navigation({
+    isThemeSupported,
+    onboardingDataPromise,
+}: {
+    isThemeSupported: boolean;
+    onboardingDataPromise: Promise<OnboardingStepData>;
+}) {
     const { data: walletStatus } = useWalletStatus();
-    const { t } = useTranslation();
 
+    return (
+        <NavigationRoot>
+            {isThemeSupported && walletStatus?.wallet && (
+                <Suspense>
+                    <Await resolve={onboardingDataPromise}>
+                        {(onboardingData) => {
+                            const validationResult =
+                                validateCompleteOnboarding(onboardingData);
+                            if (!validationResult.isComplete) return null;
+                            return <NavigationContent />;
+                        }}
+                    </Await>
+                </Suspense>
+            )}
+        </NavigationRoot>
+    );
+}
+
+function NavigationRoot({ children }: { children: ReactNode }) {
     return (
         <NavMenu>
             <Link to="/app" rel="home">
                 Home
             </Link>
-            {isThemeSupported && walletStatus?.wallet && (
-                <>
-                    <Link to="/app/pixel">{t("navigation.pixel")}</Link>
-                    <Link to="/app/webhook">{t("navigation.webhook")}</Link>
-                    <Link to="/app/theme">{t("navigation.theme")}</Link>
-                    <Link to="/app/button">{t("navigation.button")}</Link>
-                    <Link to="/app/walletbutton">
-                        {t("navigation.buttonWallet")}
-                    </Link>
-                    <Link to="/app/customizations">
-                        {t("navigation.customizations")}
-                    </Link>
-                    <Link to="/app/status">{t("navigation.status")}</Link>
-                </>
-            )}
+            {children}
         </NavMenu>
+    );
+}
+
+function NavigationContent() {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <Link to="/app/pixel">{t("navigation.pixel")}</Link>
+            <Link to="/app/webhook">{t("navigation.webhook")}</Link>
+            <Link to="/app/theme">{t("navigation.theme")}</Link>
+            <Link to="/app/button">{t("navigation.button")}</Link>
+            <Link to="/app/walletbutton">{t("navigation.buttonWallet")}</Link>
+            <Link to="/app/customizations">
+                {t("navigation.customizations")}
+            </Link>
+            <Link to="/app/status">{t("navigation.status")}</Link>
+        </>
     );
 }
