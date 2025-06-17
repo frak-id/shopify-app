@@ -11,10 +11,10 @@
         "pixel": "Application pixel",
         "webhook": "Webhook",
         "theme": "Theme",
-        "button": "Share button",
-        "buttonWallet": "Wallet button",
-        "customizations": "Customizations",
-        "status": "Status"
+        "status": "Status",
+        "campaigns": "Campaigns",
+        "appearance": "Appearance",
+        "funding": "Funding"
     },
     "stepper": {
         "back": "Back",
@@ -141,16 +141,6 @@
         "notConnected": "Frak application is not activated",
         "link": "Configuring Frak application in your theme"
     },
-    "button": {
-        "title": "Share button",
-        "connected": "Frak button is on your product page",
-        "notConnected": "Frak button is not in your product page",
-        "link": "Configure button in your product page"
-    },
-    "walletButton": {
-        "title": "Wallet button",
-        "link": "Configure wallet button in theme editor"
-    },
     "gated": {
         "configure": "Configure Frak",
         "create": "CREATE AN ACCOUNT",
@@ -250,7 +240,6 @@
         }
     },
     "customizations": {
-        "title": "Customizations",
         "description": "Customize the text displayed in Frak modals for different languages. These customizations will override the default text for your store.",
         "save": "Save Customizations",
         "saved": "Customizations saved successfully!",
@@ -324,5 +313,28 @@
                 "sharingText": "I have an amazing product to share with you ! 😉"
             }
         }
+    },
+    "campaigns": {
+        "title": "Campaigns",
+        "description": "Manage your marketing campaigns and track their performance. Create new campaigns to distribute rewards to users and grow your customer base."
+    },
+    "appearance": {
+        "title": "Appearance",
+        "description": "Customize the look and feel of your Frak integration across your store.",
+        "tabs": {
+            "customizations": "Text Customizations",
+            "shareButton": "Share Button",
+            "walletButton": "Wallet Button"
+        },
+        "shareButton": {
+            "link": "Configure button in your product page"
+        },
+        "walletButton": {
+            "link": "Configure wallet button in theme editor"
+        }
+    },
+    "funding": {
+        "title": "Funding",
+        "description": "Manage your funding sources and purchase history. Add funds to your banks to ensure your campaigns can distribute rewards to users."
     }
 }
