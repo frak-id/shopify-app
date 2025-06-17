@@ -14,7 +14,8 @@
         "status": "Statut",
         "campaigns": "Campagnes",
         "appearance": "Apparence",
-        "funding": "Financement"
+        "funding": "Financement",
+        "settings": "Paramètres"
     },
     "stepper": {
         "back": "Retour",
@@ -343,5 +344,9 @@
     "funding": {
         "title": "Financement",
         "description": "Gérez vos sources de financement et l'historique de vos achats. Ajoutez des fonds à vos banques pour vous assurer que vos campagnes peuvent distribuer des récompenses aux utilisateurs."
+    },
+    "settings": {
+        "title": "Paramètres",
+        "description": "Configurez les paramètres de votre intégration Frak et complétez le processus d'intégration."
     }
 }

@@ -131,6 +131,7 @@ function NavigationContent() {
             <Link to="/app/campaigns">{t("navigation.campaigns")}</Link>
             <Link to="/app/appearance">{t("navigation.appearance")}</Link>
             <Link to="/app/funding">{t("navigation.funding")}</Link>
+            <Link to="/app/settings">{t("navigation.settings")}</Link>
         </>
     );
 }

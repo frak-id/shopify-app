@@ -14,7 +14,8 @@
         "status": "Status",
         "campaigns": "Campaigns",
         "appearance": "Appearance",
-        "funding": "Funding"
+        "funding": "Funding",
+        "settings": "Settings"
     },
     "stepper": {
         "back": "Back",
@@ -336,5 +337,9 @@
     "funding": {
         "title": "Funding",
         "description": "Manage your funding sources and purchase history. Add funds to your banks to ensure your campaigns can distribute rewards to users."
+    },
+    "settings": {
+        "title": "Settings",
+        "description": "Configure your Frak integration settings and complete the onboarding process."
     }
 }

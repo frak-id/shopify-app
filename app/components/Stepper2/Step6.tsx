@@ -36,7 +36,7 @@ export function Step6({
                     url={`${editorUrl}?context=apps`}
                     target="_blank"
                 >
-                    {t("walletButton.link")}
+                    {t("appearance.walletButton.link")}
                 </Button>
             )}
         </StepItem>
