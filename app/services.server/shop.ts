@@ -1,4 +1,5 @@
 import type { AuthenticatedContext } from "app/types/context";
+import { LRUCache } from "lru-cache";
 import type { Hex } from "viem";
 import { productIdFromDomain } from "../utils/productIdFromDomain";
 
@@ -17,12 +18,27 @@ type ShopInfoReturnType = {
     productId: Hex;
 };
 
+const shopInfoCache = new LRUCache<string, ShopInfoReturnType>({
+    max: 512,
+    // ttl of 1min
+    ttl: 60_000,
+});
+
 /**
  * Get the shop name and url
  */
 export async function shopInfo({
     admin: { graphql },
+    session: { shop: sessionShop },
 }: AuthenticatedContext): Promise<ShopInfoReturnType> {
+    // Check if we got that in our LRU Cache
+    const cachedShopInfo = shopInfoCache.get(sessionShop);
+    if (cachedShopInfo) {
+        console.debug("Cache hit for shop", sessionShop);
+        return cachedShopInfo;
+    }
+    console.debug("Cache miss for shop", sessionShop);
+    // Otherwise, fetch it from the API
     const response = await graphql(`
 query shopInfo {
   shop {
@@ -37,18 +53,25 @@ query shopInfo {
         data: { shop },
     } = await response.json();
 
+    // Build our final domain
     const finalDomain = shop.primaryDomain?.host ?? shop.myshopifyDomain;
     const normalizedDomain = finalDomain
         .replace("https://", "")
         .replace("http://", "")
         .replace("www.", "");
 
-    return {
+    // Build our final object
+    const finalShopInfo = {
         ...shop,
         domain: shop.primaryDomain?.host ?? shop.myshopifyDomain,
         normalizedDomain,
         productId: productIdFromDomain(normalizedDomain),
     };
+
+    // Add it to our LRU Cache
+    shopInfoCache.set(sessionShop, finalShopInfo);
+
+    return finalShopInfo;
 }
 
 export type FirstProductPublishedReturnType = {
