@@ -21,7 +21,7 @@ import {
     getWebhooks,
 } from "app/services.server/webhook";
 import type { AuthenticatedContext } from "app/types/context";
-import { indexerApi } from "./indexerApi";
+import { getOnchainProductInfo } from "../services.server/onchain";
 
 export type OnboardingStepData = {
     webPixel?: GetWebPixelReturnType;
@@ -60,10 +60,7 @@ export const stepValidations: StepValidation = {
 export const stepDataFetchers = {
     1: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
         try {
-            const shop = await shopInfo(context);
-            const productInfo = (await indexerApi
-                .get(`products/info?domain=${shop.normalizedDomain}`)
-                .json()) as GetProductInfoResponseDto | null;
+            const productInfo = await getOnchainProductInfo(context);
             return { shopInfo: productInfo ?? undefined };
         } catch (e) {
             console.warn("Error fetching shop info or product info", e);

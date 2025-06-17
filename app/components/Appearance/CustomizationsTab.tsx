@@ -116,7 +116,7 @@ export function CustomizationsTab({
         if (!formData) return;
         fetcher.submit(formData, {
             method: "post",
-            action: "/app/customizations",
+            action: "/app/appearance",
         });
     };
 

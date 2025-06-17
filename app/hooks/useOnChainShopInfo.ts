@@ -4,6 +4,7 @@ import type { loader as rootLoader } from "app/routes/app";
 import type { Address } from "viem";
 import { indexerApi } from "../utils/indexerApi";
 
+// todo: to be deleted alongside the initial stepper component
 export function useOnChainShopInfo() {
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 

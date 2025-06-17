@@ -1,18 +1,20 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { BlockStack, Layout, Page } from "@shopify/polaris";
 import { ConnectedShopInfo } from "app/components/Status/ConnectedShopInfo";
 import { Stepper2 } from "app/components/Stepper2";
-import { useOnChainShopInfo } from "app/hooks/useOnChainShopInfo";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
+import { getOnchainProductInfo } from "../services.server/onchain";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-    await authenticate.admin(request);
-    return Response.json({});
+    const context = await authenticate.admin(request);
+    const shopInfo = await getOnchainProductInfo(context);
+    return Response.json({ shopInfo });
 };
 
 export default function SettingsPage() {
-    const { shopInfo, isLoading } = useOnChainShopInfo();
+    const { shopInfo } = useLoaderData<typeof loader>();
     const { t } = useTranslation();
 
     return (
@@ -21,7 +23,7 @@ export default function SettingsPage() {
                 <Layout.Section>
                     <BlockStack gap="500">
                         {/* Show ConnectedShopInfo only if shop is connected and has product data */}
-                        {!isLoading && shopInfo?.product && (
+                        {shopInfo?.product && (
                             <ConnectedShopInfo product={shopInfo.product} />
                         )}
 

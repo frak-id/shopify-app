@@ -1,5 +1,9 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
-import { useRevalidator, useRouteLoaderData } from "@remix-run/react";
+import {
+    useFetcher,
+    useRevalidator,
+    useRouteLoaderData,
+} from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
 import { useMutation } from "@tanstack/react-query";
 import type { loader as rootLoader } from "app/routes/app";
@@ -17,6 +21,7 @@ export function Step1({
     const { revalidate } = useRevalidator();
     const { data: walletStatus } = useWalletStatus();
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const fetcher = useFetcher();
 
     const { mutate: openMintEmbed, isPending } = useMutation({
         mutationKey: ["setup", "mint-embed"],
@@ -57,10 +62,17 @@ export function Step1({
                 openedWindow.focus();
 
                 // Check every 500ms if the window is closed
-                // If it is, revalidate the page
+                // If it is, clear cache and revalidate the page
                 const timer = setInterval(() => {
                     if (openedWindow.closed) {
                         clearInterval(timer);
+
+                        // Clear the on-chain shop cache before revalidating
+                        fetcher.submit(
+                            { intent: "clearCache" },
+                            { method: "POST", action: "/app/onboarding" }
+                        );
+
                         setTimeout(() => revalidate(), 1000);
                     }
                 }, 500);

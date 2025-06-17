@@ -8,48 +8,53 @@ import {
     Page,
     Spinner,
 } from "@shopify/polaris";
-import { useQueryClient } from "@tanstack/react-query";
 import { SetupInstructions } from "app/components/Status/SetupInstructions";
-import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { BankingStatus } from "../components/Status/Bank";
 import { CampaignStatus } from "../components/Status/Campaign";
 import { ConnectedShopInfo } from "../components/Status/ConnectedShopInfo";
 import { PurchaseStatus } from "../components/Status/Purchase";
 import { StatusBanner } from "../components/Status/StatusBanner";
-import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
+import { useRefreshData } from "../hooks/useRefreshData";
+import { getOnchainProductInfo } from "../services.server/onchain";
 import { getCurrentPurchases } from "../services.server/purchase";
 import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const currentPurchases = await getCurrentPurchases(context);
-    return { currentPurchases };
+    const [currentPurchases, shopInfo] = await Promise.all([
+        getCurrentPurchases(context),
+        getOnchainProductInfo(context),
+    ]);
+    return { currentPurchases, shopInfo };
 };
 
 export default function StatusPage() {
     const { data: walletStatus, isLoading: isWalletLoading } =
         useWalletStatus();
-    const {
-        shopInfo,
-        isLoading: isShopInfoLoading,
-        refetch: refetchShopInfo,
-    } = useOnChainShopInfo();
     const { t } = useTranslation();
-    const { currentPurchases } = useLoaderData<typeof loader>();
-    const queryClient = useQueryClient();
-    const refetch = useCallback(() => {
-        // Refetch the shop info
-        refetchShopInfo();
-        // Refetch all the other queries
-        queryClient.refetchQueries();
-    }, [queryClient, refetchShopInfo]);
+    const { currentPurchases, shopInfo } = useLoaderData<typeof loader>();
+    const refetch = useRefreshData();
 
     // Check loading state for all queries
-    const isLoading = isWalletLoading || isShopInfoLoading;
+    const isLoading = isWalletLoading;
+
+    if (isWalletLoading) {
+        return (
+            <Page title={t("status.title")}>
+                <Layout>
+                    <Layout.Section>
+                        <BlockStack gap="400" align="center">
+                            <Spinner size="large" />
+                        </BlockStack>
+                    </Layout.Section>
+                </Layout>
+            </Page>
+        );
+    }
 
     // If we don't have a wallet yet
-    if (!isLoading && !walletStatus?.wallet) {
+    if (!isWalletLoading && !walletStatus?.wallet) {
         return (
             <Page title={t("status.title")}>
                 <Layout>
@@ -60,20 +65,6 @@ export default function StatusPage() {
                         >
                             <p>{t("status.noWallet.message")}</p>
                         </EmptyState>
-                    </Layout.Section>
-                </Layout>
-            </Page>
-        );
-    }
-
-    if (isLoading) {
-        return (
-            <Page title={t("status.title")}>
-                <Layout>
-                    <Layout.Section>
-                        <BlockStack gap="400" align="center">
-                            <Spinner size="large" />
-                        </BlockStack>
                     </Layout.Section>
                 </Layout>
             </Page>
