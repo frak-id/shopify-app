@@ -14,7 +14,10 @@
         "button": "Bouton de partage",
         "buttonWallet": "Bouton porte-monnaie",
         "customizations": "Personnalisations",
-        "status": "Statut"
+        "status": "Statut",
+        "campaigns": "Campagnes",
+        "appearance": "Apparence",
+        "funding": "Financement"
     },
     "stepper": {
         "back": "Retour",
@@ -307,5 +310,22 @@
                 "description": "J'ai un produit incroyable à te partager ! 😉"
             }
         }
+    },
+    "campaigns": {
+        "title": "Campagnes",
+        "description": "Gérez vos campagnes marketing et suivez leurs performances. Créez de nouvelles campagnes pour distribuer des récompenses aux utilisateurs et développer votre base client."
+    },
+    "appearance": {
+        "title": "Apparence",
+        "description": "Personnalisez l'apparence de votre intégration Frak dans votre boutique.",
+        "tabs": {
+            "customizations": "Personnalisations de texte",
+            "shareButton": "Bouton de partage",
+            "walletButton": "Bouton porte-monnaie"
+        }
+    },
+    "funding": {
+        "title": "Financement",
+        "description": "Gérez vos sources de financement et l'historique de vos achats. Ajoutez des fonds à vos banques pour vous assurer que vos campagnes peuvent distribuer des récompenses aux utilisateurs."
     }
 }

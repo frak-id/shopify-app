@@ -133,6 +133,9 @@ function NavigationContent() {
                 {t("navigation.customizations")}
             </Link>
             <Link to="/app/status">{t("navigation.status")}</Link>
+            <Link to="/app/campaigns">{t("navigation.campaigns")}</Link>
+            <Link to="/app/appearance">{t("navigation.appearance")}</Link>
+            <Link to="/app/funding">{t("navigation.funding")}</Link>
         </>
     );
 }
