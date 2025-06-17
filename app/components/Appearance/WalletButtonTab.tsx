@@ -27,7 +27,7 @@ export function WalletButtonTab({ themeWalletButton }: WalletButtonTabProps) {
                                 url={`${editorUrl}?context=apps&appEmbed=${themeWalletButton}%2Fwallet_button`}
                                 target="_blank"
                             >
-                                {t("walletButton.link")}
+                                {t("appearance.walletButton.link")}
                             </Link>
                         </Box>
                     </>

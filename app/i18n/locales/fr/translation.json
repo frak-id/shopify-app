@@ -11,9 +11,6 @@
         "pixel": "Pixel d'application",
         "webhook": "Webhook",
         "theme": "Thème",
-        "button": "Bouton de partage",
-        "buttonWallet": "Bouton porte-monnaie",
-        "customizations": "Personnalisations",
         "status": "Statut",
         "campaigns": "Campagnes",
         "appearance": "Apparence",
@@ -121,16 +118,7 @@
         "notConnected": "L'application Frak n'est pas activée",
         "link": "Configuration de l'application dans votre thème"
     },
-    "button": {
-        "title": "Bouton de partage",
-        "connected": "Le bouton Frak est dans votre page produit",
-        "notConnected": "Le bouton Frak n'est pas dans votre page produit",
-        "link": "Configurer le bouton dans votre page produit"
-    },
-    "walletButton": {
-        "title": "Bouton porte-monnaie",
-        "link": "Configurer le bouton porte-monnaie dans l'éditeur de thème"
-    },
+
     "gated": {
         "configure": "Configurer Frak",
         "create": "CREER UN COMPTE",
@@ -230,7 +218,6 @@
         }
     },
     "customizations": {
-        "title": "Personnalisations",
         "description": "Personnalisez les textes affichés dans les modales Frak pour différentes langues. Ces personnalisations remplaceront les textes par défaut de votre boutique.",
         "save": "Enregistrer les personnalisations",
         "saved": "Personnalisations enregistrées avec succès !",
@@ -322,6 +309,12 @@
             "customizations": "Personnalisations de texte",
             "shareButton": "Bouton de partage",
             "walletButton": "Bouton porte-monnaie"
+        },
+        "shareButton": {
+            "link": "Configurer le bouton dans votre page produit"
+        },
+        "walletButton": {
+            "link": "Configurer le bouton porte-monnaie dans l'éditeur de thème"
         }
     },
     "funding": {

@@ -162,7 +162,7 @@ export function WalletNotActivated({
                                 url={`${editorUrl}?context=apps`}
                                 target="_blank"
                             >
-                                {t("walletButton.link")}
+                                {t("appearance.walletButton.link")}
                             </Link>
                         </Text>
                     </Box>

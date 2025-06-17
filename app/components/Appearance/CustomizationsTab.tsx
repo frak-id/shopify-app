@@ -9,6 +9,7 @@ import {
     Text,
 } from "@shopify/polaris";
 import { CheckIcon } from "@shopify/polaris-icons";
+import type { action } from "app/routes/app.appearance";
 import type {
     I18nCustomizations,
     MultiLanguageI18nCustomizations,
@@ -31,7 +32,7 @@ interface CustomizationsTabProps {
 export function CustomizationsTab({
     initialCustomizations,
 }: CustomizationsTabProps) {
-    const fetcher = useFetcher();
+    const fetcher = useFetcher<typeof action>();
     const navigation = useNavigation();
     const { t } = useTranslation();
 

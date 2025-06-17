@@ -34,7 +34,7 @@ export function ButtonTab({
                                     url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
                                     target="_blank"
                                 >
-                                    {t("button.link")}
+                                    {t("appearance.shareButton.link")}
                                 </Link>
                             ) : (
                                 <>{t("stepper.step5.noProduct")}</>
