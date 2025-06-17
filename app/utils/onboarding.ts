@@ -1,3 +1,4 @@
+import type { GetProductInfoResponseDto } from "app/hooks/useOnChainShopInfo";
 import {
     type FirstProductPublishedReturnType,
     firstProductPublished,
@@ -20,6 +21,7 @@ import {
     getWebhooks,
 } from "app/services.server/webhook";
 import type { AuthenticatedContext } from "app/types/context";
+import { indexerApi } from "./indexerApi";
 
 export type OnboardingStepData = {
     webPixel?: GetWebPixelReturnType;
@@ -33,6 +35,7 @@ export type OnboardingStepData = {
         setup: boolean;
     };
     productId?: string;
+    shopInfo?: GetProductInfoResponseDto;
 };
 
 export type StepValidation = {
@@ -43,10 +46,10 @@ export type StepValidation = {
  * Validation functions for each onboarding step
  */
 export const stepValidations: StepValidation = {
-    1: () => true, // Welcome step, always valid
-    2: () => true, // Application pixel info step, always valid
-    3: (data) => Boolean(data?.webPixel?.id), // Web pixel must be created
-    4: (data) => Boolean(data?.webhooks?.length && data?.frakWebhook?.setup), // Webhooks must be set up
+    1: (data) => Boolean(data?.shopInfo), // Shop info from indexer
+    2: (data) => Boolean(data?.webPixel?.id), // Web pixel must be created
+    3: (data) => Boolean(data?.webhooks?.length), // Webhooks must be set up
+    4: (data) => Boolean(data?.frakWebhook?.setup), // Frak webhook must be set up
     5: (data) => Boolean(data?.isThemeHasFrakActivated), // Theme must have Frak activated
     6: (data) => Boolean(data?.isThemeHasFrakButton || data?.themeWalletButton), // Theme must have Frak button or wallet button
 };
@@ -55,7 +58,19 @@ export const stepValidations: StepValidation = {
  * Data fetchers for each onboarding step
  */
 export const stepDataFetchers = {
-    3: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
+    1: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
+        try {
+            const shop = await shopInfo(context);
+            const productInfo = (await indexerApi
+                .get(`products/info?domain=${shop.normalizedDomain}`)
+                .json()) as GetProductInfoResponseDto | null;
+            return { shopInfo: productInfo ?? undefined };
+        } catch (e) {
+            console.warn("Error fetching shop info or product info", e);
+            return {};
+        }
+    },
+    2: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
         try {
             const webPixel = await getWebPixel(context);
             return { webPixel };
@@ -65,18 +80,25 @@ export const stepDataFetchers = {
         }
     },
 
+    3: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
+        try {
+            const webhooks = await getWebhooks(context);
+            return { webhooks };
+        } catch (error) {
+            console.error("Error fetching shopify webhooks:", error);
+            return {};
+        }
+    },
+
     4: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
         try {
-            const [webhooks, shop] = await Promise.all([
-                getWebhooks(context),
-                shopInfo(context),
-            ]);
+            const shop = await shopInfo(context);
             const frakWebhook = await frakWebhookStatus({
                 productId: shop.productId,
             });
-            return { webhooks, frakWebhook, productId: shop.productId };
+            return { frakWebhook, productId: shop.productId };
         } catch (error) {
-            console.error("Error fetching webhooks:", error);
+            console.error("Error fetching frak webhook:", error);
             return {};
         }
     },
@@ -131,18 +153,28 @@ export async function fetchAllOnboardingData(
 ): Promise<OnboardingStepData> {
     try {
         // Fetch all data in parallel for efficiency
-        const [webPixelData, webhookData, themeData, buttonData] =
-            await Promise.all([
-                stepDataFetchers[3](context),
-                stepDataFetchers[4](context),
-                stepDataFetchers[5](context),
-                stepDataFetchers[6](context),
-            ]);
+        const [
+            shopInfoData,
+            webPixelData,
+            webhookData,
+            frakWebhookData,
+            themeData,
+            buttonData,
+        ] = await Promise.all([
+            stepDataFetchers[1](context),
+            stepDataFetchers[2](context),
+            stepDataFetchers[3](context),
+            stepDataFetchers[4](context),
+            stepDataFetchers[5](context),
+            stepDataFetchers[6](context),
+        ]);
 
         // Merge all data
         return {
+            ...shopInfoData,
             ...webPixelData,
             ...webhookData,
+            ...frakWebhookData,
             ...themeData,
             ...buttonData,
         };
@@ -166,8 +198,8 @@ export function validateCompleteOnboarding(data: OnboardingStepData): {
     const failedSteps: number[] = [];
     const completedSteps: number[] = [];
 
-    // Check steps 3-6 (steps 1-2 are info steps)
-    for (let step = 3; step <= 6; step++) {
+    // Check steps 1-6
+    for (let step = 1; step <= 6; step++) {
         const validator = stepValidations[step];
         if (validator) {
             if (validator(data)) {
@@ -213,8 +245,10 @@ export function getOnboardingStatusMessage(validationResult: {
     }
 
     const stepNames = {
-        3: "Web Pixel",
-        4: "Webhooks",
+        1: "Shop Info",
+        2: "Web Pixel",
+        3: "Shopify Webhooks",
+        4: "Frak Webhook",
         5: "Theme Activation",
         6: "Frak Buttons",
     };

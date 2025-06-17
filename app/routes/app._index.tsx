@@ -1,11 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import {
-    Await,
-    defer,
-    useLoaderData,
-    useNavigate,
-    useRouteLoaderData,
-} from "@remix-run/react";
+import { Await, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import {
     Banner,
     BlockStack,
@@ -17,10 +10,8 @@ import {
     Text,
 } from "@shopify/polaris";
 import type { loader as appLoader } from "app/routes/app";
-import { authenticate } from "app/shopify.server";
 import {
     type OnboardingStepData,
-    fetchAllOnboardingData,
     getOnboardingStatusMessage,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
@@ -36,18 +27,6 @@ export const headers = () => {
 };
 
 /**
- * Loader function that validates complete onboarding status
- */
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-    const context = await authenticate.admin(request);
-
-    // Fetch all onboarding data to validate completion
-    return defer({
-        onboardingDataPromise: fetchAllOnboardingData(context),
-    });
-};
-
-/**
  * todo: Index page of the Frak application on the shopify admin panel
  *  - Login with a Frak wallet if needed
  *  - Check if a product is present, otherwise, link to product page?
@@ -60,9 +39,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
  * @param request
  */
 export default function Index() {
-    const { onboardingDataPromise } = useLoaderData<typeof loader>();
     const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
     const isThemeSupportedPromise = rootData?.isThemeSupportedPromise;
+    const onboardingDataPromise = rootData?.onboardingDataPromise;
     const { t } = useTranslation();
 
     return (
@@ -150,19 +129,11 @@ function ThemeSupported({
             // Clear the localStorage since it's not actually complete
             window.localStorage.removeItem("frak-onBoarding");
             setLocalOnBoarding(false);
-            navigate(
-                `/app/onboarding/step${validationResult.firstMissingStep ?? 1}`
-            );
+            navigate("/app/onboarding");
         } else if (frakOnboarding !== "done") {
-            navigate(
-                `/app/onboarding/step${validationResult.firstMissingStep ?? 1}`
-            );
+            navigate("/app/onboarding");
         }
-    }, [
-        navigate,
-        validationResult.isComplete,
-        validationResult.firstMissingStep,
-    ]);
+    }, [navigate, validationResult.isComplete]);
 
     const isOnboardingComplete = localOnBoarding && validationResult.isComplete;
 
@@ -191,7 +162,7 @@ function ThemeSupported({
                             </Banner>
                         </BlockStack>
                     ) : (
-                        <Link url="/app/onboarding/step1">
+                        <Link url="/app/onboarding">
                             {t("common.getStarted")}
                         </Link>
                     )}

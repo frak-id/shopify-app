@@ -65,6 +65,29 @@
             "description": "You have completed the Frak setup!"
         }
     },
+    "stepper2": {
+        "title": "Setup guide",
+        "description": "Use this guide to setup your Frak app.",
+        "completedStep": "{{completedStep}} of {{totalSteps}} tasks completed",
+        "footer": "If you experience any issues or have any questions, just send us an email to <a />.",
+        "step2": {
+            "title": "Application pixel"
+        },
+        "step3": {
+            "title": "Shopify Webhook"
+        },
+        "step4": {
+            "title": "Frak Webhook"
+        },
+        "step5": {
+            "title": "Setup Frak embedded app within your theme",
+            "link": "Configure Frak embedded application in your theme"
+        },
+        "step6": {
+            "title": "Add the share or wallet button in your theme",
+            "link": "Add the sharing button to your product page"
+        }
+    },
     "pixel": {
         "title": "Application pixel",
         "connected": "Your pixel is connected to your store.",

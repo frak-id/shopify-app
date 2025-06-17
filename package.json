@@ -12,7 +12,7 @@
     "deploy:prod": "sst deploy --stage production",
     "shopify:deploy": "shopify app deploy --config development",
     "shopify:deploy:prod": "shopify app deploy --config production",
-    "dev": "bun sst dev",
+    "dev": "bun sst dev --stage dev",
     "shopify:dev": "shopify app dev --config development",
     "shopify:dev:prod": "shopify app dev --config production",
     "docker-start": "bun run setup && bun run start",

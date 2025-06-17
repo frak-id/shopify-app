@@ -65,6 +65,29 @@
             "description": "Vous avez terminé la configuration de Frak !"
         }
     },
+    "stepper2": {
+        "title": "Guide de configuration",
+        "description": "Utilisez ce guide pour configurer votre application Frak.",
+        "completedStep": "{{completedStep}} de {{totalSteps}} tâches terminées",
+        "footer": "Si vous rencontrez des problèmes ou avez des questions, envoyez-nous un email à <a />.",
+        "step2": {
+            "title": "Pixel d'application"
+        },
+        "step3": {
+            "title": "Webhook Shopify"
+        },
+        "step4": {
+            "title": "Webhook Frak"
+        },
+        "step5": {
+            "title": "Configurer l'application Frak intégrée dans votre thème",
+            "link": "Configurer l'application intégrée Frak dans votre thème"
+        },
+        "step6": {
+            "title": "Ajouter le bouton de partage ou de porte-monnaie dans votre thème",
+            "link": "Ajoutez le bouton de partage à votre page produit"
+        }
+    },
     "pixel": {
         "title": "Pixel d'application",
         "connected": "Votre pixel est connecté à votre boutique.",
