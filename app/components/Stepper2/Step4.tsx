@@ -1,8 +1,7 @@
-import { Text } from "@shopify/polaris";
 import type { OnboardingStepData } from "app/utils/onboarding";
 import { useTranslation } from "react-i18next";
-import { StepItem } from ".";
 import { FrakWebhook } from "../Webhook";
+import { CollapsibleStep } from "./CollapsibleStep";
 
 export function Step4({
     onboardingData,
@@ -14,13 +13,15 @@ export function Step4({
     const isFrakWebhookExists = frakWebhook?.setup;
 
     return (
-        <StepItem checked={!!isFrakWebhookExists}>
-            <Text variant="bodyMd" as="p">
-                {t("stepper2.step4.title")}
-            </Text>
+        <CollapsibleStep
+            step={4}
+            completed={!!isFrakWebhookExists}
+            title={t("stepper2.step4.title")}
+            description={t("stepper2.step4.description")}
+        >
             {!isFrakWebhookExists && productId && (
                 <FrakWebhook setup={false} productId={productId} />
             )}
-        </StepItem>
+        </CollapsibleStep>
     );
 }

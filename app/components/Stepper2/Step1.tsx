@@ -1,15 +1,15 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
-import {
-    useFetcher,
-    useRevalidator,
-    useRouteLoaderData,
-} from "@remix-run/react";
+import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
 import { useMutation } from "@tanstack/react-query";
+import { useRefreshData } from "app/hooks/useRefreshData";
 import type { loader as rootLoader } from "app/routes/app";
 import type { OnboardingStepData } from "app/utils/onboarding";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { StepItem } from ".";
+import { CollapsibleStep } from "./CollapsibleStep";
+
+let pollTimeout: ReturnType<typeof setTimeout> | null = null;
 
 export function Step1({
     onboardingData,
@@ -18,10 +18,34 @@ export function Step1({
 }) {
     const { shopInfo } = onboardingData;
     const { t } = useTranslation();
-    const { revalidate } = useRevalidator();
+    const refresh = useRefreshData();
     const { data: walletStatus } = useWalletStatus();
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const fetcher = useFetcher();
+
+    // Check if the shop is connected
+    const isConnected = !!shopInfo;
+    const isConnectedRef = useRef(isConnected);
+
+    useEffect(() => {
+        if (!isConnected) return;
+        isConnectedRef.current = isConnected;
+    }, [isConnected]);
+
+    // Poll every 1s until shopInfo is defined, then stop polling
+    const pollForShopInfo = async () => {
+        await refresh();
+
+        if (!isConnectedRef.current) {
+            pollTimeout = setTimeout(() => pollForShopInfo(), 1000);
+            return;
+        }
+
+        if (pollTimeout) {
+            clearTimeout(pollTimeout);
+            pollTimeout = null;
+        }
+    };
 
     const { mutate: openMintEmbed, isPending } = useMutation({
         mutationKey: ["setup", "mint-embed"],
@@ -73,31 +97,30 @@ export function Step1({
                             { method: "POST", action: "/app/onboarding" }
                         );
 
-                        setTimeout(() => revalidate(), 1000);
+                        pollForShopInfo();
                     }
                 }, 500);
             }
         },
     });
 
-    // Check if the shop is connected
-    const isConnected = !!shopInfo;
-
     return (
-        <StepItem checked={isConnected}>
-            <Text variant="bodyMd" as="p">
-                {t("status.connectionStatus.title")}
+        <CollapsibleStep
+            step={1}
+            completed={isConnected}
+            title={t("status.connectionStatus.title")}
+        >
+            <Text as="p" variant="bodyMd">
+                {t("stepper2.step1.description")}
             </Text>
-            {!isConnected && (
-                <Button
-                    onClick={openMintEmbed}
-                    variant="primary"
-                    loading={isPending}
-                    disabled={walletStatus?.wallet === undefined}
-                >
-                    {t("status.modal.button")}
-                </Button>
-            )}
-        </StepItem>
+            <Button
+                onClick={openMintEmbed}
+                variant="primary"
+                loading={isPending}
+                disabled={walletStatus?.wallet === undefined}
+            >
+                {t("status.modal.button")}
+            </Button>
+        </CollapsibleStep>
     );
 }

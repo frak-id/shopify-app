@@ -1,8 +1,7 @@
-import { Text } from "@shopify/polaris";
 import type { OnboardingStepData } from "app/utils/onboarding";
 import { useTranslation } from "react-i18next";
-import { StepItem } from ".";
 import { CreateShopifyWebhook } from "../Webhook";
+import { CollapsibleStep } from "./CollapsibleStep";
 
 export function Step3({
     onboardingData,
@@ -14,11 +13,13 @@ export function Step3({
     const isWebhookExists = Boolean(webhooks?.length);
 
     return (
-        <StepItem checked={isWebhookExists}>
-            <Text variant="bodyMd" as="p">
-                {t("stepper2.step3.title")}
-            </Text>
+        <CollapsibleStep
+            step={3}
+            completed={isWebhookExists}
+            title={t("stepper2.step3.title")}
+            description={t("stepper2.step3.description")}
+        >
             {!isWebhookExists && <CreateShopifyWebhook />}
-        </StepItem>
+        </CollapsibleStep>
     );
 }

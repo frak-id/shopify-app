@@ -6,7 +6,8 @@ export function useRefreshData() {
     const { revalidate } = useRevalidator();
     const queryClient = useQueryClient();
 
-    return useCallback(() => {
-        queryClient.refetchQueries().then(() => revalidate());
+    return useCallback(async () => {
+        await queryClient.refetchQueries();
+        await revalidate();
     }, [revalidate, queryClient]);
 }

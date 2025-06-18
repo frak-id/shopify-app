@@ -71,22 +71,33 @@
         "description": "Utilisez ce guide pour configurer votre application Frak.",
         "completedStep": "{{completedStep}} de {{totalSteps}} tâches terminées",
         "footer": "Si vous rencontrez des problèmes ou avez des questions, envoyez-nous un email à <a />.",
+        "step1": {
+            "title": "Statut de connexion",
+            "description": "Vous devez connecter votre boutique à l'écosystème Frak."
+        },
         "step2": {
-            "title": "Pixel d'application"
+            "title": "Pixel d'application",
+            "description": "Nous avons besoin d'implémenter un pixel d'application pour suivre les achats de vos clients."
         },
         "step3": {
-            "title": "Webhook Shopify"
+            "title": "Webhook Shopify",
+            "description": "Nous avons besoin de configurer un webhook pour passer les informations sur les commandes."
         },
         "step4": {
-            "title": "Webhook Frak"
+            "title": "Webhook Frak",
+            "description": "Vous allez connecter votre webhook Frak à votre boutique."
         },
         "step5": {
             "title": "Configurer l'application Frak intégrée dans votre thème",
-            "link": "Configurer l'application intégrée Frak dans votre thème"
+            "link": "Activer l'application intégrée Frak dans votre thème",
+            "description": "Veuillez activer l'<strong>application Frak intégrée</strong> dans votre thème à l'aide de l'interrupteur comme illustré ci-dessous"
         },
         "step6": {
             "title": "Ajouter le bouton de partage ou de porte-monnaie dans votre thème",
-            "link": "Ajoutez le bouton de partage à votre page produit"
+            "descriptionShare": "Veuillez ajouter le <strong>Frak Sharing Button</strong> comme illustré ci-dessous",
+            "descriptionWallet": "Veuillez activer le <strong>Frak Wallet Button</strong> comme illustré ci-dessous",
+            "linkShare": "Ajoutez le bouton Frak Sharing Button à votre page produit",
+            "linkWallet": "Activez le bouton Frak Wallet Button"
         }
     },
     "pixel": {

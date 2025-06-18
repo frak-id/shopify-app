@@ -2,8 +2,9 @@ import { useRouteLoaderData } from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import type { OnboardingStepData } from "app/utils/onboarding";
-import { useTranslation } from "react-i18next";
-import { StepItem } from ".";
+import { Trans, useTranslation } from "react-i18next";
+import screenFrakListener from "../../assets/frak-listener.png";
+import { CollapsibleStep } from "./CollapsibleStep";
 
 export function Step5({
     onboardingData,
@@ -18,19 +19,22 @@ export function Step5({
     const isFrakActivated = !!isThemeHasFrakActivated;
 
     return (
-        <StepItem checked={isFrakActivated}>
-            <Text variant="bodyMd" as="p">
-                {t("stepper2.step5.title")}
+        <CollapsibleStep
+            step={5}
+            completed={isFrakActivated}
+            title={t("stepper2.step5.title")}
+        >
+            <Text as="p" variant="bodyMd">
+                <Trans i18nKey="stepper2.step5.description" />
             </Text>
-            {!isFrakActivated && (
-                <Button
-                    variant="primary"
-                    url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
-                    target="_blank"
-                >
-                    {t("stepper2.step5.link")}
-                </Button>
-            )}
-        </StepItem>
+            <img src={screenFrakListener} alt="" />
+            <Button
+                variant="primary"
+                url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
+                target="_blank"
+            >
+                {t("stepper2.step5.link")}
+            </Button>
+        </CollapsibleStep>
     );
 }

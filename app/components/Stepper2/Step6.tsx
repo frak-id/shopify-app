@@ -1,9 +1,11 @@
 import { useRouteLoaderData } from "@remix-run/react";
-import { Button, Text } from "@shopify/polaris";
+import { BlockStack, Button, Grid, Text } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import type { OnboardingStepData } from "app/utils/onboarding";
-import { useTranslation } from "react-i18next";
-import { StepItem } from ".";
+import { Trans, useTranslation } from "react-i18next";
+import screenShareButton from "../../assets/share-button.png";
+import screenWalletButton from "../../assets/wallet-button.png";
+import { CollapsibleStep } from "./CollapsibleStep";
 
 export function Step6({
     onboardingData,
@@ -15,30 +17,55 @@ export function Step6({
     const { t } = useTranslation();
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
+    const isThemeWalletButtonExist = !!themeWalletButton;
+    const isCompleted = !!(isThemeHasFrakButton || themeWalletButton);
 
     return (
-        <StepItem checked={!!(isThemeHasFrakButton || themeWalletButton)}>
-            <Text variant="bodyMd" as="p">
-                {t("stepper2.step6.title")}
-            </Text>
-            {!isThemeHasFrakButton && firstProduct && (
-                <Button
-                    variant="primary"
-                    url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
-                    target="_blank"
-                >
-                    {t("stepper2.step6.link")}
-                </Button>
-            )}
-            {!!themeWalletButton && (
-                <Button
-                    variant="primary"
-                    url={`${editorUrl}?context=apps`}
-                    target="_blank"
-                >
-                    {t("appearance.walletButton.link")}
-                </Button>
-            )}
-        </StepItem>
+        <CollapsibleStep
+            step={6}
+            completed={isCompleted}
+            title={t("stepper2.step6.title")}
+        >
+            <Grid>
+                {!isThemeHasFrakButton && firstProduct && (
+                    <Grid.Cell
+                        columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                    >
+                        <BlockStack gap="400">
+                            <Text as="p" variant="bodyMd">
+                                <Trans i18nKey="stepper2.step6.descriptionShare" />
+                            </Text>
+                            <img src={screenShareButton} alt="" />
+                            <Button
+                                variant="primary"
+                                url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
+                                target="_blank"
+                            >
+                                {t("stepper2.step6.linkShare")}
+                            </Button>
+                        </BlockStack>
+                    </Grid.Cell>
+                )}
+                {!isThemeWalletButtonExist && (
+                    <Grid.Cell
+                        columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
+                    >
+                        <BlockStack gap="400">
+                            <Text as="p" variant="bodyMd">
+                                <Trans i18nKey="stepper2.step6.descriptionWallet" />
+                            </Text>
+                            <img src={screenWalletButton} alt="" />
+                            <Button
+                                variant="primary"
+                                url={`${editorUrl}?context=apps`}
+                                target="_blank"
+                            >
+                                {t("stepper2.step6.linkWallet")}
+                            </Button>
+                        </BlockStack>
+                    </Grid.Cell>
+                )}
+            </Grid>
+        </CollapsibleStep>
     );
 }
