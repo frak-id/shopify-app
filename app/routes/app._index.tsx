@@ -15,7 +15,7 @@ import {
     getOnboardingStatusMessage,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 export const headers = () => {
@@ -117,32 +117,23 @@ function ThemeSupported({
     const validationResult = validateCompleteOnboarding(onboardingData);
     const statusMessage = getOnboardingStatusMessage(validationResult);
     const { t } = useTranslation();
-    const [localOnBoarding, setLocalOnBoarding] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const frakOnboarding = window.localStorage.getItem("frak-onBoarding");
-        setLocalOnBoarding(frakOnboarding === "done");
-
-        // If localStorage says onboarding is done but server validation fails, redirect to onboarding
-        if (frakOnboarding === "done" && !validationResult.isComplete) {
-            // Clear the localStorage since it's not actually complete
-            window.localStorage.removeItem("frak-onBoarding");
-            setLocalOnBoarding(false);
-            navigate("/app/onboarding");
-        } else if (frakOnboarding !== "done") {
+        // Redirect to onboarding if onboarding is not complete
+        if (!validationResult.isComplete) {
             navigate("/app/onboarding");
         }
     }, [navigate, validationResult.isComplete]);
 
-    const isOnboardingComplete = localOnBoarding && validationResult.isComplete;
+    const isOnboardingComplete = validationResult.isComplete;
 
     return (
         <Layout.Section>
             <Card>
                 <BlockStack gap="500">
                     {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
-                    {localOnBoarding && !validationResult.isComplete && (
+                    {!validationResult.isComplete && (
                         <Banner tone="warning">
                             <Text as="p">{statusMessage.message}</Text>
                             <Text as="p" variant="bodySm">

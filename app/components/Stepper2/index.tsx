@@ -1,4 +1,4 @@
-import { Await, useRouteLoaderData } from "@remix-run/react";
+import { Await, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Box,
@@ -16,7 +16,7 @@ import {
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
 import type { ReactNode } from "react";
-import { Suspense, useCallback } from "react";
+import { Suspense, useCallback, useEffect } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useRefreshData } from "../../hooks/useRefreshData";
 import { Step1 } from "./Step1";
@@ -76,10 +76,20 @@ function StepsIntroduction({
 }: {
     onboardingData: OnboardingStepData;
 }) {
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const { completedSteps } = validateCompleteOnboarding(onboardingData);
     const completedStep = completedSteps.length;
     const progress = (completedStep / MAX_STEP) * 100;
+
+    useEffect(() => {
+        if (progress === 100) {
+            // Small delay to ensure the progress bar is updated
+            setTimeout(() => {
+                navigate("/app");
+            }, 1000);
+        }
+    }, [progress, navigate]);
 
     return (
         <BlockStack gap="200">
