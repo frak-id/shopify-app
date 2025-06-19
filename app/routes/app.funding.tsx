@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BlockStack, Layout, Page } from "@shopify/polaris";
-import { BankingStatus } from "app/components/Status/Bank";
-import { PurchaseStatus } from "app/components/Status/Purchase";
+import { BankingStatus } from "app/components/Funding/Bank";
+import { PurchaseStatus } from "app/components/Funding/Purchase";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
 import { getOnchainProductInfo } from "../services.server/onchain";

@@ -11,7 +11,6 @@
         "pixel": "Application pixel",
         "webhook": "Webhook",
         "theme": "Theme",
-        "status": "Status",
         "campaigns": "Campaigns",
         "appearance": "Appearance",
         "funding": "Funding",
@@ -160,22 +159,13 @@
         "alreadyGotAnAccount": "I already have an account"
     },
     "status": {
-        "title": "Frak Connection Status",
         "connected": "Connected to Frak",
-        "noWallet": {
-            "title": "Wallet Connection Required",
-            "message": "Please connect your wallet in the settings page to continue setup."
-        },
         "connectionStatus": {
             "title": "Connection Status",
             "loading": "Checking Connection Status...",
             "checking": "We're checking if your shop is connected to the Frak ecosystem.",
             "connected": "Your shop is successfully connected to the Frak ecosystem.",
             "notConnected": "Your shop is not yet connected to the Frak ecosystem. Follow the instructions below to complete setup."
-        },
-        "setupInstructions": {
-            "title": "Set up your Frak integration",
-            "description": "Click the button below to register your shop in the Frak ecosystem"
         },
         "modal": {
             "title": "Register your shop",

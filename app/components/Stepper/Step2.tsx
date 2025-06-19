@@ -1,6 +1,6 @@
 import { BlockStack, Box, Spinner } from "@shopify/polaris";
 import { useOnChainShopInfo } from "app/hooks/useOnChainShopInfo";
-import { ConnectedShopInfo } from "../Status/ConnectedShopInfo";
+import { ConnectedShopInfo } from "../ConnectedShopInfo";
 import { SetupInstructions } from "../Status/SetupInstructions";
 import { StatusBanner } from "../Status/StatusBanner";
 

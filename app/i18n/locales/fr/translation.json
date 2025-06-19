@@ -11,7 +11,6 @@
         "pixel": "Pixel d'application",
         "webhook": "Webhook",
         "theme": "Thème",
-        "status": "Statut",
         "campaigns": "Campagnes",
         "appearance": "Apparence",
         "funding": "Financement",
@@ -161,22 +160,13 @@
         "alreadyGotAnAccount": "J'ai déjà un compte"
     },
     "status": {
-        "title": "Statut de connexion Frak",
         "connected": "Connecté à Frak",
-        "noWallet": {
-            "title": "Connexion de portefeuille requise",
-            "message": "Veuillez connecter votre portefeuille dans la page des paramètres pour continuer la configuration."
-        },
         "connectionStatus": {
             "title": "Statut de connexion",
             "loading": "Vérification du statut de connexion...",
             "checking": "Nous vérifions si votre boutique est connectée à l'écosystème Frak.",
             "connected": "Votre boutique est correctement connectée à l'écosystème Frak.",
             "notConnected": "Votre boutique n'est pas encore connectée à l'écosystème Frak. Suivez les instructions ci-dessous pour terminer la configuration."
-        },
-        "setupInstructions": {
-            "title": "Configurer votre intégration Frak",
-            "description": "Cliquez sur le bouton ci-dessous pour enregistrer votre boutique dans l'écosystème Frak"
         },
         "modal": {
             "title": "Enregistrer votre boutique",

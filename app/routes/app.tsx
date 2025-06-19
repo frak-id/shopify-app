@@ -127,7 +127,6 @@ function NavigationContent() {
             <Link to="/app/pixel">{t("navigation.pixel")}</Link>
             <Link to="/app/webhook">{t("navigation.webhook")}</Link>
             <Link to="/app/theme">{t("navigation.theme")}</Link>
-            <Link to="/app/status">{t("navigation.status")}</Link>
             <Link to="/app/campaigns">{t("navigation.campaigns")}</Link>
             <Link to="/app/appearance">{t("navigation.appearance")}</Link>
             <Link to="/app/funding">{t("navigation.funding")}</Link>

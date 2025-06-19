@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BlockStack, Layout, Page } from "@shopify/polaris";
-import { ConnectedShopInfo } from "app/components/Status/ConnectedShopInfo";
+import { ConnectedShopInfo } from "app/components/ConnectedShopInfo";
 import { Stepper2 } from "app/components/Stepper2";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";

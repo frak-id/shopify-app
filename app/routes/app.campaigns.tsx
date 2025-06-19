@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Layout, Page } from "@shopify/polaris";
-import { CampaignStatus } from "app/components/Status/Campaign";
+import { CampaignStatus } from "app/components/Campaign";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
 import { getOnchainProductInfo } from "../services.server/onchain";
