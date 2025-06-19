@@ -8,13 +8,16 @@
         "getStarted": "Commencer la configuration de l'application"
     },
     "navigation": {
-        "pixel": "Pixel d'application",
-        "webhook": "Webhook",
-        "theme": "Thème",
         "campaigns": "Campagnes",
         "appearance": "Apparence",
         "funding": "Financement",
-        "settings": "Paramètres"
+        "settings": {
+            "title": "Paramètres",
+            "general": "Général",
+            "pixel": "Pixel d'application",
+            "webhook": "Webhook",
+            "theme": "Thème"
+        }
     },
     "stepper": {
         "title": "Guide de configuration",
@@ -306,7 +309,6 @@
         "description": "Gérez vos sources de financement et l'historique de vos achats. Ajoutez des fonds à vos banques pour vous assurer que vos campagnes peuvent distribuer des récompenses aux utilisateurs."
     },
     "settings": {
-        "title": "Paramètres",
-        "description": "Configurez les paramètres de votre intégration Frak et complétez le processus d'intégration."
+        "title": "Paramètres"
     }
 }

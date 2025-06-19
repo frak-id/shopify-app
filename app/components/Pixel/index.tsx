@@ -1,6 +1,7 @@
 import { useFetcher } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button } from "@shopify/polaris";
+import { useRefreshData } from "app/hooks/useRefreshData";
 import type {
     CreateWebPixelReturnType,
     DeleteWebPixelReturnType,
@@ -16,6 +17,7 @@ export function Pixel({ id }: { id?: string }) {
         CreateWebPixelReturnType | DeleteWebPixelReturnType
     >();
     const { t } = useTranslation();
+    const refresh = useRefreshData();
 
     useEffect(() => {
         if (!fetcher.data) return;
@@ -34,15 +36,20 @@ export function Pixel({ id }: { id?: string }) {
 
         if (webPixel) {
             shopify.toast.show(t("pixel.actions.messages.connect"));
+            refresh();
         }
 
         if (deletedWebPixelId) {
             shopify.toast.show(t("pixel.actions.messages.disconnect"));
+            refresh();
         }
-    }, [fetcher.data, shopify.toast, t]);
+    }, [fetcher.data, shopify.toast, t, refresh]);
 
     const handleAction = async (intent: IntentWebPixel) => {
-        fetcher.submit({ intent }, { method: "POST", action: "/app/pixel" });
+        fetcher.submit(
+            { intent },
+            { method: "POST", action: "/app/settings/pixel" }
+        );
     };
 
     return (

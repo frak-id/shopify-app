@@ -8,13 +8,16 @@
         "getStarted": "Start application setup"
     },
     "navigation": {
-        "pixel": "Application pixel",
-        "webhook": "Webhook",
-        "theme": "Theme",
         "campaigns": "Campaigns",
         "appearance": "Appearance",
         "funding": "Funding",
-        "settings": "Settings"
+        "settings": {
+            "title": "Settings",
+            "general": "General",
+            "pixel": "Application pixel",
+            "webhook": "Webhook",
+            "theme": "Theme"
+        }
     },
     "stepper": {
         "title": "Setup guide",
@@ -299,7 +302,6 @@
         "description": "Manage your funding sources and purchase history. Add funds to your banks to ensure your campaigns can distribute rewards to users."
     },
     "settings": {
-        "title": "Settings",
-        "description": "Configure your Frak integration settings and complete the onboarding process."
+        "title": "Settings"
     }
 }

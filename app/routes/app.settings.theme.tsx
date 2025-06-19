@@ -1,15 +1,18 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
-import { BlockStack, Box, Card, Link, Page } from "@shopify/polaris";
+import { BlockStack, Box, Card, Link } from "@shopify/polaris";
 import screenFrakListener from "app/assets/frak-listener.png";
 import { Activated } from "app/components/Activated";
 import { Instructions } from "app/components/Instructions";
+import { useRefreshData } from "app/hooks/useRefreshData";
+import { useVisibilityChange } from "app/hooks/useVisibilityChange";
 import type { loader as rootLoader } from "app/routes/app";
 import {
     doesThemeHasFrakActivated,
     getMainThemeId,
 } from "app/services.server/theme";
 import { authenticate } from "app/shopify.server";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -19,37 +22,42 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return { isThemeHasFrakActivated, theme };
 };
 
-export default function ThemePage() {
+export default function SettingsThemePage() {
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const data = useLoaderData<typeof loader>();
     const isThemeHasFrakActivated = data?.isThemeHasFrakActivated;
     const { id } = data?.theme || {};
     const { t } = useTranslation();
     const editorUrl = `https://${rootData?.shop.myshopifyDomain}/admin/themes/current/editor`;
+    const refresh = useRefreshData();
+
+    useVisibilityChange(
+        useCallback(() => {
+            refresh();
+        }, [refresh])
+    );
 
     return (
-        <Page title={t("theme.title")}>
-            <BlockStack gap="500">
-                <Card>
-                    <Box paddingBlockStart={"200"}>
-                        {isThemeHasFrakActivated && (
-                            <>
-                                <Activated text={t("theme.connected")} />
-                                <Box paddingBlockStart={"200"}>
-                                    <Link
-                                        url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
-                                        target="_blank"
-                                    >
-                                        {t("theme.link")}
-                                    </Link>
-                                </Box>
-                            </>
-                        )}
-                        {!isThemeHasFrakActivated && <ThemeNotActivated />}
-                    </Box>
-                </Card>
-            </BlockStack>
-        </Page>
+        <BlockStack gap="500">
+            <Card>
+                <Box paddingBlockStart={"200"}>
+                    {isThemeHasFrakActivated && (
+                        <>
+                            <Activated text={t("theme.connected")} />
+                            <Box paddingBlockStart={"200"}>
+                                <Link
+                                    url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
+                                    target="_blank"
+                                >
+                                    {t("theme.link")}
+                                </Link>
+                            </Box>
+                        </>
+                    )}
+                    {!isThemeHasFrakActivated && <ThemeNotActivated />}
+                </Box>
+            </Card>
+        </BlockStack>
     );
 }
 

@@ -47,7 +47,10 @@ export function CreateShopifyWebhook() {
     }, [fetcher.data, shopify.toast, t]);
 
     const handleAction = async (intent: IntentWebhook) => {
-        fetcher.submit({ intent }, { method: "POST", action: "/app/webhook" });
+        fetcher.submit(
+            { intent },
+            { method: "POST", action: "/app/settings/webhook" }
+        );
     };
 
     return (
@@ -140,7 +143,7 @@ export function WebhookList({
     const handleDeleteWebhook = (webhookId: string) => {
         fetcher.submit(
             { intent: "deleteWebhook", webhookId },
-            { method: "POST", action: "/app/webhook" }
+            { method: "POST", action: "/app/settings/webhook" }
         );
     };
 
