@@ -29,7 +29,11 @@ import { UncheckedIcon } from "./UncheckedIcon";
 
 const MAX_STEP = 6;
 
-export function Stepper2() {
+export function Stepper2({
+    redirectToApp,
+}: {
+    redirectToApp: boolean;
+}) {
     const refresh = useRefreshData();
     const { t } = useTranslation();
     const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
@@ -58,6 +62,7 @@ export function Stepper2() {
                                 <>
                                     <StepsIntroduction
                                         onboardingData={onboardingData}
+                                        redirectToApp={redirectToApp}
                                     />
                                     <Steps onboardingData={onboardingData} />
                                 </>
@@ -73,8 +78,10 @@ export function Stepper2() {
 
 function StepsIntroduction({
     onboardingData,
+    redirectToApp,
 }: {
     onboardingData: OnboardingStepData;
+    redirectToApp: boolean;
 }) {
     const navigate = useNavigate();
     const { t } = useTranslation();
@@ -83,13 +90,13 @@ function StepsIntroduction({
     const progress = (completedStep / MAX_STEP) * 100;
 
     useEffect(() => {
-        if (progress === 100) {
+        if (progress === 100 && redirectToApp) {
             // Small delay to ensure the progress bar is updated
             setTimeout(() => {
                 navigate("/app");
             }, 1000);
         }
-    }, [progress, navigate]);
+    }, [progress, navigate, redirectToApp]);
 
     return (
         <BlockStack gap="200">

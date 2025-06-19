@@ -28,7 +28,7 @@ export default function SettingsPage() {
                         )}
 
                         {/* Always show the Stepper2 component */}
-                        <Stepper2 />
+                        <Stepper2 redirectToApp={false} />
                     </BlockStack>
                 </Layout.Section>
             </Layout>

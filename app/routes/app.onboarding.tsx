@@ -26,7 +26,7 @@ export default function OnBoardingPage() {
 
     return (
         <Page title={t("common.title")}>
-            <Stepper2 />
+            <Stepper2 redirectToApp={true} />
         </Page>
     );
 }
