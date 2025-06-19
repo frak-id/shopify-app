@@ -1,11 +1,10 @@
 import { useRouteLoaderData } from "@remix-run/react";
 import { Box, Card, Link } from "@shopify/polaris";
-import {
-    Step5Activated,
-    WalletNotActivated,
-} from "app/components/Stepper/Step6";
 import type { loader as rootLoader } from "app/routes/app";
 import { useTranslation } from "react-i18next";
+import screenWalletButton from "../../assets/wallet-button.png";
+import { Activated } from "../Activated";
+import { Instructions } from "../Instructions";
 
 interface WalletButtonTabProps {
     themeWalletButton?: string | null;
@@ -21,7 +20,9 @@ export function WalletButtonTab({ themeWalletButton }: WalletButtonTabProps) {
             <Box>
                 {themeWalletButton && (
                     <>
-                        <Step5Activated type="wallet" />
+                        <Activated
+                            text={t("appearance.walletButton.activated")}
+                        />
                         <Box paddingBlockStart={"200"}>
                             <Link
                                 url={`${editorUrl}?context=apps&appEmbed=${themeWalletButton}%2Fwallet_button`}
@@ -32,13 +33,26 @@ export function WalletButtonTab({ themeWalletButton }: WalletButtonTabProps) {
                         </Box>
                     </>
                 )}
-                {!themeWalletButton && (
-                    <WalletNotActivated
-                        defaultOpen={true}
-                        editorUrl={editorUrl}
-                    />
-                )}
+                {!themeWalletButton && <WalletButtonNotActivated />}
             </Box>
         </Card>
+    );
+}
+
+function WalletButtonNotActivated() {
+    const { t } = useTranslation();
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
+
+    return (
+        <Instructions
+            badgeText={t("appearance.walletButton.notActivated")}
+            todoText={t("appearance.walletButton.todo")}
+            image={screenWalletButton}
+        >
+            <Link url={`${editorUrl}?context=apps`} target="_blank">
+                {t("appearance.walletButton.link")}
+            </Link>
+        </Instructions>
     );
 }

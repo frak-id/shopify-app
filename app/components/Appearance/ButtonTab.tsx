@@ -1,11 +1,11 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Box, Card, Link } from "@shopify/polaris";
-import {
-    Step5Activated,
-    Step5NotActivated,
-} from "app/components/Stepper/Step6";
 import type { loader as rootLoader } from "app/routes/app";
+import type { loader } from "app/routes/app.appearance";
 import { useTranslation } from "react-i18next";
+import screenShareButton from "../../assets/share-button.png";
+import { Activated } from "../Activated";
+import { Instructions } from "../Instructions";
 
 interface ButtonTabProps {
     isThemeHasFrakButton: boolean;
@@ -24,10 +24,12 @@ export function ButtonTab({
 
     return (
         <Card>
-            <Box paddingBlockStart={"200"}>
+            <Box>
                 {isThemeHasFrakButton && (
                     <>
-                        <Step5Activated type="share" />
+                        <Activated
+                            text={t("appearance.shareButton.activated")}
+                        />
                         <Box paddingBlockStart={"200"}>
                             {firstProduct ? (
                                 <Link
@@ -37,15 +39,40 @@ export function ButtonTab({
                                     {t("appearance.shareButton.link")}
                                 </Link>
                             ) : (
-                                <>{t("stepper.step5.noProduct")}</>
+                                <>{t("appearance.shareButton.noProduct")}</>
                             )}
                         </Box>
                     </>
                 )}
-                {!isThemeHasFrakButton && (
-                    <Step5NotActivated type="share" defaultOpen={true} />
-                )}
+                {!isThemeHasFrakButton && <ButtonNotActivated />}
             </Box>
         </Card>
+    );
+}
+
+function ButtonNotActivated() {
+    const { t } = useTranslation();
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const data = useLoaderData<typeof loader>();
+    const firstProduct = data?.firstProduct;
+    const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
+
+    return (
+        <Instructions
+            badgeText={t("appearance.shareButton.notActivated")}
+            todoText={t("appearance.shareButton.todo")}
+            image={screenShareButton}
+        >
+            {firstProduct ? (
+                <Link
+                    url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
+                    target="_blank"
+                >
+                    {t("appearance.shareButton.link")}
+                </Link>
+            ) : (
+                <>{t("appearance.shareButton.noProduct")}</>
+            )}
+        </Instructions>
     );
 }

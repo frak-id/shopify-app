@@ -1,10 +1,9 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { BlockStack, Box, Card, Link, Page } from "@shopify/polaris";
-import {
-    Step4Activated,
-    Step4NotActivated,
-} from "app/components/Stepper/Step5";
+import screenFrakListener from "app/assets/frak-listener.png";
+import { Activated } from "app/components/Activated";
+import { Instructions } from "app/components/Instructions";
 import type { loader as rootLoader } from "app/routes/app";
 import {
     doesThemeHasFrakActivated,
@@ -35,7 +34,7 @@ export default function ThemePage() {
                     <Box paddingBlockStart={"200"}>
                         {isThemeHasFrakActivated && (
                             <>
-                                <Step4Activated />
+                                <Activated text={t("theme.connected")} />
                                 <Box paddingBlockStart={"200"}>
                                     <Link
                                         url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
@@ -46,10 +45,28 @@ export default function ThemePage() {
                                 </Box>
                             </>
                         )}
-                        {!isThemeHasFrakActivated && <Step4NotActivated />}
+                        {!isThemeHasFrakActivated && <ThemeNotActivated />}
                     </Box>
                 </Card>
             </BlockStack>
         </Page>
+    );
+}
+
+function ThemeNotActivated() {
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const { t } = useTranslation();
+    const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
+
+    return (
+        <Instructions
+            badgeText={t("theme.notConnected")}
+            todoText={t("theme.todo")}
+            image={screenFrakListener}
+        >
+            <Link url={`${editorUrl}?context=apps`} target="_blank">
+                {t("theme.link")}
+            </Link>
+        </Instructions>
     );
 }

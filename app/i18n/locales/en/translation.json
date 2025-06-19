@@ -16,55 +16,6 @@
         "funding": "Funding",
         "settings": "Settings"
     },
-    "stepper": {
-        "back": "Back",
-        "next": "Next",
-        "step": "Step",
-        "step1": {
-            "title": "Welcome to Frak!",
-            "description": "Ready to explore exciting features and build an effective loyalty program for your business?"
-        },
-        "step2": {
-            "title": "Application pixel",
-            "description": "In order to track your loyalty program, we need to implement an application pixel.",
-            "success": "Application pixel connected successfully",
-            "notActivated": "Application pixel not connected"
-        },
-        "step3": {
-            "title": "Webhook",
-            "description": "Next, we need to set up a webhook to pass information about the orders.",
-            "success": "Webhook connected successfully",
-            "notActivated": "Webhook not connected",
-            "frakActivated": "Frak purchase tracker is activated",
-            "frakNotActivated": "Frak purchase tracker is not activated"
-        },
-        "step4": {
-            "title": "Setup Frak embedded app within your theme",
-            "description": "Frak application needs to be enabled in your theme.",
-            "link": "Configure Frak embedded application in your theme",
-            "activated": "Frak application is activated",
-            "notActivated": "Frak application is not activated",
-            "todo": "Please activate the app using the switch as shown below"
-        },
-        "step5": {
-            "title": "Add the share or wallet button in your theme",
-            "description": "A share or wallet button should be added",
-            "link": "Add the sharing button to your product page",
-            "noProduct": "You need to add a product to your store to add the sharing button",
-            "activated": "Share button is on your product page",
-            "notActivated": "Share button is not in your product page",
-            "todo": "Please add the button as shown below",
-            "collapsibleButtonShareTitle": "How to add the share button to your product page",
-            "collapsibleButtonWalletTitle": "How to add the wallet button",
-            "noWalletButtonActivated": "Wallet button is not activated",
-            "todoWalletButton": "Please activate the button as shown below",
-            "walletButtonConnected": "Wallet button is active on your store"
-        },
-        "step6": {
-            "title": "Well done!",
-            "description": "You have completed the Frak setup!"
-        }
-    },
     "stepper2": {
         "title": "Setup guide",
         "description": "Use this guide to setup your Frak app.",
@@ -150,7 +101,8 @@
         "title": "Theme",
         "connected": "Frak application is activated",
         "notConnected": "Frak application is not activated",
-        "link": "Configuring Frak application in your theme"
+        "link": "Configuring Frak application in your theme",
+        "todo": "Please activate the Frak application in your theme by following the instructions below"
     },
     "gated": {
         "configure": "Configure Frak",
@@ -329,10 +281,17 @@
             "walletButton": "Wallet Button"
         },
         "shareButton": {
-            "link": "Configure button in your product page"
+            "link": "Configure button in your product page",
+            "noProduct": "You need to add a product to your store to add the sharing button",
+            "activated": "Share button is on your product page",
+            "notActivated": "Share button is not in your product page",
+            "todo": "Please add the button as shown below"
         },
         "walletButton": {
-            "link": "Configure wallet button in theme editor"
+            "link": "Configure wallet button in theme editor",
+            "activated": "Wallet button is in your theme",
+            "notActivated": "Wallet button is not in your theme",
+            "todo": "Please add the button as shown below"
         }
     },
     "funding": {
