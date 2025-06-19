@@ -24,7 +24,7 @@ export function Step6({
         <CollapsibleStep
             step={6}
             completed={isCompleted}
-            title={t("stepper2.step6.title")}
+            title={t("stepper.step6.title")}
         >
             <Grid>
                 {!isThemeHasFrakButton && firstProduct && (
@@ -33,7 +33,7 @@ export function Step6({
                     >
                         <BlockStack gap="400">
                             <Text as="p" variant="bodyMd">
-                                <Trans i18nKey="stepper2.step6.descriptionShare" />
+                                <Trans i18nKey="stepper.step6.descriptionShare" />
                             </Text>
                             <img src={screenShareButton} alt="" />
                             <Button
@@ -41,7 +41,7 @@ export function Step6({
                                 url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
                                 target="_blank"
                             >
-                                {t("stepper2.step6.linkShare")}
+                                {t("stepper.step6.linkShare")}
                             </Button>
                         </BlockStack>
                     </Grid.Cell>
@@ -52,7 +52,7 @@ export function Step6({
                     >
                         <BlockStack gap="400">
                             <Text as="p" variant="bodyMd">
-                                <Trans i18nKey="stepper2.step6.descriptionWallet" />
+                                <Trans i18nKey="stepper.step6.descriptionWallet" />
                             </Text>
                             <img src={screenWalletButton} alt="" />
                             <Button
@@ -60,7 +60,7 @@ export function Step6({
                                 url={`${editorUrl}?context=apps`}
                                 target="_blank"
                             >
-                                {t("stepper2.step6.linkWallet")}
+                                {t("stepper.step6.linkWallet")}
                             </Button>
                         </BlockStack>
                     </Grid.Cell>

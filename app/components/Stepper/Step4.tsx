@@ -16,8 +16,8 @@ export function Step4({
         <CollapsibleStep
             step={4}
             completed={!!isFrakWebhookExists}
-            title={t("stepper2.step4.title")}
-            description={t("stepper2.step4.description")}
+            title={t("stepper.step4.title")}
+            description={t("stepper.step4.description")}
         >
             {!isFrakWebhookExists && productId && (
                 <FrakWebhook setup={false} productId={productId} />

@@ -16,8 +16,8 @@ export function Step2({
         <CollapsibleStep
             step={2}
             completed={isPixelConnected}
-            title={t("stepper2.step2.title")}
-            description={t("stepper2.step2.description")}
+            title={t("stepper.step2.title")}
+            description={t("stepper.step2.description")}
         >
             {!isPixelConnected && <Pixel id={webPixel?.id} />}
         </CollapsibleStep>

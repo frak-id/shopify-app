@@ -111,7 +111,7 @@ export function Step1({
             title={t("status.connectionStatus.title")}
         >
             <Text as="p" variant="bodyMd">
-                {t("stepper2.step1.description")}
+                {t("stepper.step1.description")}
             </Text>
             <Button
                 onClick={openMintEmbed}

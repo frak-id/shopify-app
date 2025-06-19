@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { Page } from "@shopify/polaris";
-import { Stepper2 } from "app/components/Stepper2";
+import { Stepper } from "app/components/Stepper";
 import { clearOnChainShopCache } from "app/services.server/onchain";
 import { useTranslation } from "react-i18next";
 import { authenticate } from "../shopify.server";
@@ -26,7 +26,7 @@ export default function OnBoardingPage() {
 
     return (
         <Page title={t("common.title")}>
-            <Stepper2 redirectToApp={true} />
+            <Stepper redirectToApp={true} />
         </Page>
     );
 }

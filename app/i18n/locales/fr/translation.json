@@ -16,7 +16,7 @@
         "funding": "Financement",
         "settings": "Paramètres"
     },
-    "stepper2": {
+    "stepper": {
         "title": "Guide de configuration",
         "description": "Utilisez ce guide pour configurer votre application Frak.",
         "completedStep": "{{completedStep}} de {{totalSteps}} tâches terminées",

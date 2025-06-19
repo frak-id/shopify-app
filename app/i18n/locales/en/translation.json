@@ -16,7 +16,7 @@
         "funding": "Funding",
         "settings": "Settings"
     },
-    "stepper2": {
+    "stepper": {
         "title": "Setup guide",
         "description": "Use this guide to setup your Frak app.",
         "completedStep": "{{completedStep}} of {{totalSteps}} tasks completed",

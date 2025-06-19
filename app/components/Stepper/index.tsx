@@ -29,7 +29,7 @@ import { UncheckedIcon } from "./UncheckedIcon";
 
 const MAX_STEP = 6;
 
-export function Stepper2({
+export function Stepper({
     redirectToApp,
 }: {
     redirectToApp: boolean;
@@ -49,7 +49,7 @@ export function Stepper2({
         <Card>
             <Box paddingBlockEnd="400">
                 <Text variant="headingSm" as="h2">
-                    {t("stepper2.title")}
+                    {t("stepper.title")}
                 </Text>
             </Box>
 
@@ -101,13 +101,13 @@ function StepsIntroduction({
     return (
         <BlockStack gap="200">
             <Text variant="bodyMd" as="p" fontWeight="bold">
-                {t("stepper2.description")}
+                {t("stepper.description")}
             </Text>
 
             <InlineStack gap={"200"} wrap={false} blockAlign="center">
                 <span style={{ whiteSpace: "nowrap" }}>
                     <Text variant="bodySm" tone="subdued" as="p">
-                        {t("stepper2.completedStep", {
+                        {t("stepper.completedStep", {
                             completedStep,
                             totalSteps: MAX_STEP,
                         })}
@@ -162,7 +162,7 @@ function StepsFooter() {
         <Box>
             <Text variant="bodySm" tone="subdued" as="p">
                 <Trans
-                    i18nKey="stepper2.footer"
+                    i18nKey="stepper.footer"
                     components={{
                         a: (
                             <a

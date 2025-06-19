@@ -16,8 +16,8 @@ export function Step3({
         <CollapsibleStep
             step={3}
             completed={isWebhookExists}
-            title={t("stepper2.step3.title")}
-            description={t("stepper2.step3.description")}
+            title={t("stepper.step3.title")}
+            description={t("stepper.step3.description")}
         >
             {!isWebhookExists && <CreateShopifyWebhook />}
         </CollapsibleStep>

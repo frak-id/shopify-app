@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { BlockStack, Layout, Page } from "@shopify/polaris";
 import { ConnectedShopInfo } from "app/components/ConnectedShopInfo";
-import { Stepper2 } from "app/components/Stepper2";
+import { Stepper } from "app/components/Stepper";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
 import { getOnchainProductInfo } from "../services.server/onchain";
@@ -27,8 +27,8 @@ export default function SettingsPage() {
                             <ConnectedShopInfo product={shopInfo.product} />
                         )}
 
-                        {/* Always show the Stepper2 component */}
-                        <Stepper2 redirectToApp={false} />
+                        {/* Always show the Stepper component */}
+                        <Stepper redirectToApp={false} />
                     </BlockStack>
                 </Layout.Section>
             </Layout>

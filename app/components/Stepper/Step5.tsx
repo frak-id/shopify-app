@@ -22,10 +22,10 @@ export function Step5({
         <CollapsibleStep
             step={5}
             completed={isFrakActivated}
-            title={t("stepper2.step5.title")}
+            title={t("stepper.step5.title")}
         >
             <Text as="p" variant="bodyMd">
-                <Trans i18nKey="stepper2.step5.description" />
+                <Trans i18nKey="stepper.step5.description" />
             </Text>
             <img src={screenFrakListener} alt="" />
             <Button
@@ -33,7 +33,7 @@ export function Step5({
                 url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
                 target="_blank"
             >
-                {t("stepper2.step5.link")}
+                {t("stepper.step5.link")}
             </Button>
         </CollapsibleStep>
     );
