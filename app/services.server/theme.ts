@@ -1,4 +1,5 @@
 import { parse as jsonc_parse } from "jsonc-parser";
+import { LRUCache } from "lru-cache";
 import type { AuthenticatedContext } from "../types/context";
 
 type ThemeFile = {
@@ -36,13 +37,24 @@ export type GetMainThemeIdReturnType = {
     id: string;
 };
 
+const mainThemeIdCache = new LRUCache<string, GetMainThemeIdReturnType>({
+    max: 512,
+    // TTL of 30 seconds
+    ttl: 30_000,
+});
+
 /**
  * GraphQL query to fetch main theme id
  */
 export async function getMainThemeId(
-    graphql: AuthenticatedContext["admin"]["graphql"]
+    context: AuthenticatedContext
 ): Promise<GetMainThemeIdReturnType> {
-    const response = await graphql(`
+    const cachedMainThemeId = mainThemeIdCache.get(context.session.shop);
+    if (cachedMainThemeId) {
+        return cachedMainThemeId;
+    }
+
+    const response = await context.admin.graphql(`
 query getMainThemeId {
   themes(first: 1, roles: [MAIN]) {
     nodes {
@@ -57,6 +69,8 @@ query getMainThemeId {
 
     // Extract the theme id from the full string (e.g. "gid://shopify/OnlineStoreTheme/140895584433")
     const id = gid.match(/\d+$/)[0];
+
+    mainThemeIdCache.set(context.session.shop, { gid, id });
 
     return { gid, id };
 }
@@ -97,16 +111,16 @@ async function getTemplateFiles(
 /**
  * Check if the current shop theme support blocks
  */
-export async function doesThemeSupportBlock({
-    admin: { graphql },
-}: AuthenticatedContext) {
+export async function doesThemeSupportBlock(context: AuthenticatedContext) {
     // Get the main theme id
-    const mainThemeId = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(context);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
-        "templates/product.json",
-    ]);
+    const jsonTemplateData = await getTemplateFiles(
+        context.admin.graphql,
+        mainThemeId.gid,
+        ["templates/product.json"]
+    );
 
     // Retrieve the body of JSON templates and find what section is set as `main`
     const templateMainSections = jsonTemplateData
@@ -123,7 +137,7 @@ export async function doesThemeSupportBlock({
         })
         .filter((section: string | null) => section);
 
-    const response = await graphql(getFilesQuery, {
+    const response = await context.admin.graphql(getFilesQuery, {
         variables: {
             themeId: mainThemeId.gid,
             filenames: templateMainSections,
@@ -177,16 +191,16 @@ interface ThemeBlockInfo {
 /**
  * Check if the current shop theme has the Frak app activated
  */
-export async function doesThemeHasFrakActivated({
-    admin: { graphql },
-}: AuthenticatedContext) {
+export async function doesThemeHasFrakActivated(context: AuthenticatedContext) {
     // Get the main theme id
-    const mainThemeId = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(context);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
-        "config/settings_data.json",
-    ]);
+    const jsonTemplateData = await getTemplateFiles(
+        context.admin.graphql,
+        mainThemeId.gid,
+        ["config/settings_data.json"]
+    );
 
     if (
         jsonTemplateData.length <= 0 ||
@@ -212,16 +226,16 @@ export async function doesThemeHasFrakActivated({
 /**
  * Check if the current shop theme has the Frak button in product page
  */
-export async function doesThemeHasFrakButton({
-    admin: { graphql },
-}: AuthenticatedContext) {
+export async function doesThemeHasFrakButton(context: AuthenticatedContext) {
     // Get the main theme id
-    const mainThemeId = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(context);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
-        "templates/product.json",
-    ]);
+    const jsonTemplateData = await getTemplateFiles(
+        context.admin.graphql,
+        mainThemeId.gid,
+        ["templates/product.json"]
+    );
 
     // Retrieve the body of JSON templates and find what section is set as `main`
     // Return true if any of the main sections has a block with the frak_referral_button type
@@ -248,16 +262,18 @@ export async function doesThemeHasFrakButton({
 /**
  * Check if the current shop theme has the Frak wallet button in body
  */
-export async function doesThemeHasFrakWalletButton({
-    admin: { graphql },
-}: AuthenticatedContext) {
+export async function doesThemeHasFrakWalletButton(
+    context: AuthenticatedContext
+) {
     // Get the main theme id
-    const mainThemeId = await getMainThemeId(graphql);
+    const mainThemeId = await getMainThemeId(context);
 
     // Retrieve the JSON templates that we want to integrate with
-    const jsonTemplateData = await getTemplateFiles(graphql, mainThemeId.gid, [
-        "config/settings_data.json",
-    ]);
+    const jsonTemplateData = await getTemplateFiles(
+        context.admin.graphql,
+        mainThemeId.gid,
+        ["config/settings_data.json"]
+    );
 
     if (
         jsonTemplateData.length <= 0 ||

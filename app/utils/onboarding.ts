@@ -104,7 +104,7 @@ export const stepDataFetchers = {
         try {
             const [isThemeHasFrakActivated, theme] = await Promise.all([
                 doesThemeHasFrakActivated(context),
-                getMainThemeId(context.admin.graphql),
+                getMainThemeId(context),
             ]);
             return { isThemeHasFrakActivated, theme };
         } catch (error) {
@@ -165,7 +165,6 @@ export async function fetchAllOnboardingData(
             stepDataFetchers[5](context),
             stepDataFetchers[6](context),
         ]);
-
         // Merge all data
         return {
             ...shopInfoData,
