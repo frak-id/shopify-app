@@ -118,7 +118,8 @@ function Navigation({
                         {(onboardingData) => {
                             const validationResult =
                                 validateCompleteOnboarding(onboardingData);
-                            if (!validationResult.isComplete) return null;
+                            if (validationResult.hasMissedCriticalSteps)
+                                return null;
                             return <NavigationContent />;
                         }}
                     </Await>

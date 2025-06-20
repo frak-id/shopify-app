@@ -121,10 +121,10 @@ function ThemeSupported({
 
     useEffect(() => {
         // Redirect to onboarding if onboarding is not complete
-        if (!validationResult.isComplete) {
+        if (validationResult.hasMissedCriticalSteps) {
             navigate("/app/onboarding");
         }
-    }, [navigate, validationResult.isComplete]);
+    }, [navigate, validationResult.hasMissedCriticalSteps]);
 
     const isOnboardingComplete = validationResult.isComplete;
 

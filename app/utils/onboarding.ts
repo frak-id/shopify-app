@@ -180,6 +180,15 @@ export async function fetchAllOnboardingData(
         return {};
     }
 }
+/**
+ * All the critical onboarding steps
+ *  - Frak registration
+ *  - Web pixel
+ *  - Webhooks
+ *  - Frak webhook
+ *  - Theme activation
+ */
+const criticalOnboardingSteps = [1, 2, 3, 4, 5];
 
 /**
  * Checks if the entire onboarding process is complete
@@ -190,7 +199,7 @@ export function validateCompleteOnboarding(data: OnboardingStepData): {
     isComplete: boolean;
     failedSteps: number[];
     completedSteps: number[];
-    firstMissingStep: number | undefined;
+    hasMissedCriticalSteps: boolean;
 } {
     const failedSteps: number[] = [];
     const completedSteps: number[] = [];
@@ -207,15 +216,17 @@ export function validateCompleteOnboarding(data: OnboardingStepData): {
         }
     }
 
-    // Get the first missing step
-    const firstMissingStep =
-        failedSteps.length > 0 ? failedSteps[0] : undefined;
+    // Check if any critical steps are missing
+    const hasMissedCriticalSteps = criticalOnboardingSteps.some(
+        (step) => !completedSteps.includes(step)
+    );
+    console.log("hasMissedCriticalSteps", hasMissedCriticalSteps);
 
     return {
         isComplete: failedSteps.length === 0,
         failedSteps,
         completedSteps,
-        firstMissingStep,
+        hasMissedCriticalSteps,
     };
 }
 
