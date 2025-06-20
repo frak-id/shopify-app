@@ -17,6 +17,8 @@ import {
 } from "app/utils/onboarding";
 import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { CampaignStatus } from "../components/Campaign";
+import { BankingStatus } from "../components/Funding/Bank";
 
 export const headers = () => {
     return {
@@ -113,6 +115,7 @@ function ThemeSupported({
 }: {
     onboardingData: OnboardingStepData;
 }) {
+    onboardingData.shopInfo;
     // Validate if onboarding is truly complete
     const validationResult = validateCompleteOnboarding(onboardingData);
     const statusMessage = getOnboardingStatusMessage(validationResult);
@@ -126,39 +129,41 @@ function ThemeSupported({
         }
     }, [navigate, validationResult.hasMissedCriticalSteps]);
 
-    const isOnboardingComplete = validationResult.isComplete;
-
     return (
         <Layout.Section>
-            <Card>
-                <BlockStack gap="500">
+            <BlockStack gap="500">
+                <Card>
                     {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
                     {!validationResult.isComplete && (
                         <Banner tone="warning">
-                            <Text as="p">{statusMessage.message}</Text>
+                            <Text as="p">{statusMessage}</Text>
                             <Text as="p" variant="bodySm">
                                 Please complete the missing steps to activate
                                 all features.
                             </Text>
+                            <Link url="/app/onboarding">
+                                {t("common.getStarted")}
+                            </Link>
                         </Banner>
                     )}
-
-                    {isOnboardingComplete ? (
-                        <BlockStack gap="300">
-                            <Banner tone="success">
-                                <Text as="p">{t("common.allSet")}</Text>
-                                <Text as="p" variant="bodySm">
-                                    {statusMessage.message}
-                                </Text>
-                            </Banner>
-                        </BlockStack>
-                    ) : (
-                        <Link url="/app/onboarding">
-                            {t("common.getStarted")}
-                        </Link>
-                    )}
-                </BlockStack>
-            </Card>
+                </Card>
+                <OnBoardingComplete onboardingData={onboardingData} />
+            </BlockStack>
         </Layout.Section>
+    );
+}
+
+function OnBoardingComplete({
+    onboardingData,
+}: { onboardingData: OnboardingStepData }) {
+    if (!onboardingData.shopInfo) {
+        return null;
+    }
+
+    return (
+        <BlockStack gap="500">
+            <CampaignStatus shopInfo={onboardingData.shopInfo} />
+            <BankingStatus shopInfo={onboardingData.shopInfo} />
+        </BlockStack>
     );
 }

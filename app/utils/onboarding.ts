@@ -220,7 +220,6 @@ export function validateCompleteOnboarding(data: OnboardingStepData): {
     const hasMissedCriticalSteps = criticalOnboardingSteps.some(
         (step) => !completedSteps.includes(step)
     );
-    console.log("hasMissedCriticalSteps", hasMissedCriticalSteps);
 
     return {
         isComplete: failedSteps.length === 0,
@@ -239,17 +238,9 @@ export function getOnboardingStatusMessage(validationResult: {
     isComplete: boolean;
     failedSteps: number[];
     completedSteps: number[];
-}): {
-    status: "complete" | "incomplete";
-    message: string;
-    failedSteps: number[];
-} {
+}): string | null {
     if (validationResult.isComplete) {
-        return {
-            status: "complete",
-            message: "All onboarding steps completed successfully",
-            failedSteps: [],
-        };
+        return null;
     }
 
     const stepNames = {
@@ -265,9 +256,5 @@ export function getOnboardingStatusMessage(validationResult: {
         .map((step) => stepNames[step as keyof typeof stepNames])
         .filter(Boolean);
 
-    return {
-        status: "incomplete",
-        message: `Onboarding incomplete. Missing: ${failedStepNames.join(", ")}`,
-        failedSteps: validationResult.failedSteps,
-    };
+    return `Onboarding incomplete. Missing: ${failedStepNames.join(", ")}`;
 }
