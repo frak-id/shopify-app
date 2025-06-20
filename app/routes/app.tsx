@@ -4,7 +4,6 @@ import {
     Await,
     Link,
     Outlet,
-    defer,
     useLoaderData,
     useRouteError,
 } from "@remix-run/react";
@@ -31,12 +30,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
     const [shop] = await Promise.all([shopInfo(context)]);
 
-    return defer({
+    return {
         apiKey: process.env.SHOPIFY_API_KEY || "",
         isThemeSupportedPromise: doesThemeSupportBlock(context),
         shop,
         onboardingDataPromise: fetchAllOnboardingData(context),
-    });
+    };
 };
 
 export default function App() {
@@ -45,26 +44,41 @@ export default function App() {
 
     return (
         <AppProvider isEmbeddedApp apiKey={apiKey}>
-            <Suspense>
-                <Await resolve={isThemeSupportedPromise}>
-                    {(isThemeSupported) => {
-                        return (
-                            <RootProvider>
-                                <Navigation
-                                    isThemeSupported={isThemeSupported}
-                                    onboardingDataPromise={
-                                        onboardingDataPromise
-                                    }
-                                />
-                                <WalletGated>
-                                    <Outlet />
-                                </WalletGated>
-                            </RootProvider>
-                        );
-                    }}
-                </Await>
-            </Suspense>
+            <RootProvider>
+                <Suspense>
+                    <AppContent
+                        isThemeSupportedPromise={isThemeSupportedPromise}
+                        onboardingDataPromise={onboardingDataPromise}
+                    />
+                </Suspense>
+            </RootProvider>
         </AppProvider>
+    );
+}
+
+function AppContent({
+    isThemeSupportedPromise,
+    onboardingDataPromise,
+}: {
+    isThemeSupportedPromise: Promise<boolean>;
+    onboardingDataPromise: Promise<OnboardingStepData>;
+}) {
+    return (
+        <Await resolve={isThemeSupportedPromise}>
+            {(isThemeSupported) => {
+                return (
+                    <>
+                        <Navigation
+                            isThemeSupported={isThemeSupported}
+                            onboardingDataPromise={onboardingDataPromise}
+                        />
+                        <WalletGated>
+                            <Outlet />
+                        </WalletGated>
+                    </>
+                );
+            }}
+        </Await>
     );
 }
 
