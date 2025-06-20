@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
     const isThemeHasFrakActivated = await doesThemeHasFrakActivated(context);
-    const theme = await getMainThemeId(context.admin.graphql);
+    const theme = await getMainThemeId(context);
     return { isThemeHasFrakActivated, theme };
 };
 
