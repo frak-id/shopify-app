@@ -5,12 +5,14 @@ import {
     Link,
     Outlet,
     useLoaderData,
+    useNavigation,
     useRouteError,
 } from "@remix-run/react";
 import { NavMenu } from "@shopify/app-bridge-react";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
+import { Skeleton } from "app/components/Skeleton";
 import { WalletGated } from "app/components/WalletGated";
 import { shopInfo } from "app/services.server/shop";
 import { doesThemeSupportBlock } from "app/services.server/theme";
@@ -63,6 +65,10 @@ function AppContent({
     isThemeSupportedPromise: Promise<boolean>;
     onboardingDataPromise: Promise<OnboardingStepData>;
 }) {
+    const navigation = useNavigation();
+    const isLoading =
+        navigation.state === "loading" || navigation.state === "submitting";
+
     return (
         <Await resolve={isThemeSupportedPromise}>
             {(isThemeSupported) => {
@@ -73,7 +79,7 @@ function AppContent({
                             onboardingDataPromise={onboardingDataPromise}
                         />
                         <WalletGated>
-                            <Outlet />
+                            {isLoading ? <Skeleton /> : <Outlet />}
                         </WalletGated>
                     </>
                 );
