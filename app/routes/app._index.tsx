@@ -132,9 +132,9 @@ function ThemeSupported({
     return (
         <Layout.Section>
             <BlockStack gap="500">
-                <Card>
-                    {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
-                    {!validationResult.isComplete && (
+                {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
+                {!validationResult.isComplete && (
+                    <Card>
                         <Banner tone="warning">
                             <Text as="p">{statusMessage}</Text>
                             <Text as="p" variant="bodySm">
@@ -145,8 +145,8 @@ function ThemeSupported({
                                 {t("common.getStarted")}
                             </Link>
                         </Banner>
-                    )}
-                </Card>
+                    </Card>
+                )}
                 <OnBoardingComplete onboardingData={onboardingData} />
             </BlockStack>
         </Layout.Section>
