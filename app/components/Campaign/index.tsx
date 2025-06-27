@@ -1,3 +1,5 @@
+import { type Currency, formatAmount } from "@frak-labs/core-sdk";
+import { useRouteLoaderData } from "@remix-run/react";
 import {
     Badge,
     BlockStack,
@@ -14,13 +16,13 @@ import {
     TextField,
 } from "@shopify/polaris";
 import { ChevronDownIcon, ChevronUpIcon } from "@shopify/polaris-icons";
+import type { loader as rootLoader } from "app/routes/app";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCreateCampaignLink } from "../../hooks/useCreateCampaignLink";
 import { useOnChainCampaignInfo } from "../../hooks/useOnChainCampaignInfo";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 import { useRefreshData } from "../../hooks/useRefreshData";
-import { useTokenInfoWithBalance } from "../../hooks/usetokenInfo";
 
 export function CampaignStatus({
     shopInfo,
@@ -114,32 +116,24 @@ function CampaignCreation({
     banks,
 }: { banks: GetProductInfoResponseDto["banks"] }) {
     const { t } = useTranslation();
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 
     const [selectedBankId, setSelectedBankId] = useState(
         banks.length === 1 ? banks[0].id : ""
     );
     const selectedBank = banks.find((b) => b.id === selectedBankId) || null;
-    const { data: tokenInfo, isLoading: tokenInfoLoading } =
-        useTokenInfoWithBalance({
-            token: selectedBank?.tokenId,
-            wallet: selectedBank?.id,
-        });
 
-    const [weeklyBudget, setWeeklyBudget] = useState("");
+    const [globalBudget, setGlobalBudget] = useState("");
     const [rawCAC, setRawCAC] = useState("");
     const [ratio, setRatio] = useState(90); // 90% referrer, 10% referee
     const [name, setName] = useState("");
 
-    const isFormDisabled = useMemo(() => {
-        return !selectedBank || tokenInfoLoading;
-    }, [selectedBank, tokenInfoLoading]);
     const isCreationDisabled = useMemo(() => {
-        if (isFormDisabled) return true;
-        if (!weeklyBudget || !rawCAC) return true;
         if (!selectedBank) return true;
+        if (!globalBudget || !rawCAC) return true;
 
         return false;
-    }, [isFormDisabled, weeklyBudget, rawCAC, selectedBank]);
+    }, [globalBudget, rawCAC, selectedBank]);
 
     // Breakdown calculations
     const breakdown = useMemo(() => {
@@ -150,8 +144,7 @@ function CampaignCreation({
         const referrerAmount = afterCommission * (ratio / 100);
         const refereeAmount = afterCommission * (1 - ratio / 100);
 
-        const maxWeeklyUsers =
-            weeklyBudget && cac ? Number(weeklyBudget) / cac : 0;
+        const maxUsers = globalBudget && cac ? Number(globalBudget) / cac : 0;
 
         return {
             cac,
@@ -159,11 +152,12 @@ function CampaignCreation({
             afterCommission,
             referrerAmount,
             refereeAmount,
-            maxWeeklyUsers,
+            maxUsers,
         };
-    }, [rawCAC, ratio, weeklyBudget]);
+    }, [rawCAC, ratio, globalBudget]);
 
-    const tokenSymbol = tokenInfo?.symbol || "";
+    const currencySymbol = (rootData?.shop.preferredCurrency ??
+        "usd") as Currency;
 
     // Bank select options (just show id, show balance separately)
     const bankOptions = banks.map((bank) => ({
@@ -174,7 +168,7 @@ function CampaignCreation({
     // The creation link
     const creationLink = useCreateCampaignLink({
         bankId: selectedBank?.id ?? "0x",
-        weeklyBudget: Number(weeklyBudget),
+        globalBudget: Number(globalBudget),
         rawCAC: Number(rawCAC),
         ratio,
         name,
@@ -224,18 +218,18 @@ function CampaignCreation({
             <InlineGrid gap="200" columns={2}>
                 <BlockStack gap="200">
                     <TextField
-                        label={t("status.campaign.weeklyBudget")}
+                        label={t("status.campaign.budget")}
                         type="number"
-                        value={weeklyBudget}
-                        onChange={setWeeklyBudget}
+                        value={globalBudget}
+                        onChange={setGlobalBudget}
                         autoComplete="off"
                         min={0}
                         step={0.01}
-                        suffix={tokenSymbol}
-                        disabled={isFormDisabled}
+                        suffix={currencySymbol}
+                        disabled={!selectedBank}
                     />
                     <Text variant="bodySm" as="p">
-                        {t("status.campaign.rawCACInfo")}
+                        {t("status.campaign.budgetInfo")}
                     </Text>
                 </BlockStack>
                 <BlockStack gap="200">
@@ -247,8 +241,8 @@ function CampaignCreation({
                         autoComplete="off"
                         min={0}
                         step={0.01}
-                        suffix={tokenSymbol}
-                        disabled={isFormDisabled}
+                        suffix={currencySymbol}
+                        disabled={!selectedBank}
                     />
                     <Text variant="bodySm" as="p">
                         {t("status.campaign.rawCACInfo")}
@@ -268,7 +262,7 @@ function CampaignCreation({
                     onChange={(value) => setRatio(value as number)}
                     output
                     helpText={t("status.campaign.ratioHelp")}
-                    disabled={isFormDisabled}
+                    disabled={!selectedBank}
                 />
                 <Text variant="bodyMd" as="span">
                     {t("status.campaign.ratioReferee")}
@@ -276,19 +270,19 @@ function CampaignCreation({
             </InlineStack>
             <BlockStack gap="100">
                 <Text variant="bodyMd" as="span">
-                    {`${t("status.campaign.breakdown.rawCAC")}: ${breakdown.cac} ${tokenSymbol}`}
+                    {`${t("status.campaign.breakdown.rawCAC")}: ${formatAmount(breakdown.cac, currencySymbol)}`}
                 </Text>
                 <Text variant="bodyMd" as="span">
-                    {`${t("status.campaign.breakdown.commission")}: ${breakdown.commission.toFixed(2)} ${tokenSymbol} (20%)`}
+                    {`${t("status.campaign.breakdown.commission")}: ${formatAmount(breakdown.commission, currencySymbol)} (20%)`}
                 </Text>
                 <Text variant="bodyMd" as="span">
-                    {`${t("status.campaign.breakdown.referrer")}: ${breakdown.referrerAmount.toFixed(2)} ${tokenSymbol} (${ratio}%)`}
+                    {`${t("status.campaign.breakdown.referrer")}: ${formatAmount(breakdown.referrerAmount, currencySymbol)} (${ratio}%)`}
                 </Text>
                 <Text variant="bodyMd" as="span">
-                    {`${t("status.campaign.breakdown.referee")}: ${breakdown.refereeAmount.toFixed(2)} ${tokenSymbol} (${100 - ratio}%)`}
+                    {`${t("status.campaign.breakdown.referee")}: ${formatAmount(breakdown.refereeAmount, currencySymbol)} (${100 - ratio}%)`}
                 </Text>
                 <Text variant="bodyMd" as="span">
-                    {`${t("status.campaign.breakdown.newUser")}: ${breakdown.maxWeeklyUsers.toFixed(0)}`}
+                    {`${t("status.campaign.breakdown.newUser")}: ${breakdown.maxUsers.toFixed(0)}`}
                 </Text>
             </BlockStack>
             <Button

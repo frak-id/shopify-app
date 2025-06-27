@@ -4,14 +4,14 @@ import { useMemo } from "react";
 import type { Address } from "viem";
 
 export function useCreateCampaignLink({
-    weeklyBudget,
+    globalBudget,
     bankId,
     rawCAC,
     ratio,
     name,
 }: {
     bankId: Address;
-    weeklyBudget: number;
+    globalBudget: number;
     rawCAC: number;
     ratio: number;
     name: string;
@@ -28,10 +28,24 @@ export function useCreateCampaignLink({
         createUrl.searchParams.append("n", name);
         createUrl.searchParams.append("bid", bankId);
         createUrl.searchParams.append("d", rootData?.shop?.domain ?? "");
-        createUrl.searchParams.append("wb", weeklyBudget.toString());
+        createUrl.searchParams.append("gb", globalBudget.toString());
         createUrl.searchParams.append("cac", rawCAC.toString());
         createUrl.searchParams.append("r", ratio.toString());
+        if (rootData?.shop?.preferredCurrency) {
+            createUrl.searchParams.append(
+                "sc",
+                rootData.shop.preferredCurrency
+            );
+        }
 
         return createUrl.toString();
-    }, [rawCAC, ratio, weeklyBudget, name, rootData?.shop?.domain, bankId]);
+    }, [
+        rawCAC,
+        ratio,
+        globalBudget,
+        name,
+        rootData?.shop?.domain,
+        rootData?.shop?.preferredCurrency,
+        bankId,
+    ]);
 }

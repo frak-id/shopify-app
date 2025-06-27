@@ -4,6 +4,7 @@
     "": {
       "name": "@frak-labs/shopify-app",
       "dependencies": {
+        "@frak-labs/core-sdk": "^0.0.16",
         "@frak-labs/react-sdk": "^0.0.15",
         "@remix-run/dev": "^2.16.2",
         "@remix-run/node": "^2.16.2",
@@ -214,7 +215,7 @@
 
     "@frak-labs-shopify/checkout-web-pixel": ["@frak-labs-shopify/checkout-web-pixel@workspace:extensions/checkout-web-pixel"],
 
-    "@frak-labs/core-sdk": ["@frak-labs/core-sdk@0.0.15", "", { "dependencies": { "@jsonjoy.com/json-pack": "^1.2.0" }, "peerDependencies": { "viem": "^2.23.14" } }, "sha512-RkEjABEJLq4r9aMYTnw5veB4fUp6Bc1/vStJEKyRlS2j7EHHxxwCinZqfEzxojpc5LS/Q8J4qO9zjxEzCsniyw=="],
+    "@frak-labs/core-sdk": ["@frak-labs/core-sdk@0.0.16", "", { "dependencies": { "@jsonjoy.com/json-pack": "^1.2.0" }, "peerDependencies": { "viem": "^2.23.14" } }, "sha512-7x3WDDJla7DwiEwQvHJPIcIXb8EHc1uvWwg5PxLK1tpf0+Mskdf6gsxXW2P14BuOCmkUWx28+U2n/PQfxqaDKg=="],
 
     "@frak-labs/react-sdk": ["@frak-labs/react-sdk@0.0.15", "", { "dependencies": { "@frak-labs/core-sdk": "0.0.15" }, "peerDependencies": { "@tanstack/react-query": ">=5.0.0", "react": ">=18", "viem": "^2.x" } }, "sha512-3OfgU2dTSLWBQtqg52QwjHS5BwX/+npM2I2LWqRnEZ1ANJL678ogIRRaDKGIv4Hg4QaG7Sv0dg7pge2USu8dmg=="],
 
@@ -2141,6 +2142,8 @@
     "@babel/helper-create-class-features-plugin/semver": ["semver@6.3.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
 
     "@esbuild-kit/core-utils/esbuild": ["esbuild@0.18.20", "", { "optionalDependencies": { "@esbuild/android-arm": "0.18.20", "@esbuild/android-arm64": "0.18.20", "@esbuild/android-x64": "0.18.20", "@esbuild/darwin-arm64": "0.18.20", "@esbuild/darwin-x64": "0.18.20", "@esbuild/freebsd-arm64": "0.18.20", "@esbuild/freebsd-x64": "0.18.20", "@esbuild/linux-arm": "0.18.20", "@esbuild/linux-arm64": "0.18.20", "@esbuild/linux-ia32": "0.18.20", "@esbuild/linux-loong64": "0.18.20", "@esbuild/linux-mips64el": "0.18.20", "@esbuild/linux-ppc64": "0.18.20", "@esbuild/linux-riscv64": "0.18.20", "@esbuild/linux-s390x": "0.18.20", "@esbuild/linux-x64": "0.18.20", "@esbuild/netbsd-x64": "0.18.20", "@esbuild/openbsd-x64": "0.18.20", "@esbuild/sunos-x64": "0.18.20", "@esbuild/win32-arm64": "0.18.20", "@esbuild/win32-ia32": "0.18.20", "@esbuild/win32-x64": "0.18.20" }, "bin": { "esbuild": "bin/esbuild" } }, "sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA=="],
+
+    "@frak-labs/react-sdk/@frak-labs/core-sdk": ["@frak-labs/core-sdk@0.0.15", "", { "dependencies": { "@jsonjoy.com/json-pack": "^1.2.0" }, "peerDependencies": { "viem": "^2.23.14" } }, "sha512-RkEjABEJLq4r9aMYTnw5veB4fUp6Bc1/vStJEKyRlS2j7EHHxxwCinZqfEzxojpc5LS/Q8J4qO9zjxEzCsniyw=="],
 
     "@graphql-codegen/add/tslib": ["tslib@2.6.3", "", {}, "sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ=="],
 

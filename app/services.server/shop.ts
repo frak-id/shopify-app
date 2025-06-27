@@ -16,6 +16,7 @@ type ShopInfoReturnType = {
     domain: string;
     normalizedDomain: string;
     productId: Hex;
+    preferredCurrency: "usd" | "eur" | "gbp";
 };
 
 const shopInfoCache = new LRUCache<string, ShopInfoReturnType>({
@@ -47,6 +48,7 @@ query shopInfo {
     url
     myshopifyDomain
     primaryDomain { id, host, url }
+    currencyCode
   }
 }`);
     const {
@@ -60,12 +62,24 @@ query shopInfo {
         .replace("http://", "")
         .replace("www.", "");
 
+    // Save the preferred currency
+    let preferredCurrency = shop.currencyCode ?? "USD";
+
+    // If the currency is not supported, use USD
+    if (!["USD", "EUR", "GBP"].includes(preferredCurrency)) {
+        preferredCurrency = "USD";
+    }
+
     // Build our final object
     const finalShopInfo = {
         ...shop,
         domain: shop.primaryDomain?.host ?? shop.myshopifyDomain,
         normalizedDomain,
         productId: productIdFromDomain(normalizedDomain),
+        preferredCurrency: preferredCurrency.toLocaleLowerCase() as
+            | "usd"
+            | "eur"
+            | "gbp",
     };
 
     // Add it to our LRU Cache

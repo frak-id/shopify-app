@@ -144,8 +144,8 @@
             "nameInput": "Nom de la campagne",
             "bankSelect": "Sélectionner la banque",
             "bankBalance": "Solde de la banque",
-            "weeklyBudget": "Budget hebdomadaire",
-            "weeklyBudgetInfo": "Ce montant est le montant maximum qui sera distribué par semaine.",
+            "budget": "Budget global",
+            "budgetInfo": "Ce montant est le montant maximum qui sera distribué par cette campagne.",
             "rawCAC": "CAC brut par nouvel utilisateur",
             "rawCACInfo": "Ceci est le montant brut qui sera distribué au parrain et au filleul.",
             "ratio": "Ratio Parrain/Filleul",
@@ -157,7 +157,7 @@
                 "commission": "Commission Frak (20%)",
                 "referrer": "Récompense pour le parrain/marraine",
                 "referee": "Récompense pour le-a filleul-e",
-                "newUser": "Nombre de nouveaux clients par semaine"
+                "newUser": "Nombre de nouveaux clients"
             },
             "createOpen": "Formulaire de création de campagne",
             "createButton": "Créer la campagne",
