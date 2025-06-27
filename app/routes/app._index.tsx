@@ -20,14 +20,6 @@ import { useTranslation } from "react-i18next";
 import { CampaignStatus } from "../components/Campaign";
 import { BankingStatus } from "../components/Funding/Bank";
 
-export const headers = () => {
-    return {
-        "Cache-Control":
-            "public, max-age=1800, s-maxage=3600, stale-while-revalidate=86400",
-        Vary: "Accept-Encoding",
-    };
-};
-
 /**
  * todo: Index page of the Frak application on the shopify admin panel
  *  - Login with a Frak wallet if needed
@@ -115,7 +107,6 @@ function ThemeSupported({
 }: {
     onboardingData: OnboardingStepData;
 }) {
-    onboardingData.shopInfo;
     // Validate if onboarding is truly complete
     const validationResult = validateCompleteOnboarding(onboardingData);
     const statusMessage = getOnboardingStatusMessage(validationResult);
