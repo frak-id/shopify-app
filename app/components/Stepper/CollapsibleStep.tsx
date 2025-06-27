@@ -4,6 +4,7 @@ import { StepItem } from ".";
 
 interface CollapsibleStepProps {
     step: number;
+    currentStep: number;
     completed: boolean;
     title: string;
     description?: string;
@@ -12,6 +13,7 @@ interface CollapsibleStepProps {
 
 export function CollapsibleStep({
     step,
+    currentStep,
     completed,
     title,
     description,
@@ -21,26 +23,42 @@ export function CollapsibleStep({
     const handleToggle = useCallback(() => setOpen((open) => !open), []);
 
     useEffect(() => {
-        if (!completed) return;
+        // If the step is not completed and the current step is the step, open the collapsible
+        if (!completed && currentStep === step) {
+            setOpen(true);
+            return;
+        }
         setOpen(false);
-    }, [completed]);
+    }, [completed, currentStep, step]);
 
     return (
         <>
-            <StepItem checked={completed}>
+            <StepItem
+                checked={completed}
+                stepNumber={step}
+                currentStep={currentStep}
+            >
                 {completed ? (
                     <Text variant="bodyMd" as="p">
                         {title}
                     </Text>
                 ) : (
-                    <Button
-                        variant="plain"
-                        onClick={handleToggle}
-                        ariaExpanded={open}
-                        ariaControls={`stepper-step${step}-collapsible`}
-                    >
-                        {title}
-                    </Button>
+                    <>
+                        {currentStep === step ? (
+                            <Button
+                                variant="plain"
+                                onClick={handleToggle}
+                                ariaExpanded={open}
+                                ariaControls={`stepper-step${step}-collapsible`}
+                            >
+                                {title}
+                            </Button>
+                        ) : (
+                            <Text variant="bodyMd" as="p" tone="subdued">
+                                {title}
+                            </Text>
+                        )}
+                    </>
                 )}
             </StepItem>
             <Collapsible

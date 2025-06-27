@@ -4,7 +4,10 @@ import { Button, Text } from "@shopify/polaris";
 import { useMutation } from "@tanstack/react-query";
 import { useRefreshData } from "app/hooks/useRefreshData";
 import type { loader as rootLoader } from "app/routes/app";
-import type { OnboardingStepData } from "app/utils/onboarding";
+import {
+    type OnboardingStepData,
+    validateCompleteOnboarding,
+} from "app/utils/onboarding";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CollapsibleStep } from "./CollapsibleStep";
@@ -22,6 +25,7 @@ export function Step1({
     const { data: walletStatus } = useWalletStatus();
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const fetcher = useFetcher();
+    const { failedSteps } = validateCompleteOnboarding(onboardingData);
 
     // Check if the shop is connected
     const isConnected = !!shopInfo;
@@ -107,6 +111,7 @@ export function Step1({
     return (
         <CollapsibleStep
             step={1}
+            currentStep={failedSteps[0]}
             completed={isConnected}
             title={t("status.connectionStatus.title")}
         >

@@ -8,7 +8,7 @@ import {
     ProgressBar,
     Text,
 } from "@shopify/polaris";
-import { CheckIcon } from "@shopify/polaris-icons";
+import { CheckIcon, DisabledIcon } from "@shopify/polaris-icons";
 import { useVisibilityChange } from "app/hooks/useVisibilityChange";
 import type { loader as appLoader } from "app/routes/app";
 import {
@@ -136,23 +136,42 @@ function Steps({ onboardingData }: { onboardingData: OnboardingStepData }) {
     );
 }
 
+type StepItemProps = {
+    checked: boolean;
+    stepNumber: number;
+    children: ReactNode;
+    currentStep: number;
+};
+
 export function StepItem({
     checked,
+    stepNumber,
     children,
-}: {
-    checked: boolean;
-    children: ReactNode;
-}) {
+    currentStep,
+}: StepItemProps) {
     return (
-        <InlineStack gap="300" blockAlign="center" wrap={false}>
+        <InlineStack gap="200" blockAlign="center" wrap={false}>
             <Box>
                 {checked ? (
                     <Icon source={CheckIcon} tone="base" />
                 ) : (
-                    <Icon source={UncheckedIcon} tone="base" />
+                    <>
+                        {currentStep === stepNumber ? (
+                            <Icon source={UncheckedIcon} tone="base" />
+                        ) : (
+                            <Icon source={DisabledIcon} tone="subdued" />
+                        )}
+                    </>
                 )}
             </Box>
-            {children}
+            <InlineStack gap="100" blockAlign="center" wrap={false}>
+                <Box>
+                    <Text variant="bodyMd" tone="subdued" as="p">
+                        {stepNumber}.
+                    </Text>
+                </Box>
+                {children}
+            </InlineStack>
         </InlineStack>
     );
 }

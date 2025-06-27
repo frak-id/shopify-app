@@ -1,7 +1,10 @@
 import { useRouteLoaderData } from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
-import type { OnboardingStepData } from "app/utils/onboarding";
+import {
+    type OnboardingStepData,
+    validateCompleteOnboarding,
+} from "app/utils/onboarding";
 import { Trans, useTranslation } from "react-i18next";
 import screenFrakListener from "../../assets/frak-listener.png";
 import { CollapsibleStep } from "./CollapsibleStep";
@@ -17,12 +20,14 @@ export function Step5({
     const { id } = theme || {};
     const editorUrl = `https://${rootData?.shop?.myshopifyDomain}/admin/themes/current/editor`;
     const isFrakActivated = !!isThemeHasFrakActivated;
+    const { failedSteps } = validateCompleteOnboarding(onboardingData);
 
     return (
         <CollapsibleStep
             step={5}
             completed={isFrakActivated}
             title={t("stepper.step5.title")}
+            currentStep={failedSteps[0]}
         >
             <Text as="p" variant="bodyMd">
                 <Trans i18nKey="stepper.step5.description" />
