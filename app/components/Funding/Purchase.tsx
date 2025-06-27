@@ -1,3 +1,4 @@
+import { useRouteLoaderData } from "@remix-run/react";
 import {
     Badge,
     BlockStack,
@@ -12,6 +13,7 @@ import {
 } from "@shopify/polaris";
 import type { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import { useMutation } from "@tanstack/react-query";
+import type { loader as rootLoader } from "app/routes/app";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { PurchaseTable } from "../../../db/schema/purchaseTable";
@@ -113,8 +115,6 @@ function ActivePurchases({
 /**
  * Component that will permit to fund a given bank
  *  under the hood it should trigger the complete stuff to fund the bank via shopify
- *
- * todo: returnUrl page
  */
 function CreatePurchase({
     banks,
@@ -123,6 +123,7 @@ function CreatePurchase({
     const [selectedBank, setSelectedBank] = useState(
         banks.length === 1 ? banks[0].id : ""
     );
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const [error, setError] = useState<string | null>(null);
     const { t } = useTranslation();
 
@@ -185,6 +186,7 @@ function CreatePurchase({
                     min={0}
                     step={0.5}
                     disabled={isLoading || confirmationUrl}
+                    suffix={rootData?.shop.preferredCurrency ?? "USD"}
                 />
                 <Button
                     onClick={handleSubmit}

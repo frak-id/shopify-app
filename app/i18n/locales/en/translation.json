@@ -181,7 +181,7 @@
             "createdAt": "Created At",
             "actions": "Actions",
             "selectBank": "Select bank to fund",
-            "amountToFund": "Amount to fund (USD)",
+            "amountToFund": "Amount to fund",
             "fundBank": "Fund bank",
             "confirm": "Confirm",
             "confirmPurchase": "Confirm the purchase",

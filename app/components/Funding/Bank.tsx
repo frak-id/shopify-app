@@ -1,3 +1,5 @@
+import { formatAmount } from "@frak-labs/core-sdk";
+import { useRouteLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Card,
@@ -6,9 +8,11 @@ import {
     SkeletonDisplayText,
     Text,
 } from "@shopify/polaris";
+import type { loader as rootLoader } from "app/routes/app";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { formatUnits } from "viem";
+import { useConversionRate } from "../../hooks/useConversionRate";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 import { useTokenInfoWithBalance } from "../../hooks/usetokenInfo";
 
@@ -43,7 +47,7 @@ export function BankingStatus({
 
 /**
  * Display each bank items
- * todo: We are creating one table per banks, so the UI will be terrible once we got multiple banks, but since only one for now balek
+ * todo: We are creating one table per banks, so the UI will be terrible once we got multiple banks
  */
 function BankItem({
     bank,
@@ -53,8 +57,11 @@ function BankItem({
             token: bank.tokenId,
             wallet: bank.id,
         });
+    const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
+    const { rate } = useConversionRate({ token: bank.tokenId });
+
     const { balance, distributed, claimed } = useMemo(() => {
-        if (!tokenInfo) {
+        if (!tokenInfo || !rate) {
             return {
                 balance: undefined,
                 distributed: undefined,
@@ -62,21 +69,30 @@ function BankItem({
             };
         }
 
+        const currency = rootData?.shop.preferredCurrency ?? "usd";
+
+        function formatEthers(value: bigint, decimals: number) {
+            const floatValue = Number.parseFloat(formatUnits(value, decimals));
+            const currencyRate = rate?.[currency] ?? 1;
+
+            return formatAmount(floatValue * currencyRate, currency);
+        }
+
         return {
-            balance: formatUnits(
+            balance: formatEthers(
                 tokenInfo.balance ?? 0n,
                 tokenInfo.decimals ?? 18
             ),
-            distributed: formatUnits(
+            distributed: formatEthers(
                 BigInt(bank.totalDistributed),
                 tokenInfo.decimals ?? 18
             ),
-            claimed: formatUnits(
+            claimed: formatEthers(
                 BigInt(bank.totalClaimed),
                 tokenInfo.decimals ?? 18
             ),
         };
-    }, [tokenInfo, bank]);
+    }, [tokenInfo, bank, rate, rootData?.shop.preferredCurrency]);
     const { t } = useTranslation();
 
     if (tokenInfoLoading || !tokenInfo) {
@@ -96,9 +112,9 @@ function BankItem({
             rows={[
                 [
                     `${tokenInfo.name} (${tokenInfo.symbol})`,
-                    `${balance} ${tokenInfo.symbol}`,
-                    `${distributed} ${tokenInfo.symbol}`,
-                    `${claimed} ${tokenInfo.symbol}`,
+                    balance,
+                    distributed,
+                    claimed,
                     bank.id,
                 ],
             ]}

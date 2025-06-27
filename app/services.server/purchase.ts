@@ -61,7 +61,8 @@ export async function startupPurchase(
                 returnUrl: "https://extension-shop.frak.id/purchase",
                 price: {
                     amount: amount,
-                    currencyCode: "USD",
+                    currencyCode:
+                        info.preferredCurrency?.toUpperCase() ?? "USD",
                 },
                 test: process.env.STAGE !== "production",
             },

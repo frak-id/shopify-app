@@ -182,7 +182,7 @@
             "createdAt": "Créé le",
             "actions": "Actions",
             "selectBank": "Sélectionner la banque à alimenter",
-            "amountToFund": "Montant à alimenter (USD)",
+            "amountToFund": "Montant à alimenter",
             "fundBank": "Alimenter la banque",
             "confirm": "Confirmer",
             "confirmPurchase": "Confirmer l'achat",

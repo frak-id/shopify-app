@@ -81,7 +81,7 @@ function PurchasePresent({
             </Text>
             <Text variant="bodyLg" as="p" alignment="center">
                 You can track your purchase status in the{" "}
-                <Link url="/app/campaigns">campaigns page</Link>.
+                <Link url="/app/funding">funding page</Link>.
             </Text>
             <Text variant="bodyLg" as="p" alignment="center">
                 If you have any questions, please contact us at{" "}
