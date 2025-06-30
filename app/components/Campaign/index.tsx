@@ -102,10 +102,22 @@ function CampaignStatusBadge({
 
     return (
         <InlineStack gap="200">
-            <Badge tone={campaignInfo.isActive ? "success" : "warning"}>
+            <Badge
+                tone={
+                    campaign.attached && campaignInfo.isActive
+                        ? "success"
+                        : "warning"
+                }
+            >
                 {t("status.campaign.active")}
             </Badge>
-            <Badge tone={campaignInfo.isRunning ? "success" : "warning"}>
+            <Badge
+                tone={
+                    campaign.attached && campaignInfo.isRunning
+                        ? "success"
+                        : "warning"
+                }
+            >
                 {t("status.campaign.running")}
             </Badge>
         </InlineStack>
