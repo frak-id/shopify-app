@@ -12,7 +12,7 @@
 }
 
 .header {
-    height: 117px;
+    min-height: 117px;
     font-size: 21px;
     font-weight: 600;
     line-height: 1.5;
@@ -32,7 +32,7 @@
 }
 
 .text {
-    margin-bottom: 29px;
+    margin: 29px 0;
     font-size: 21px;
     font-weight: 600;
     line-height: 1.5;
@@ -60,6 +60,8 @@
 }
 
 .logo {
+    display: block;
+    margin: 0 auto;
     max-width: 170px;
     height: auto;
 }
