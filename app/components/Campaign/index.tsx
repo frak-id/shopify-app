@@ -80,11 +80,16 @@ function CampaignTable({
                 t("status.campaign.type"),
                 t("status.campaign.active"),
             ]}
-            rows={campaigns.map((campaign) => [
-                campaign.name,
-                campaign.type,
-                <CampaignStatusBadge key={campaign.id} campaign={campaign} />,
-            ])}
+            rows={campaigns
+                .filter((c) => c?.attached)
+                .map((campaign) => [
+                    campaign.name,
+                    campaign.type,
+                    <CampaignStatusBadge
+                        key={campaign.id}
+                        campaign={campaign}
+                    />,
+                ])}
         />
     );
 }
