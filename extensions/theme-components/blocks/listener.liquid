@@ -4,11 +4,22 @@
   type="text/javascript"
 >
   // Precompute a few stuff
+  const lang = '{{ block.settings.modal_lng }}' === 'default' ? undefined : '{{ block.settings.modal_lng }}';
+
+  // Get the logo URL
+  {% assign appearance_metafield = shop.metafields.frak.appearance %}
   let logoUrl = '{{ block.settings.logo.src }}';
   if (!logoUrl.startsWith('cdn.shopify.com')) {
     logoUrl = `https://${Shopify.shop}/cdn/shop/${logoUrl}`;
   }
-  const lang = '{{ block.settings.modal_lng }}' === 'default' ? undefined : '{{ block.settings.modal_lng }}';
+
+  {% if appearance_metafield.value %}
+    try {
+      logoUrl = {{ appearance_metafield.value | json }}.logoUrl;
+    } catch (error) {
+      console.error('Error parsing appearance customizations:', error);
+    }
+  {% endif %}
 
   // Get i18n customizations from metafield
   {% assign i18n_metafield = shop.metafields.frak.modal_i18n %}
@@ -20,11 +31,6 @@
       console.error('Error parsing i18n customizations:', error);
     }
   {% endif %}
-
-  // Override logoUrl if a custom one is provided in the i18n metafield
-  if (customI18n.logoUrl) {
-    logoUrl = customI18n.logoUrl;
-  }
 
   // Top level Frak SDK config
   const frakConfig = {

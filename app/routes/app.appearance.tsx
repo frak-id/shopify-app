@@ -5,8 +5,11 @@ import { ButtonTab } from "app/components/Appearance/ButtonTab";
 import { CustomizationsTab } from "app/components/Appearance/CustomizationsTab";
 import { WalletButtonTab } from "app/components/Appearance/WalletButtonTab";
 import {
+    type AppearanceMetafieldValue,
     type I18nCustomizations,
+    getAppearanceMetafield,
     getI18nCustomizations,
+    updateAppearanceMetafield,
     updateI18nCustomizations,
 } from "app/services.server/metafields";
 import { firstProductPublished } from "app/services.server/shop";
@@ -24,11 +27,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     // Get all data needed for the appearance tabs
     const [
         customizations,
+        appearanceMetafield,
         isThemeHasFrakButton,
         firstProduct,
         themeWalletButton,
     ] = await Promise.all([
         getI18nCustomizations(context),
+        getAppearanceMetafield(context),
         doesThemeHasFrakButton(context),
         firstProductPublished(context),
         doesThemeHasFrakWalletButton(context),
@@ -36,6 +41,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     return Response.json({
         customizations,
+        appearanceMetafield,
         isThemeHasFrakButton,
         firstProduct,
         themeWalletButton,
@@ -56,7 +62,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
     try {
         const customizationsData = formData.get("customizations");
-        if (!customizationsData) {
+        const appearanceMetafieldData = formData.get("appearanceMetafield");
+        if (!customizationsData && !appearanceMetafieldData) {
             return Response.json(
                 {
                     success: false,
@@ -66,13 +73,39 @@ export async function action({ request }: ActionFunctionArgs) {
             );
         }
 
-        const customizations: I18nCustomizations = JSON.parse(
-            customizationsData as string
-        );
+        let success = true;
+        const userErrors: string[] = [];
 
-        const result = await updateI18nCustomizations(context, customizations);
+        // Handle i18n customizations
+        if (customizationsData) {
+            const customizations: I18nCustomizations = JSON.parse(
+                customizationsData as string
+            );
 
-        if (result.success) {
+            const result = await updateI18nCustomizations(
+                context,
+                customizations
+            );
+            success = result.success;
+            userErrors.push(...result.userErrors.map((e) => e.message));
+        }
+
+        // Handle appearance metafield
+        if (appearanceMetafieldData) {
+            const appearanceMetafield: AppearanceMetafieldValue = JSON.parse(
+                appearanceMetafieldData as string
+            );
+
+            const result = await updateAppearanceMetafield(
+                context,
+                appearanceMetafield
+            );
+
+            success = success && result.success;
+            userErrors.push(...result.userErrors.map((e) => e.message));
+        }
+
+        if (success) {
             return Response.json({
                 success: true,
                 message: "Customizations saved successfully!",
@@ -82,7 +115,7 @@ export async function action({ request }: ActionFunctionArgs) {
         return Response.json(
             {
                 success: false,
-                message: `Error saving customizations: ${result.userErrors.map((e) => e.message).join(", ")}`,
+                message: `Error saving customizations: ${userErrors.join(", ")}`,
             },
             { status: 400 }
         );
@@ -101,6 +134,7 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function AppearancePage() {
     const {
         customizations,
+        appearanceMetafield,
         isThemeHasFrakButton,
         firstProduct,
         themeWalletButton,
@@ -130,7 +164,10 @@ export default function AppearancePage() {
         switch (selectedTab) {
             case 0:
                 return (
-                    <CustomizationsTab initialCustomizations={customizations} />
+                    <CustomizationsTab
+                        initialCustomizations={customizations}
+                        initialAppearanceMetafield={appearanceMetafield}
+                    />
                 );
             case 1:
                 return (

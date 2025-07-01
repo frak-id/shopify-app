@@ -7,21 +7,21 @@ import { ModalSection, SharingSection } from "./Section";
 export function SingleLanguageFields({
     customizations,
     onUpdate,
+    logoUrl,
 }: {
+    logoUrl?: string;
     customizations: I18nCustomizations;
     onUpdate: (key: string, value: string) => void;
 }) {
     // Use 'en' as the default language for single mode and merge logoUrl if provided
-    const currentValues = {
-        ...(customizations.en || {}),
-        ...(customizations.logoUrl ? { logoUrl: customizations.logoUrl } : {}),
-    };
+    const currentValues = customizations.en || {};
 
     return (
         <BlockStack gap="500">
             <ModalSection
                 values={currentValues}
                 onUpdate={onUpdate}
+                logoUrl={logoUrl}
                 language="single"
             />
             <SharingSection
@@ -36,19 +36,15 @@ export function SingleLanguageFields({
 export function MultiLanguageFields({
     customizations,
     onUpdate,
+    logoUrl,
 }: {
     customizations: I18nCustomizations;
+    logoUrl?: string;
     onUpdate: (language: "fr" | "en", key: string, value: string) => void;
 }) {
     // Merge logoUrl into per-language values so the preview can access it
-    const frValues = {
-        ...(customizations.fr || {}),
-        ...(customizations.logoUrl ? { logoUrl: customizations.logoUrl } : {}),
-    };
-    const enValues = {
-        ...(customizations.en || {}),
-        ...(customizations.logoUrl ? { logoUrl: customizations.logoUrl } : {}),
-    };
+    const frValues = customizations.fr || {};
+    const enValues = customizations.en || {};
 
     return (
         <BlockStack gap="500">
@@ -61,6 +57,7 @@ export function MultiLanguageFields({
                     <ModalSection
                         values={frValues}
                         onUpdate={(key, value) => onUpdate("fr", key, value)}
+                        logoUrl={logoUrl}
                         language="fr"
                     />
                     <SharingSection
@@ -80,6 +77,7 @@ export function MultiLanguageFields({
                     <ModalSection
                         values={enValues}
                         onUpdate={(key, value) => onUpdate("en", key, value)}
+                        logoUrl={logoUrl}
                         language="en"
                     />
                     <SharingSection

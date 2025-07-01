@@ -67,10 +67,12 @@ export function SharingSection({
 export function ModalSection({
     values,
     onUpdate,
+    logoUrl,
     language,
 }: {
     values: Record<string, string>;
     onUpdate: (key: string, value: string) => void;
+    logoUrl?: string;
     language: string;
 }) {
     const { t } = useTranslation();
@@ -154,7 +156,7 @@ export function ModalSection({
                             values["sdk.wallet.login.primaryAction"],
                             t("customizations.preview.sharing.button")
                         )}
-                        logoUrl={values.logoUrl}
+                        logoUrl={logoUrl}
                     />
                 </Grid.Cell>
                 <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 3, lg: 6, xl: 6 }}>
@@ -171,7 +173,7 @@ export function ModalSection({
                             values["sdk.wallet.login.primaryAction"],
                             t("customizations.preview.referred.button")
                         )}
-                        logoUrl={values.logoUrl}
+                        logoUrl={logoUrl}
                     />
                 </Grid.Cell>
             </Grid>

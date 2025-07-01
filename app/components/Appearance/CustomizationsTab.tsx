@@ -11,6 +11,7 @@ import {
 import { CheckIcon } from "@shopify/polaris-icons";
 import type { action } from "app/routes/app.appearance";
 import type {
+    AppearanceMetafieldValue,
     I18nCustomizations,
     MultiLanguageI18nCustomizations,
     SingleLanguageI18nCustomizations,
@@ -28,10 +29,12 @@ type LanguageMode = "single" | "multi";
 
 interface CustomizationsTabProps {
     initialCustomizations: I18nCustomizations;
+    initialAppearanceMetafield: AppearanceMetafieldValue;
 }
 
 export function CustomizationsTab({
     initialCustomizations,
+    initialAppearanceMetafield,
 }: CustomizationsTabProps) {
     const fetcher = useFetcher<typeof action>();
     const navigation = useNavigation();
@@ -40,6 +43,8 @@ export function CustomizationsTab({
     const [customizations, setCustomizations] = useState<I18nCustomizations>(
         initialCustomizations
     );
+    const [appearanceMetafield, setAppearanceMetafield] =
+        useState<AppearanceMetafieldValue>(initialAppearanceMetafield);
     const [languageMode, setLanguageMode] = useState<LanguageMode>("single");
 
     const isLoading = navigation.state === "submitting";
@@ -114,6 +119,9 @@ export function CustomizationsTab({
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.target as HTMLFormElement);
+        console.log("formData", formData);
+        console.log("customizations", customizations);
+        console.log("appearanceMetafield", appearanceMetafield);
         if (!formData) return;
         fetcher.submit(formData, {
             method: "post",
@@ -148,13 +156,18 @@ export function CustomizationsTab({
                     name="customizations"
                     value={JSON.stringify(customizations)}
                 />
+                <input
+                    type="hidden"
+                    name="appearanceMetafield"
+                    value={JSON.stringify(appearanceMetafield)}
+                />
 
                 <FormLayout>
                     <LogoField
-                        logoUrl={customizations.logoUrl || ""}
+                        logoUrl={appearanceMetafield.logoUrl || ""}
                         onUpdate={(value) =>
-                            setCustomizations({
-                                ...customizations,
+                            setAppearanceMetafield({
+                                ...appearanceMetafield,
                                 logoUrl: value,
                             })
                         }
@@ -166,12 +179,14 @@ export function CustomizationsTab({
                                 customizations as SingleLanguageI18nCustomizations
                             }
                             onUpdate={handleSingleLanguageUpdate}
+                            logoUrl={appearanceMetafield.logoUrl}
                         />
                     ) : (
                         <MultiLanguageFields
                             customizations={
                                 customizations as MultiLanguageI18nCustomizations
                             }
+                            logoUrl={appearanceMetafield.logoUrl}
                             onUpdate={handleMultiLanguageUpdate}
                         />
                     )}
