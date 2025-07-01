@@ -79,8 +79,10 @@ async function writeMetafield<T>(
     } = ctx;
     const shopId = await getShopId(ctx);
 
-    const response = await graphql(
-        `
+    // Get the right query depending on the value (either create / update or delete)
+    const query = value
+        ? graphql(
+              `
         mutation CreateOrUpdateShopMetafield($metafields: [MetafieldsSetInput!]!) {
             metafieldsSet(metafields: $metafields) {
                 metafields {
@@ -96,28 +98,60 @@ async function writeMetafield<T>(
             }
         }
     `,
-        {
-            variables: {
-                metafields: [
-                    {
-                        namespace: FRAK_NAMESPACE,
-                        key,
-                        type: "json",
-                        value: value ? JSON.stringify(value) : null,
-                        ownerId: shopId,
-                    },
-                ],
-            },
+              {
+                  variables: {
+                      metafields: [
+                          {
+                              namespace: FRAK_NAMESPACE,
+                              key,
+                              type: "json",
+                              value: value ? JSON.stringify(value) : undefined,
+                              ownerId: shopId,
+                          },
+                      ],
+                  },
+              }
+          )
+        : graphql(
+              `
+        mutation DeleteShopMetafield($metafields: [MetafieldIdentifierInput!]!) {
+            metafieldsDelete(metafields: $metafields) {
+                deletedMetafields {
+                    key
+                    namespace
+                    ownerId
+                }
+                userErrors {
+                    field
+                    message
+                }
+            }
         }
-    );
+    `,
+              {
+                  variables: {
+                      metafields: [
+                          {
+                              namespace: FRAK_NAMESPACE,
+                              key,
+                              ownerId: shopId,
+                          },
+                      ],
+                  },
+              }
+          );
+
+    const response = await query;
 
     const {
-        data: { metafieldsSet },
+        data: { metafieldsSet, metafieldsDelete },
     } = await response.json();
 
     return {
-        success: metafieldsSet.userErrors.length === 0,
-        userErrors: metafieldsSet.userErrors,
+        success:
+            metafieldsSet?.userErrors?.length === 0 ||
+            metafieldsDelete?.userErrors?.length === 0,
+        userErrors: metafieldsSet?.userErrors || metafieldsDelete?.userErrors,
     };
 }
 
@@ -254,7 +288,9 @@ export async function updateAppearanceMetafield(
     success: boolean;
     userErrors: Array<{ field: string; message: string }>;
 }> {
-    return writeMetafield(context, APPEARANCE_KEY, appearance);
+    // Polish up the object (right now only the logo url, so if not present set it to null)
+    const polishedAppearance = appearance?.logoUrl?.length ? appearance : null;
+    return writeMetafield(context, APPEARANCE_KEY, polishedAppearance);
 }
 
 /**
@@ -263,52 +299,4 @@ export async function updateAppearanceMetafield(
 export async function getShopId(ctx: AuthenticatedContext): Promise<string> {
     const info = await shopInfo(ctx);
     return info.id;
-}
-
-/**
- * Get i18n customizations formatted for liquid template consumption
- */
-export async function getI18nCustomizationsForLiquid(
-    context: AuthenticatedContext
-): Promise<string> {
-    const customizations = await getI18nCustomizations(context);
-
-    // Filter out empty values and format for liquid
-    const filteredCustomizations: I18nCustomizations = {};
-
-    if (customizations.logoUrl) {
-        filteredCustomizations.logoUrl = customizations.logoUrl;
-    }
-
-    if (customizations.fr) {
-        const frFiltered = Object.entries(customizations.fr)
-            .filter(([, value]) => value?.trim())
-            .reduce(
-                (acc, [key, value]) => {
-                    acc[key] = value;
-                    return acc;
-                },
-                {} as Record<string, string>
-            );
-        if (Object.keys(frFiltered).length > 0) {
-            filteredCustomizations.fr = frFiltered;
-        }
-    }
-
-    if (customizations.en) {
-        const enFiltered = Object.entries(customizations.en)
-            .filter(([, value]) => value?.trim())
-            .reduce(
-                (acc, [key, value]) => {
-                    acc[key] = value;
-                    return acc;
-                },
-                {} as Record<string, string>
-            );
-        if (Object.keys(enFiltered).length > 0) {
-            filteredCustomizations.en = enFiltered;
-        }
-    }
-
-    return JSON.stringify(filteredCustomizations);
 }

@@ -63,6 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
     try {
         const customizationsData = formData.get("customizations");
         const appearanceMetafieldData = formData.get("appearanceMetafield");
+
         if (!customizationsData && !appearanceMetafieldData) {
             return Response.json(
                 {

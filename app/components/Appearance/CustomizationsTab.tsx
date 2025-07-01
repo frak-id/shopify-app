@@ -119,9 +119,6 @@ export function CustomizationsTab({
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.target as HTMLFormElement);
-        console.log("formData", formData);
-        console.log("customizations", customizations);
-        console.log("appearanceMetafield", appearanceMetafield);
         if (!formData) return;
         fetcher.submit(formData, {
             method: "post",
