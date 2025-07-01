@@ -154,6 +154,7 @@ export function ModalSection({
                             values["sdk.wallet.login.primaryAction"],
                             t("customizations.preview.sharing.button")
                         )}
+                        logoUrl={values.logoUrl}
                     />
                 </Grid.Cell>
                 <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 3, lg: 6, xl: 6 }}>
@@ -170,6 +171,7 @@ export function ModalSection({
                             values["sdk.wallet.login.primaryAction"],
                             t("customizations.preview.referred.button")
                         )}
+                        logoUrl={values.logoUrl}
                     />
                 </Grid.Cell>
             </Grid>
@@ -182,6 +184,7 @@ type ModalPreviewSectionProps = {
     description?: string;
     text?: string;
     button?: string;
+    logoUrl?: string;
 };
 
 export function ModalPreviewSection({
@@ -189,6 +192,7 @@ export function ModalPreviewSection({
     description,
     text,
     button,
+    logoUrl,
 }: ModalPreviewSectionProps) {
     return (
         <Card>
@@ -201,7 +205,7 @@ export function ModalPreviewSection({
                         {description}
                     </Text>
                 </Box>
-                <ModalPreview text={text} button={button} />
+                <ModalPreview text={text} button={button} logoUrl={logoUrl} />
             </BlockStack>
         </Card>
     );

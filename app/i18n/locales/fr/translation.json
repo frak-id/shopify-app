@@ -223,6 +223,10 @@
         "modal": {
             "title": "Personnalisation des modales Frak",
             "description": "Personnalisez les textes affichés dans les modales Frak pour différentes langues. Les champs de texte supportent le formatage markdown et des variables spéciales.",
+            "logo": {
+                "title": "Logo du portefeuille",
+                "description": "Personnalisez la modale de connexion au portefeuille avec votre propre logo."
+            },
             "formatting": {
                 "title": "Guide de formatage du texte",
                 "description": "Vous pouvez utiliser les options de formatage suivantes pour améliorer votre texte :",
@@ -233,6 +237,11 @@
             }
         },
         "fields": {
+            "logoUrl": {
+                "label": "URL de l'image de logo du portefeuille",
+                "description": "L'URL de l'image de logo qui sera affichée dans la modale de connexion au portefeuille. Cela remplacera l'image par défaut.",
+                "placeholder": "Exemple : 'https://example.com/logo.png'"
+            },
             "sharing.title": {
                 "label": "Titre de la modale de partage",
                 "description": "Le titre qui apparaît lorsque les utilisateurs partagent votre contenu sur les réseaux sociaux ou les applications de messagerie",

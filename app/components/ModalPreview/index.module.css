@@ -58,3 +58,8 @@
     font-size: 16px;
     font-weight: 600;
 }
+
+.logo {
+    max-width: 170px;
+    height: auto;
+}

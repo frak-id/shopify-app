@@ -222,6 +222,10 @@
         "modal": {
             "title": "Frak Modal Customization",
             "description": "Customize the text displayed in Frak modals for different languages. The text fields support markdown formatting and special variables.",
+            "logo": {
+                "title": "Wallet Logo",
+                "description": "Personalize the wallet modal with your own logo."
+            },
             "formatting": {
                 "title": "Text Formatting Guide",
                 "description": "You can use the following formatting options to enhance your text:",
@@ -232,6 +236,11 @@
             }
         },
         "fields": {
+            "logoUrl": {
+                "label": "Wallet Logo URL",
+                "description": "The URL of the logo that will be displayed in the wallet modal. This will override the default logo.",
+                "placeholder": "Example: 'https://example.com/logo.png'"
+            },
             "sharing.title": {
                 "label": "Sharing Modal Title",
                 "description": "The title that appears when users share your content on social media or messaging apps",

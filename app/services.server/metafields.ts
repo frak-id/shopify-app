@@ -4,11 +4,13 @@ const FRAK_NAMESPACE = "frak";
 const MODAL_I18N_KEY = "modal_i18n";
 
 export type I18nCustomizations = {
+    logoUrl?: string;
     fr?: SingleLanguageI18nCustomizations;
     en?: SingleLanguageI18nCustomizations;
 };
 
 export type MultiLanguageI18nCustomizations = {
+    logoUrl?: string;
     fr?: SingleLanguageI18nCustomizations;
     en?: SingleLanguageI18nCustomizations;
 };
@@ -49,22 +51,30 @@ export async function getI18nCustomizations({
         try {
             const storedValue = JSON.parse(shop.metafield.value);
 
-            // Check if it's a flat structure (single language mode)
-            // If the stored value doesn't have 'fr' or 'en' keys, it's a flat structure
-            if (
+            // If the stored value is a flat structure (single language mode)
+            const isFlatStructure =
                 storedValue &&
                 typeof storedValue === "object" &&
                 !storedValue.fr &&
-                !storedValue.en
-            ) {
-                // Map flat structure to 'en' for frontend compatibility
+                !storedValue.en;
+
+            if (isFlatStructure) {
+                // Extract logoUrl if it exists in the flat structure
+                const { logoUrl, ...flatTranslations } = storedValue as Record<
+                    string,
+                    string
+                > & {
+                    logoUrl?: string;
+                };
+
                 return {
-                    en: storedValue,
+                    logoUrl,
+                    en: flatTranslations,
                     fr: {},
                 };
             }
 
-            // Return multi-language structure as-is
+            // If the structure already contains language keys, return as-is
             return storedValue;
         } catch (error) {
             console.error("Error parsing i18n metafield:", error);
@@ -93,29 +103,19 @@ export async function updateI18nCustomizations(
     const shopId = await getShopId(context);
 
     // Determine if we should store as flat structure (single language) or multi-language
-    const hasFrenchData =
-        customizations.fr && Object.keys(customizations.fr).length > 0;
-    const hasEnglishData =
-        customizations.en && Object.keys(customizations.en).length > 0;
+    const hasFrenchData = Boolean(
+        customizations.fr && Object.keys(customizations.fr).length > 0
+    );
+    const hasEnglishData = Boolean(
+        customizations.en && Object.keys(customizations.en).length > 0
+    );
+    const hasLogoUrl = Boolean(customizations.logoUrl);
 
-    let valueToStore:
-        | I18nCustomizations
-        | SingleLanguageI18nCustomizations
-        | Record<string, never>;
-
-    if (hasFrenchData && hasEnglishData) {
-        // Multi-language: store with language structure
-        valueToStore = customizations;
-    } else if (hasEnglishData && !hasFrenchData && customizations.en) {
-        // Single language (English): store flat structure
-        valueToStore = customizations.en;
-    } else if (hasFrenchData && !hasEnglishData && customizations.fr) {
-        // Single language (French): store flat structure
-        valueToStore = customizations.fr;
-    } else {
-        // No data: store empty object
-        valueToStore = {};
-    }
+    const computedValueToStore = buildMetafieldValue(customizations, {
+        hasFrenchData,
+        hasEnglishData,
+        hasLogoUrl,
+    });
 
     const response = await graphql(
         `
@@ -141,7 +141,7 @@ export async function updateI18nCustomizations(
                         namespace: FRAK_NAMESPACE,
                         key: MODAL_I18N_KEY,
                         type: "json",
-                        value: JSON.stringify(valueToStore),
+                        value: JSON.stringify(computedValueToStore),
                         ownerId: shopId,
                     },
                 ],
@@ -191,6 +191,10 @@ export async function getI18nCustomizationsForLiquid(
     // Filter out empty values and format for liquid
     const filteredCustomizations: I18nCustomizations = {};
 
+    if (customizations.logoUrl) {
+        filteredCustomizations.logoUrl = customizations.logoUrl;
+    }
+
     if (customizations.fr) {
         const frFiltered = Object.entries(customizations.fr)
             .filter(([, value]) => value?.trim())
@@ -222,4 +226,52 @@ export async function getI18nCustomizationsForLiquid(
     }
 
     return JSON.stringify(filteredCustomizations);
+}
+
+/**
+ * Helper to compute the value we want to persist in the metafield, while keeping
+ * the main updateI18nCustomizations function simple.
+ */
+function buildMetafieldValue(
+    customizations: I18nCustomizations,
+    {
+        hasFrenchData,
+        hasEnglishData,
+        hasLogoUrl,
+    }: {
+        hasFrenchData: boolean;
+        hasEnglishData: boolean;
+        hasLogoUrl: boolean;
+    }
+):
+    | I18nCustomizations
+    | SingleLanguageI18nCustomizations
+    | Record<string, never> {
+    const singleLanguageKey =
+        hasEnglishData && !hasFrenchData
+            ? "en"
+            : hasFrenchData && !hasEnglishData
+              ? "fr"
+              : null;
+
+    if (hasFrenchData && hasEnglishData) {
+        return {
+            ...(hasLogoUrl ? { logoUrl: customizations.logoUrl } : {}),
+            fr: customizations.fr ?? {},
+            en: customizations.en ?? {},
+        };
+    }
+
+    if (singleLanguageKey) {
+        const translations = customizations[singleLanguageKey] as Record<
+            string,
+            string
+        >;
+        return {
+            ...translations,
+            ...(hasLogoUrl ? { logoUrl: customizations.logoUrl } : {}),
+        };
+    }
+
+    return hasLogoUrl ? { logoUrl: customizations.logoUrl } : {};
 }

@@ -7,6 +7,7 @@ import styles from "./index.module.css";
 type ModalPreviewProps = {
     text?: string;
     button?: string;
+    logoUrl?: string;
 };
 
 /**
@@ -68,7 +69,7 @@ function parseMarkdown(text: string, currency: Currency): React.ReactNode[] {
     return parts;
 }
 
-export function ModalPreview({ text, button }: ModalPreviewProps) {
+export function ModalPreview({ text, button, logoUrl }: ModalPreviewProps) {
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const currency = (rootData?.shop?.preferredCurrency ?? "usd") as Currency;
 
@@ -77,7 +78,11 @@ export function ModalPreview({ text, button }: ModalPreviewProps) {
     return (
         <div className={styles.modalPreview}>
             <div className={styles.header}>
-                <span className={styles.headerText}>Logo</span>
+                {logoUrl ? (
+                    <img src={logoUrl} alt="Logo" className={styles.logo} />
+                ) : (
+                    <span className={styles.headerText}>Logo</span>
+                )}
             </div>
             <p className={styles.text}>
                 {parsedText && parsedText.length > 0 ? parsedText : text}

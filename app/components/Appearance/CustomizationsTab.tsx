@@ -18,6 +18,7 @@ import type {
 import { type FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+    LogoField,
     MultiLanguageFields,
     SingleLanguageFields,
 } from "../Customizations/Field";
@@ -149,6 +150,16 @@ export function CustomizationsTab({
                 />
 
                 <FormLayout>
+                    <LogoField
+                        logoUrl={customizations.logoUrl || ""}
+                        onUpdate={(value) =>
+                            setCustomizations({
+                                ...customizations,
+                                logoUrl: value,
+                            })
+                        }
+                    />
+
                     {languageMode === "single" ? (
                         <SingleLanguageFields
                             customizations={

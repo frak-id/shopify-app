@@ -21,6 +21,11 @@
     }
   {% endif %}
 
+  // Override logoUrl if a custom one is provided in the i18n metafield
+  if (customI18n.logoUrl) {
+    logoUrl = customI18n.logoUrl;
+  }
+
   // Top level Frak SDK config
   const frakConfig = {
     walletUrl: 'https://wallet.frak.id',
@@ -49,7 +54,7 @@
     },
   };
 
-  // Sharing config 
+  // Sharing config
   const sharingConfig = { link: window.location.href };
 
   const modalWalletConfig = {
