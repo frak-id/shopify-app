@@ -248,7 +248,7 @@ function buildMetafieldValue(
               ? "fr"
               : null;
 
-    if (hasFrenchData || hasEnglishData) {
+    if (hasFrenchData && hasEnglishData) {
         return {
             fr: customizations.fr ?? {},
             en: customizations.en ?? {},
