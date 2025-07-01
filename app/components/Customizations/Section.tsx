@@ -77,6 +77,41 @@ export function ModalSection({
     return (
         <>
             <Card>
+                <BlockStack gap="300">
+                    <Box>
+                        <Text as="h4" variant="headingSm">
+                            {t("customizations.modal.formatting.title")}
+                        </Text>
+                        <Text as="p" variant="bodySm" tone="subdued">
+                            {t("customizations.modal.formatting.description")}
+                        </Text>
+                    </Box>
+                    <BlockStack gap="200">
+                        <Box>
+                            <Text as="p" variant="bodySm">
+                                • {t("customizations.modal.formatting.bold")}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Text as="p" variant="bodySm">
+                                • {t("customizations.modal.formatting.italic")}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Text as="p" variant="bodySm">
+                                •{" "}
+                                {t("customizations.modal.formatting.variable")}
+                            </Text>
+                        </Box>
+                        <Box>
+                            <Text as="p" variant="bodySm" tone="subdued">
+                                • {t("customizations.modal.formatting.preview")}
+                            </Text>
+                        </Box>
+                    </BlockStack>
+                </BlockStack>
+            </Card>
+            <Card>
                 <BlockStack gap="400">
                     <Box>
                         <Text as="h4" variant="headingSm">
@@ -201,11 +236,11 @@ export function SocialPreviewSection({
                 <SocialPreview
                     title={handleValue(
                         sharingTitle,
-                        t("customizations.preview.social.sharingTitle")
+                        t("customizations.preview.social.title")
                     )}
                     text={handleValue(
                         sharingText,
-                        t("customizations.preview.social.sharingText")
+                        t("customizations.preview.social.description")
                     )}
                 />
             </BlockStack>

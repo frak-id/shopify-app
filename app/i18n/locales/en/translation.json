@@ -221,7 +221,15 @@
         },
         "modal": {
             "title": "Frak Modal Customization",
-            "description": "Customize the text displayed in Frak modals for different languages."
+            "description": "Customize the text displayed in Frak modals for different languages. The text fields support markdown formatting and special variables.",
+            "formatting": {
+                "title": "Text Formatting Guide",
+                "description": "You can use the following formatting options to enhance your text:",
+                "bold": "Use **text** to make text bold (e.g., **Get rewards** displays as bold text)",
+                "italic": "Use *text* to make text italic (e.g., *amazing offer* displays as italic text)",
+                "variable": "Use {{ estimatedReward }} to show the potential reward amount that users can earn (automatically calculated based on your campaign settings)",
+                "preview": "Note: The preview below shows $42.00 as an example amount. Your customers will see actual reward amounts based on your campaign settings."
+            }
         },
         "fields": {
             "sharing.title": {
@@ -241,12 +249,12 @@
             },
             "sdk.wallet.login.text_sharing": {
                 "label": "Login Text for Sharing",
-                "description": "Message shown to users when they need to login to share content and earn rewards",
+                "description": "Message shown to users when they need to login to share content and earn rewards. You can use **bold text**, *italic text*, and {{ estimatedReward }} to show the reward amount.",
                 "placeholder": "Example: 'Share, Refer, Earn up to **{{ estimatedReward }}** per successful referral'"
             },
             "sdk.wallet.login.text_referred": {
                 "label": "Welcome Text for Referred Users",
-                "description": "Message shown to users who clicked on a shared link",
+                "description": "Message shown to users who clicked on a shared link. You can use **bold text**, *italic text*, and {{ estimatedReward }} to show the reward amount.",
                 "placeholder": "Example: 'Welcome! Receive **{{ estimatedReward }}** when you make a purchase'"
             }
         },

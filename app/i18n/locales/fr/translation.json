@@ -216,21 +216,21 @@
                 "helpText": "Fournissez différents textes en français et en anglais. Les utilisateurs verront le texte basé sur la langue de leur navigateur ou leur localisation"
             }
         },
-        "keys": {
-            "sharing.title": "Titre de la modale de partage système",
-            "sharing.text": "Contenu du texte de partage",
-            "sdk.wallet.login.text": "Texte de connexion par défaut pour l'utilisateur final",
-            "sdk.wallet.login.primaryAction": "Texte du bouton de connexion par défaut",
-            "sdk.wallet.login.text_sharing": "Texte de connexion dans le contexte de partage",
-            "sdk.wallet.login.text_referred": "Texte de connexion pour les utilisateurs qui ont ouvert un lien de partage"
-        },
         "sharing": {
             "title": "Personnalisation du partage",
             "description": "Personnalisez le texte affiché lors du partage de votre boutique."
         },
         "modal": {
             "title": "Personnalisation des modales Frak",
-            "description": "Personnalisez les textes affichés dans les modales Frak pour différentes langues."
+            "description": "Personnalisez les textes affichés dans les modales Frak pour différentes langues. Les champs de texte supportent le formatage markdown et des variables spéciales.",
+            "formatting": {
+                "title": "Guide de formatage du texte",
+                "description": "Vous pouvez utiliser les options de formatage suivantes pour améliorer votre texte :",
+                "bold": "Utilisez **texte** pour mettre le texte en gras (ex: **Obtenez des récompenses** s'affiche en gras)",
+                "italic": "Utilisez *texte* pour mettre le texte en italique (ex: *offre incroyable* s'affiche en italique)",
+                "variable": "Utilisez {{ estimatedReward }} pour afficher le montant de récompense potentiel que les utilisateurs peuvent gagner (calculé automatiquement selon vos paramètres de campagne)",
+                "preview": "Note : L'aperçu ci-dessous affiche 42,00 € comme montant d'exemple. Vos clients verront les montants de récompense réels basés sur vos paramètres de campagne."
+            }
         },
         "fields": {
             "sharing.title": {
@@ -249,32 +249,34 @@
                 "placeholder": "Exemple : 'Créez votre portefeuille en 2 secondes !'"
             },
             "sdk.wallet.login.text_sharing": {
-                "label": "Texte de connexion pour le partage",
-                "description": "Message affiché aux utilisateurs lorsqu'ils doivent se connecter pour partager du contenu et gagner des récompenses",
+                "label": "Texte de bienvenue pour le parrain/marraine",
+                "description": "Message affiché aux utilisateurs lorsqu'ils ont cliqué sur un bouton de partage. Vous pouvez utiliser **texte en gras**, *texte en italique*, et {{ estimatedReward }} pour afficher le montant de la récompense.",
                 "placeholder": "Exemple : 'Partagez, Parrainez, Gagnez jusqu'à **{{ estimatedReward }}** par parrainage réussi'"
             },
             "sdk.wallet.login.text_referred": {
-                "label": "Texte de bienvenue pour les utilisateurs référés",
-                "description": "Message affiché aux utilisateurs qui ont cliqué sur un lien partagé",
+                "label": "Texte de bienvenue pour le-a filleul-e",
+                "description": "Message affiché aux utilisateurs qui ont cliqué sur un lien partagé. Vous pouvez utiliser **texte en gras**, *texte en italique*, et {{ estimatedReward }} pour afficher le montant de la récompense.",
                 "placeholder": "Exemple : 'Bienvenue ! Recevez **{{ estimatedReward }}** lors de votre achat'"
             }
         },
         "preview": {
             "sharing": {
-                "title": "Aperçu",
+                "title": "Aperçu parrain/marraine",
                 "description": "Aperçu du texte affiché dans les modales Frak.",
                 "placeholder": "Partagez, Parrainez, Gagnez jusqu'à **{{ estimatedReward }}** par parrainage réussi",
                 "button": "Créer votre portefeuille en 2 secondes !"
             },
             "referred": {
-                "title": "Aperçu",
+                "title": "Aperçu filleul/filleul",
                 "description": "Aperçu du texte affiché dans les modales Frak.",
                 "placeholder": "Bienvenue ! Recevez **{{ estimatedReward }}** lors de votre achat",
                 "button": "Créer votre portefeuille en 2 secondes !"
             },
             "social": {
-                "title": "Tu connais le site Example ? 😊",
-                "description": "J'ai un produit incroyable à te partager ! 😉"
+                "title": "Aperçu du partage social",
+                "description": "Aperçu du texte affiché lors du partage social.",
+                "sharingTitle": "Tu connais le site Example ? 😊",
+                "sharingText": "J'ai un produit incroyable à te partager ! 😉"
             }
         }
     },
