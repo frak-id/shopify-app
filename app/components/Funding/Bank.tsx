@@ -51,7 +51,9 @@ export function BankingStatus({
  */
 function BankItem({
     bank,
-}: { bank: GetProductInfoResponseDto["banks"][number] }) {
+}: {
+    bank: GetProductInfoResponseDto["banks"][number];
+}) {
     const { data: tokenInfo, isLoading: tokenInfoLoading } =
         useTokenInfoWithBalance({
             token: bank.tokenId,

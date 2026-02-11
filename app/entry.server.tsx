@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
 import { PassThrough } from "node:stream";
 import {
-    type EntryContext,
     createReadableStreamFromReadable,
+    type EntryContext,
 } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import { createInstance } from "i18next";
@@ -78,7 +78,6 @@ export default async function handleRequest(
                     reject(error);
                 },
                 onError(error) {
-                    // biome-ignore lint/style/noParameterAssign : Code from shopify directly
                     responseStatusCode = 500;
                     console.error(error);
                 },

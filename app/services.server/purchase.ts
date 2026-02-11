@@ -88,13 +88,15 @@ export async function startupPurchase(
     }
 
     const trimmedShopId = Number.parseInt(
-        info.id.replace("gid://shopify/Shop/", "")
+        info.id.replace("gid://shopify/Shop/", ""),
+        10
     );
     const trimmedPurchaseId = Number.parseInt(
         purchaseData.appPurchaseOneTime.id.replace(
             "gid://shopify/AppPurchaseOneTime/",
             ""
-        )
+        ),
+        10
     );
 
     // Insert it into the database
@@ -121,7 +123,8 @@ export async function startupPurchase(
 export async function getCurrentPurchases(ctx: AuthenticatedContext) {
     const info = await shopInfo(ctx);
     const trimmedShopId = Number.parseInt(
-        info.id.replace("gid://shopify/Shop/", "")
+        info.id.replace("gid://shopify/Shop/", ""),
+        10
     );
     return await drizzleDb
         .select()

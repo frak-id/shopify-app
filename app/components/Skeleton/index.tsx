@@ -1,5 +1,4 @@
-import { Card, SkeletonBodyText, SkeletonPage } from "@shopify/polaris";
-import { Layout } from "@shopify/polaris";
+import { Card, Layout, SkeletonBodyText, SkeletonPage } from "@shopify/polaris";
 
 export function Skeleton() {
     return (

@@ -17,8 +17,8 @@ import { WalletGated } from "app/components/WalletGated";
 import { shopInfo } from "app/services.server/shop";
 import { doesThemeSupportBlock } from "app/services.server/theme";
 import {
-    type OnboardingStepData,
     fetchAllOnboardingData,
+    type OnboardingStepData,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
 import { type ReactNode, Suspense } from "react";

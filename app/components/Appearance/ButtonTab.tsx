@@ -39,7 +39,7 @@ export function ButtonTab({
                                     {t("appearance.shareButton.link")}
                                 </Link>
                             ) : (
-                                <>{t("appearance.shareButton.noProduct")}</>
+                                t("appearance.shareButton.noProduct")
                             )}
                         </Box>
                     </>
@@ -71,7 +71,7 @@ function ButtonNotActivated() {
                     {t("appearance.shareButton.link")}
                 </Link>
             ) : (
-                <>{t("appearance.shareButton.noProduct")}</>
+                t("appearance.shareButton.noProduct")
             )}
         </Instructions>
     );

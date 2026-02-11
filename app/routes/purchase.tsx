@@ -26,7 +26,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
 
     // Parse it
-    const chargeId = Number.parseInt(rawChargeId);
+    const chargeId = Number.parseInt(rawChargeId, 10);
     if (Number.isNaN(chargeId)) {
         return Response.json({ polarisTranslations });
     }
@@ -70,7 +70,9 @@ export default function PostPurchase() {
 
 function PurchasePresent({
     purchase,
-}: { purchase: PurchaseTable["$inferSelect"] }) {
+}: {
+    purchase: PurchaseTable["$inferSelect"];
+}) {
     return (
         <>
             <Text variant="heading2xl" as="h1" alignment="center">

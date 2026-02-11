@@ -123,19 +123,17 @@ export async function doesThemeSupportBlock(context: AuthenticatedContext) {
     );
 
     // Retrieve the body of JSON templates and find what section is set as `main`
-    const templateMainSections = jsonTemplateData
-        .map((file: ThemeFile) => {
-            const main = Object.entries(file.body.sections).find(
-                ([id, section]) =>
-                    typeof section !== "string"
-                        ? id === "main" || section.type.startsWith("main-")
-                        : false
-            );
-            if (main && typeof main[1] !== "string" && main[1].type) {
-                return `sections/${main[1].type}.liquid`;
-            }
-        })
-        .filter((section: string | null) => section);
+    const templateMainSections = jsonTemplateData.flatMap((file: ThemeFile) => {
+        const main = Object.entries(file.body.sections).find(([id, section]) =>
+            typeof section !== "string"
+                ? id === "main" || section.type.startsWith("main-")
+                : false
+        );
+        if (main && typeof main[1] !== "string" && main[1].type) {
+            return [`sections/${main[1].type}.liquid`];
+        }
+        return [];
+    });
 
     const response = await context.admin.graphql(getFilesQuery, {
         variables: {
@@ -152,7 +150,7 @@ export async function doesThemeSupportBlock(context: AuthenticatedContext) {
         .map((file: ThemeFile) => {
             let acceptsAppBlock = false;
             const match = file.body.content.match(
-                /\{\%\s+schema\s+\%\}([\s\S]*?)\{\%\s+endschema\s+\%\}/m
+                /\{%\s+schema\s+%\}([\s\S]*?)\{%\s+endschema\s+%\}/m
             );
             if (match) {
                 const schema = jsonc_parse(match[1]);
@@ -239,22 +237,22 @@ export async function doesThemeHasFrakButton(context: AuthenticatedContext) {
 
     // Retrieve the body of JSON templates and find what section is set as `main`
     // Return true if any of the main sections has a block with the frak_referral_button type
-    const templateMainSections = jsonTemplateData
-        .map((file: ThemeFile) => {
-            const main = Object.entries(file.body.sections).find(
-                ([id, section]) =>
-                    typeof section !== "string"
-                        ? id === "main" || section.type.startsWith("main-")
-                        : false
-            );
+    const templateMainSections = jsonTemplateData.flatMap((file: ThemeFile) => {
+        const main = Object.entries(file.body.sections).find(([id, section]) =>
+            typeof section !== "string"
+                ? id === "main" || section.type.startsWith("main-")
+                : false
+        );
 
-            if (main && typeof main[1] !== "string" && main[1].block_order) {
-                return main[1].block_order.some((blockId) =>
-                    blockId.includes("referral_button")
-                );
-            }
-        })
-        .filter((section: string | null) => section);
+        if (main && typeof main[1] !== "string" && main[1].block_order) {
+            return main[1].block_order.some((blockId) =>
+                blockId.includes("referral_button")
+            )
+                ? [true]
+                : [];
+        }
+        return [];
+    });
 
     return templateMainSections.length > 0;
 }

@@ -70,7 +70,9 @@ export function CampaignStatus({
 
 function CampaignTable({
     campaigns,
-}: { campaigns: GetProductInfoResponseDto["campaigns"] }) {
+}: {
+    campaigns: GetProductInfoResponseDto["campaigns"];
+}) {
     const { t } = useTranslation();
     return (
         <DataTable
@@ -96,7 +98,9 @@ function CampaignTable({
 
 function CampaignStatusBadge({
     campaign,
-}: { campaign: GetProductInfoResponseDto["campaigns"][number] }) {
+}: {
+    campaign: GetProductInfoResponseDto["campaigns"][number];
+}) {
     const { data: campaignInfo, isLoading: campaignInfoLoading } =
         useOnChainCampaignInfo(campaign.id);
     const { t } = useTranslation();
@@ -131,7 +135,9 @@ function CampaignStatusBadge({
 
 function CampaignCreation({
     banks,
-}: { banks: GetProductInfoResponseDto["banks"] }) {
+}: {
+    banks: GetProductInfoResponseDto["banks"];
+}) {
     const { t } = useTranslation();
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 

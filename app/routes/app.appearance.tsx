@@ -6,9 +6,9 @@ import { CustomizationsTab } from "app/components/Appearance/CustomizationsTab";
 import { WalletButtonTab } from "app/components/Appearance/WalletButtonTab";
 import {
     type AppearanceMetafieldValue,
-    type I18nCustomizations,
     getAppearanceMetafield,
     getI18nCustomizations,
+    type I18nCustomizations,
     updateAppearanceMetafield,
     updateI18nCustomizations,
 } from "app/services.server/metafields";

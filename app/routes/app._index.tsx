@@ -11,8 +11,8 @@ import {
 } from "@shopify/polaris";
 import type { loader as appLoader } from "app/routes/app";
 import {
-    type OnboardingStepData,
     getOnboardingStatusMessage,
+    type OnboardingStepData,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
 import { Suspense, useEffect } from "react";
@@ -146,7 +146,9 @@ function ThemeSupported({
 
 function OnBoardingComplete({
     onboardingData,
-}: { onboardingData: OnboardingStepData }) {
+}: {
+    onboardingData: OnboardingStepData;
+}) {
     if (!onboardingData.shopInfo) {
         return null;
     }

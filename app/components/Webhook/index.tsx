@@ -54,25 +54,26 @@ export function CreateShopifyWebhook() {
     };
 
     return (
-        <>
-            <Button
-                variant="primary"
-                loading={fetcher.state !== "idle"}
-                disabled={fetcher.state !== "idle"}
-                onClick={() => {
-                    handleAction("createWebhook");
-                }}
-            >
-                {t("webhook.actions.cta.connect")}
-            </Button>
-        </>
+        <Button
+            variant="primary"
+            loading={fetcher.state !== "idle"}
+            disabled={fetcher.state !== "idle"}
+            onClick={() => {
+                handleAction("createWebhook");
+            }}
+        >
+            {t("webhook.actions.cta.connect")}
+        </Button>
     );
 }
 
 export function FrakWebhook({
     setup,
     productId,
-}: { setup: boolean; productId: string }) {
+}: {
+    setup: boolean;
+    productId: string;
+}) {
     const { t } = useTranslation();
 
     // The webhook link
@@ -117,7 +118,9 @@ export function FrakWebhook({
 
 export function WebhookList({
     webhooks,
-}: { webhooks: GetWebhooksSubscriptionsReturnType["edges"] }) {
+}: {
+    webhooks: GetWebhooksSubscriptionsReturnType["edges"];
+}) {
     const { t } = useTranslation();
     const shopify = useAppBridge();
     const fetcher = useFetcher<DeleteWebhookSubscriptionReturnType>();

@@ -29,11 +29,7 @@ import { UncheckedIcon } from "./UncheckedIcon";
 
 const MAX_STEP = 6;
 
-export function Stepper({
-    redirectToApp,
-}: {
-    redirectToApp: boolean;
-}) {
+export function Stepper({ redirectToApp }: { redirectToApp: boolean }) {
     const refresh = useRefreshData();
     const { t } = useTranslation();
     const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
@@ -154,14 +150,10 @@ export function StepItem({
             <Box>
                 {checked ? (
                     <Icon source={CheckIcon} tone="base" />
+                ) : currentStep === stepNumber ? (
+                    <Icon source={UncheckedIcon} tone="base" />
                 ) : (
-                    <>
-                        {currentStep === stepNumber ? (
-                            <Icon source={UncheckedIcon} tone="base" />
-                        ) : (
-                            <Icon source={DisabledIcon} tone="subdued" />
-                        )}
-                    </>
+                    <Icon source={DisabledIcon} tone="subdued" />
                 )}
             </Box>
             <InlineStack gap="100" blockAlign="center" wrap={false}>

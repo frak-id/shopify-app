@@ -22,7 +22,7 @@ export function ConnectedShopInfo({ product }: ConnectedShopInfoProps) {
 
     // Convert Unix timestamp (seconds) to a human-readable date
     const formatDate = (unixTimestamp: string) => {
-        const date = new Date(Number.parseInt(unixTimestamp) * 1000);
+        const date = new Date(Number.parseInt(unixTimestamp, 10) * 1000);
         return date.toLocaleDateString(undefined, {
             year: "numeric",
             month: "long",

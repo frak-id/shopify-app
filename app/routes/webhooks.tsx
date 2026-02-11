@@ -54,7 +54,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
                     payload.app_purchase_one_time.admin_graphql_api_id.replace(
                         "gid://shopify/AppPurchaseOneTime/",
                         ""
-                    )
+                    ),
+                    10
                 );
                 console.log("Updating purchase", purchaseId);
                 await drizzleDb

@@ -9,7 +9,10 @@ import { viemClient } from "../utils/viemClient";
 export function useTokenInfoWithBalance({
     token,
     wallet,
-}: { token?: Address; wallet?: Address }) {
+}: {
+    token?: Address;
+    wallet?: Address;
+}) {
     return useQuery({
         enabled: !!token && !!wallet,
         queryKey: ["tokenInfo", token, wallet],

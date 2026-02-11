@@ -50,7 +50,9 @@ export function PurchaseStatus({
 
 function ActivePurchases({
     currentPurchases,
-}: { currentPurchases: PurchaseTable["$inferSelect"][] }) {
+}: {
+    currentPurchases: PurchaseTable["$inferSelect"][];
+}) {
     const { t } = useTranslation();
     const items = useMemo(
         () =>
@@ -118,7 +120,9 @@ function ActivePurchases({
  */
 function CreatePurchase({
     banks,
-}: { banks: GetProductInfoResponseDto["banks"] }) {
+}: {
+    banks: GetProductInfoResponseDto["banks"];
+}) {
     const [amount, setAmount] = useState("");
     const [selectedBank, setSelectedBank] = useState(
         banks.length === 1 ? banks[0].id : ""

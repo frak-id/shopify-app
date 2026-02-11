@@ -1,10 +1,6 @@
 import { useMemo } from "react";
 
-export function useFrakWebhookLink({
-    productId,
-}: {
-    productId: string;
-}) {
+export function useFrakWebhookLink({ productId }: { productId: string }) {
     return useMemo(() => {
         // Build the url
         const createUrl = new URL(

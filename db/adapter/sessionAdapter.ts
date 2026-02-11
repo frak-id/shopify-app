@@ -1,10 +1,10 @@
 import { Session } from "@shopify/shopify-api";
 import type { SessionStorage } from "@shopify/shopify-app-session-storage";
 import {
-    type InferInsertModel,
-    type InferSelectModel,
     desc,
     eq,
+    type InferInsertModel,
+    type InferSelectModel,
     inArray,
 } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";

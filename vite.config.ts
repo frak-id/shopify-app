@@ -2,7 +2,7 @@ import process from "node:process";
 import { vitePlugin as remix } from "@remix-run/dev";
 import { pick } from "radash";
 import { Resource } from "sst";
-import { type UserConfig, defineConfig } from "vite";
+import { defineConfig, type UserConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // Related: https://github.com/remix-run/remix/issues/2835#issuecomment-1144102176
@@ -37,7 +37,7 @@ if (host === "localhost") {
     hmrConfig = {
         protocol: "wss",
         host: host,
-        port: Number.parseInt(process.env.FRONTEND_PORT ?? "") ?? 8002,
+        port: Number.parseInt(process.env.FRONTEND_PORT ?? "", 10) ?? 8002,
         clientPort: 443,
     };
 }

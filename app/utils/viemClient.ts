@@ -1,4 +1,4 @@
-import { http, createClient } from "viem";
+import { createClient, http } from "viem";
 import { arbitrum, arbitrumSepolia } from "viem/chains";
 
 const chain = process.env.STAGE === "production" ? arbitrum : arbitrumSepolia;

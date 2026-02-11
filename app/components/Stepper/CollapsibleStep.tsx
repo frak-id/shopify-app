@@ -42,23 +42,19 @@ export function CollapsibleStep({
                     <Text variant="bodyMd" as="p">
                         {title}
                     </Text>
+                ) : currentStep === step ? (
+                    <Button
+                        variant="plain"
+                        onClick={handleToggle}
+                        ariaExpanded={open}
+                        ariaControls={`stepper-step${step}-collapsible`}
+                    >
+                        {title}
+                    </Button>
                 ) : (
-                    <>
-                        {currentStep === step ? (
-                            <Button
-                                variant="plain"
-                                onClick={handleToggle}
-                                ariaExpanded={open}
-                                ariaControls={`stepper-step${step}-collapsible`}
-                            >
-                                {title}
-                            </Button>
-                        ) : (
-                            <Text variant="bodyMd" as="p" tone="subdued">
-                                {title}
-                            </Text>
-                        )}
-                    </>
+                    <Text variant="bodyMd" as="p" tone="subdued">
+                        {title}
+                    </Text>
                 )}
             </StepItem>
             <Collapsible
