@@ -1,24 +1,23 @@
 {
     "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
     "files": {
-        "ignore": [
-            "_cjs",
-            "_esm",
-            "_types",
-            "dist",
-            "build",
-            "node_modules/**",
-            ".sst/**",
-            ".open-next/**",
-            "tsconfig.json",
-            "tsconfig.*.json",
-            "package.json",
-            "sst-env.d.ts"
+        "includes": [
+            "**",
+            "!**/_cjs",
+            "!**/_esm",
+            "!**/_types",
+            "!**/dist",
+            "!**/build",
+            "!**/node_modules",
+            "!**/.sst",
+            "!**/.open-next",
+            "!**/tsconfig.json",
+            "!**/tsconfig.*.json",
+            "!**/package.json",
+            "!**/sst-env.d.ts"
         ]
     },
-    "organizeImports": {
-        "enabled": true
-    },
+    "assist": { "actions": { "source": { "organizeImports": "on" } } },
     "linter": {
         "enabled": true,
         "rules": {
@@ -42,10 +41,13 @@
             },
             "style": {
                 "useFragmentSyntax": "error",
-                "useShorthandArrayType": "error",
                 "useShorthandAssign": "error",
                 "useImportType": "error",
-                "useExportType": "error"
+                "useExportType": "error",
+                "useConsistentArrayType": {
+                    "level": "error",
+                    "options": { "syntax": "shorthand" }
+                }
             }
         }
     },
