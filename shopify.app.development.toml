@@ -2,9 +2,9 @@
 
 client_id = "de34932679bc2a2c5a8dddb21a216247"
 name = "FrakDev"
-handle = "frakdev"
 application_url = "https://extension-shop-dev.frak.id"
 embedded = true
+handle = "frakdev"
 
 [build]
 automatically_update_urls_on_dev = true
