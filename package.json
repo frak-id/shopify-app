@@ -33,8 +33,8 @@
     "node": "^20.10 || >=21.0.0"
   },
   "dependencies": {
-    "@frak-labs/core-sdk": "^0.0.16",
-    "@frak-labs/react-sdk": "^0.0.15",
+    "@frak-labs/core-sdk": "0.1.1-beta.d13d0e5d",
+    "@frak-labs/react-sdk": "0.1.1-beta.d13d0e5d",
     "@remix-run/dev": "^2.17.4",
     "@remix-run/node": "^2.17.4",
     "@remix-run/react": "^2.17.4",
