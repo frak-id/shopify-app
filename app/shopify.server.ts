@@ -1,5 +1,4 @@
-import "@shopify/shopify-app-remix/adapters/node";
-import { restResources } from "@shopify/shopify-api/rest/admin/2025-01";
+import "@shopify/shopify-app-remix/server/adapters/node";
 import {
     ApiVersion,
     AppDistribution,
@@ -26,7 +25,6 @@ const shopify = shopifyApp({
     authPathPrefix: "/auth",
     sessionStorage: sessionStorageAdapter,
     distribution: AppDistribution.AppStore,
-    restResources,
     future: {
         unstable_newEmbeddedAuthStrategy: true,
     },
