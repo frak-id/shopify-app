@@ -30,15 +30,15 @@ async function readMetafield<T>(
 ): Promise<T | null> {
     const response = await graphql(
         `
-        query GetShopMetafields($namespace: String!, $key: String!) {
-            shop {
-                metafield(namespace: $namespace, key: $key) {
-                    id
-                    value
-                    type
-                }
-            }
+      query GetShopMetafields($namespace: String!, $key: String!) {
+        shop {
+          metafield(namespace: $namespace, key: $key) {
+            id
+            value
+            type
+          }
         }
+      }
     `,
         {
             variables: {
@@ -83,21 +83,23 @@ async function writeMetafield<T>(
     const query = value
         ? graphql(
               `
-        mutation CreateOrUpdateShopMetafield($metafields: [MetafieldsSetInput!]!) {
+          mutation CreateOrUpdateShopMetafield(
+            $metafields: [MetafieldsSetInput!]!
+          ) {
             metafieldsSet(metafields: $metafields) {
-                metafields {
-                    id
-                    namespace
-                    key
-                    value
-                }
-                userErrors {
-                    field
-                    message
-                }
+              metafields {
+                id
+                namespace
+                key
+                value
+              }
+              userErrors {
+                field
+                message
+              }
             }
-        }
-    `,
+          }
+        `,
               {
                   variables: {
                       metafields: [
@@ -114,20 +116,22 @@ async function writeMetafield<T>(
           )
         : graphql(
               `
-        mutation DeleteShopMetafield($metafields: [MetafieldIdentifierInput!]!) {
+          mutation DeleteShopMetafield(
+            $metafields: [MetafieldIdentifierInput!]!
+          ) {
             metafieldsDelete(metafields: $metafields) {
-                deletedMetafields {
-                    key
-                    namespace
-                    ownerId
-                }
-                userErrors {
-                    field
-                    message
-                }
+              deletedMetafields {
+                key
+                namespace
+                ownerId
+              }
+              userErrors {
+                field
+                message
+              }
             }
-        }
-    `,
+          }
+        `,
               {
                   variables: {
                       metafields: [
@@ -160,6 +164,32 @@ async function writeMetafield<T>(
 /* -------------------------------------------------------------------------- */
 
 /**
+ * Parse a stored i18n metafield value into the normalized multi-language structure.
+ */
+export function parseI18nMetafield(
+    value:
+        | SingleLanguageI18nCustomizations
+        | MultiLanguageI18nCustomizations
+        | null
+): I18nCustomizations {
+    if (value) {
+        const isFlatStructure =
+            value && typeof value === "object" && !value.fr && !value.en;
+
+        if (isFlatStructure) {
+            return {
+                en: value as Record<string, string>,
+                fr: {},
+            };
+        }
+
+        return value as I18nCustomizations;
+    }
+
+    return { fr: {}, en: {} };
+}
+
+/**
  * Get the i18n customizations from shop metafields
  */
 export async function getI18nCustomizations({
@@ -169,33 +199,7 @@ export async function getI18nCustomizations({
         SingleLanguageI18nCustomizations | MultiLanguageI18nCustomizations
     >(graphql, MODAL_I18N_KEY);
 
-    if (value) {
-        try {
-            // If the stored value is a flat structure (single language mode)
-            const isFlatStructure =
-                value && typeof value === "object" && !value.fr && !value.en;
-
-            if (isFlatStructure) {
-                // Extract logoUrl if it exists in the flat structure
-                const flatTranslations = value as Record<string, string>;
-
-                return {
-                    en: flatTranslations,
-                    fr: {},
-                };
-            }
-
-            // If the structure already contains language keys, return as-is
-            return value;
-        } catch (error) {
-            console.error("Error parsing i18n metafield:", error);
-        }
-    }
-
-    return {
-        fr: {},
-        en: {},
-    };
+    return parseI18nMetafield(value);
 }
 
 /**
@@ -228,7 +232,7 @@ export async function updateI18nCustomizations(
  * Helper to compute the value we want to persist in the metafield, while keeping
  * the main updateI18nCustomizations function simple.
  */
-function buildMetafieldValue(
+export function buildMetafieldValue(
     customizations: I18nCustomizations,
     {
         hasFrenchData,
@@ -270,6 +274,15 @@ function buildMetafieldValue(
 /*                                 Appearance                                 */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Normalize appearance: return null if logoUrl is empty/missing.
+ */
+export function polishAppearance(
+    appearance: AppearanceMetafieldValue
+): AppearanceMetafieldValue | null {
+    return appearance?.logoUrl?.length ? appearance : null;
+}
+
 export async function getAppearanceMetafield({
     admin: { graphql },
 }: AuthenticatedContext): Promise<AppearanceMetafieldValue> {
@@ -289,7 +302,7 @@ export async function updateAppearanceMetafield(
     userErrors: Array<{ field: string; message: string }>;
 }> {
     // Polish up the object (right now only the logo url, so if not present set it to null)
-    const polishedAppearance = appearance?.logoUrl?.length ? appearance : null;
+    const polishedAppearance = polishAppearance(appearance);
     return writeMetafield(context, APPEARANCE_KEY, polishedAppearance);
 }
 

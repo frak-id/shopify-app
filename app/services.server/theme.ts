@@ -68,7 +68,7 @@ query getMainThemeId {
     const gid = themes?.nodes?.[0]?.id;
 
     // Extract the theme id from the full string (e.g. "gid://shopify/OnlineStoreTheme/140895584433")
-    const id = gid.match(/\d+$/)[0];
+    const id = extractThemeId(gid);
 
     mainThemeIdCache.set(context.session.shop, { gid, id });
 
@@ -147,21 +147,9 @@ export async function doesThemeSupportBlock(context: AuthenticatedContext) {
     const sectionFiles = themeSectionFiles?.files?.nodes;
 
     const sectionsWithAppBlock = sectionFiles
-        .map((file: ThemeFile) => {
-            let acceptsAppBlock = false;
-            const match = file.body.content.match(
-                /\{%\s+schema\s+%\}([\s\S]*?)\{%\s+endschema\s+%\}/m
-            );
-            if (match) {
-                const schema = jsonc_parse(match[1]);
-                if (schema?.blocks) {
-                    acceptsAppBlock = schema.blocks.some(
-                        (b: { type: string }) => b.type === "@app"
-                    );
-                }
-            }
-            return acceptsAppBlock ? file : null;
-        })
+        .map((file: ThemeFile) =>
+            detectAppBlockSupport(file.body.content) ? file : null
+        )
         .filter((section: string | null) => section);
 
     if (
@@ -180,10 +168,84 @@ export async function doesThemeSupportBlock(context: AuthenticatedContext) {
     return true;
 }
 
-interface ThemeBlockInfo {
+export interface ThemeBlockInfo {
     type: string;
     disabled?: boolean;
     settings?: Record<string, unknown>;
+}
+
+/**
+ * Extract numeric theme ID from a Shopify GID.
+ */
+export function extractThemeId(gid: string): string {
+    const match = gid.match(/\d+$/);
+    return match ? match[0] : "";
+}
+
+/**
+ * Detect if a Frak listener block is enabled in theme settings_data blocks.
+ */
+export function detectFrakActivated(
+    blocks: Record<string, ThemeBlockInfo> | undefined
+): boolean {
+    if (!blocks) return false;
+    const typeMatch = "/blocks/listener/";
+    return !!Object.entries(blocks).find(
+        ([_id, info]) => info.type.includes(typeMatch) && !info.disabled
+    );
+}
+
+/**
+ * Detect if any main product section contains a referral_button block.
+ */
+export function detectFrakButton(
+    sections: Record<string, string | { type: string; block_order?: string[] }>
+): boolean {
+    const main = Object.entries(sections).find(([id, section]) =>
+        typeof section !== "string"
+            ? id === "main" || section.type.startsWith("main-")
+            : false
+    );
+    if (main && typeof main[1] !== "string" && main[1].block_order) {
+        return main[1].block_order.some((blockId) =>
+            blockId.includes("referral_button")
+        );
+    }
+    return false;
+}
+
+/**
+ * Detect if a Frak wallet_button block is enabled. Returns block ID or null.
+ */
+export function detectWalletButton(
+    blocks: Record<string, ThemeBlockInfo> | undefined
+): string | null {
+    if (!blocks) return null;
+    const typeMatch = "/blocks/wallet_button/";
+    const walletBlock = Object.entries(blocks).find(
+        ([_id, info]) => info.type.includes(typeMatch) && !info.disabled
+    );
+    if (walletBlock) {
+        const [_, blockInfo] = walletBlock;
+        const idMatch = blockInfo.type.match(/wallet_button\/([^/]+)$/);
+        return idMatch ? idMatch[1] : null;
+    }
+    return null;
+}
+
+/**
+ * Detect if a Liquid section's schema declares an @app block type.
+ */
+export function detectAppBlockSupport(liquidContent: string): boolean {
+    const match = liquidContent.match(
+        /\{%\s+schema\s+%\}([\s\S]*?)\{%\s+endschema\s+%\}/m
+    );
+    if (!match) return false;
+    const schema = jsonc_parse(match[1]);
+    if (schema?.blocks) {
+        return schema.blocks.some((b: { type: string }) => b.type === "@app");
+    }
+    return false;
 }
 
 /**
@@ -207,18 +269,12 @@ export async function doesThemeHasFrakActivated(context: AuthenticatedContext) {
         return false;
     }
 
-    const typeMatch = "/blocks/listener/";
-    const embedBlock = Object.entries(
+    return detectFrakActivated(
         jsonTemplateData[0].body.current.blocks as Record<
             string,
             ThemeBlockInfo
         >
-    ).find(
-        ([_id, info]: [string, ThemeBlockInfo]) =>
-            info.type.includes(typeMatch) && !info.disabled
     );
-
-    return !!embedBlock;
 }
 
 /**
@@ -237,24 +293,9 @@ export async function doesThemeHasFrakButton(context: AuthenticatedContext) {
 
     // Retrieve the body of JSON templates and find what section is set as `main`
     // Return true if any of the main sections has a block with the frak_referral_button type
-    const templateMainSections = jsonTemplateData.flatMap((file: ThemeFile) => {
-        const main = Object.entries(file.body.sections).find(([id, section]) =>
-            typeof section !== "string"
-                ? id === "main" || section.type.startsWith("main-")
-                : false
-        );
-
-        if (main && typeof main[1] !== "string" && main[1].block_order) {
-            return main[1].block_order.some((blockId) =>
-                blockId.includes("referral_button")
-            )
-                ? [true]
-                : [];
-        }
-        return [];
-    });
-
-    return templateMainSections.length > 0;
+    return jsonTemplateData.some((file: ThemeFile) =>
+        detectFrakButton(file.body.sections)
+    );
 }
 
 /**
@@ -280,24 +321,10 @@ export async function doesThemeHasFrakWalletButton(
         return null;
     }
 
-    const typeMatch = "/blocks/wallet_button/";
-    const walletBlock = Object.entries(
+    return detectWalletButton(
         jsonTemplateData[0].body.current.blocks as Record<
             string,
             ThemeBlockInfo
         >
-    ).find(
-        ([_id, info]: [string, ThemeBlockInfo]) =>
-            info.type.includes(typeMatch) && !info.disabled
     );
-
-    if (walletBlock) {
-        // Extract the ID from the type string
-        const [_, blockInfo] = walletBlock;
-        const idMatch = blockInfo.type.match(/wallet_button\/([^/]+)$/);
-        const blockId = idMatch ? idMatch[1] : null;
-        return blockId;
-    }
-
-    return null;
 }

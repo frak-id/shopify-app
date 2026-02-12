@@ -3,6 +3,36 @@ import { LRUCache } from "lru-cache";
 import type { Hex } from "viem";
 import { productIdFromDomain } from "../utils/productIdFromDomain";
 
+const CURRENCY_MAP: Record<string, "usd" | "eur" | "gbp"> = {
+    USD: "usd",
+    EUR: "eur",
+    GBP: "gbp",
+};
+
+/**
+ * Normalize a shop domain by stripping protocol and www prefix.
+ */
+export function normalizeDomain(
+    primaryDomainHost: string | undefined,
+    myshopifyDomain: string
+): string {
+    const finalDomain = primaryDomainHost ?? myshopifyDomain;
+    return finalDomain
+        .replace("https://", "")
+        .replace("http://", "")
+        .replace("www.", "");
+}
+
+/**
+ * Normalize a currency code to a supported lowercase value.
+ * Falls back to "usd" for unsupported currencies.
+ */
+export function normalizePreferredCurrency(
+    currencyCode: string | undefined
+): "usd" | "eur" | "gbp" {
+    return CURRENCY_MAP[currencyCode ?? "USD"] ?? "usd";
+}
+
 type ShopInfoReturnType = {
     id: string;
     name: string;
@@ -41,34 +71,31 @@ export async function shopInfo({
     console.debug("Cache miss for shop", sessionShop);
     // Otherwise, fetch it from the API
     const response = await graphql(`
-query shopInfo {
-  shop {
-    id
-    name
-    url
-    myshopifyDomain
-    primaryDomain { id, host, url }
-    currencyCode
-  }
-}`);
+    query shopInfo {
+      shop {
+        id
+        name
+        url
+        myshopifyDomain
+        primaryDomain {
+          id
+          host
+          url
+        }
+        currencyCode
+      }
+    }
+  `);
     const {
         data: { shop },
     } = await response.json();
 
-    // Build our final domain
-    const finalDomain = shop.primaryDomain?.host ?? shop.myshopifyDomain;
-    const normalizedDomain = finalDomain
-        .replace("https://", "")
-        .replace("http://", "")
-        .replace("www.", "");
-
-    // Save the preferred currency
-    let preferredCurrency = shop.currencyCode ?? "USD";
-
-    // If the currency is not supported, use USD
-    if (!["USD", "EUR", "GBP"].includes(preferredCurrency)) {
-        preferredCurrency = "USD";
-    }
+    // Normalize domain and currency
+    const normalizedDomain = normalizeDomain(
+        shop.primaryDomain?.host,
+        shop.myshopifyDomain
+    );
+    const preferredCurrency = normalizePreferredCurrency(shop.currencyCode);
 
     // Build our final object
     const finalShopInfo = {
@@ -76,10 +103,7 @@ query shopInfo {
         domain: shop.primaryDomain?.host ?? shop.myshopifyDomain,
         normalizedDomain,
         productId: productIdFromDomain(normalizedDomain),
-        preferredCurrency: preferredCurrency.toLocaleLowerCase() as
-            | "usd"
-            | "eur"
-            | "gbp",
+        preferredCurrency,
     };
 
     // Add it to our LRU Cache
@@ -99,15 +123,16 @@ export async function firstProductPublished({
     admin: { graphql },
 }: AuthenticatedContext): Promise<FirstProductPublishedReturnType> {
     const response = await graphql(`
-query GetFirstPublishedProduct {
-  products(first: 1, query: "published_status:published") {
-    edges {
-      node {
-        handle
+    query GetFirstPublishedProduct {
+      products(first: 1, query: "published_status:published") {
+        edges {
+          node {
+            handle
+          }
+        }
       }
     }
-  }
-}`);
+  `);
     const {
         data: { products },
     } = await response.json();

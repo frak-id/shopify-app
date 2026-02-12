@@ -1,8 +1,12 @@
 import { eq } from "drizzle-orm";
-import { isAddress } from "viem";
 import { purchaseTable } from "../../db/schema/purchaseTable";
 import { drizzleDb } from "../db.server";
 import type { AuthenticatedContext } from "../types/context";
+import {
+    parseShopifyGid,
+    validateBank,
+    validatePurchaseAmount,
+} from "./purchase.helpers";
 import { shopInfo } from "./shop";
 /**
  * Startup purchase for a shop
@@ -11,20 +15,12 @@ export async function startupPurchase(
     ctx: AuthenticatedContext,
     { amount: rawAmount, bank }: { amount: string; bank: string }
 ) {
-    // Failsafe on the amount
+    // Validate inputs
+    const amountError = validatePurchaseAmount(rawAmount);
+    if (amountError) throw new Error(amountError);
+    const bankError = validateBank(bank);
+    if (bankError) throw new Error(bankError);
     const amount = Number(rawAmount);
-    if (Number.isNaN(amount)) {
-        throw new Error("Amount must be a number");
-    }
-    if (amount < 10) {
-        throw new Error("Amount must be greater than 10");
-    }
-    if (amount > 1000) {
-        throw new Error("Amount must be less than 1000");
-    }
-    if (!isAddress(bank)) {
-        throw new Error("Bank must be a valid address");
-    }
 
     // Get the shop info and generate a name for this purchase
     const info = await shopInfo(ctx);
@@ -87,16 +83,10 @@ export async function startupPurchase(
         throw new Error("Failed to create purchase");
     }
 
-    const trimmedShopId = Number.parseInt(
-        info.id.replace("gid://shopify/Shop/", ""),
-        10
-    );
-    const trimmedPurchaseId = Number.parseInt(
-        purchaseData.appPurchaseOneTime.id.replace(
-            "gid://shopify/AppPurchaseOneTime/",
-            ""
-        ),
-        10
+    const trimmedShopId = parseShopifyGid(info.id, "Shop");
+    const trimmedPurchaseId = parseShopifyGid(
+        purchaseData.appPurchaseOneTime.id,
+        "AppPurchaseOneTime"
     );
 
     // Insert it into the database
@@ -122,10 +112,7 @@ export async function startupPurchase(
  */
 export async function getCurrentPurchases(ctx: AuthenticatedContext) {
     const info = await shopInfo(ctx);
-    const trimmedShopId = Number.parseInt(
-        info.id.replace("gid://shopify/Shop/", ""),
-        10
-    );
+    const trimmedShopId = parseShopifyGid(info.id, "Shop");
     return await drizzleDb
         .select()
         .from(purchaseTable)

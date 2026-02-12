@@ -1,20 +1,18 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { data } from "react-router";
-import { isAddress } from "viem";
 import { getProductSetupCode } from "../services.server/mint";
 import { authenticate } from "../shopify.server";
+import { validateMintParams } from "../utils/url";
 
 export async function loader({ request }: LoaderFunctionArgs) {
     const url = new URL(request.url);
-    const walletAddress = url.searchParams.get("walletAddress");
 
-    // Extract the wallet address from the request
-    if (!walletAddress) {
-        return data("Missing wallet address", { status: 400 });
-    }
-
-    if (!isAddress(walletAddress)) {
-        return data("Invalid wallet address", { status: 400 });
+    // Validate the wallet address from the request
+    const mintResult = validateMintParams(
+        url.searchParams.get("walletAddress")
+    );
+    if (!mintResult.valid) {
+        return data(mintResult.error, { status: 400 });
     }
 
     // Authenticate the request
@@ -22,7 +20,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     try {
         // Delegate the core logic (including auth) to the service function
-        const result = await getProductSetupCode(context, walletAddress);
+        const result = await getProductSetupCode(context, mintResult.address);
         return data(result);
     } catch (error) {
         console.error(`API Route Error (/api/wallet-data): ${error}`);

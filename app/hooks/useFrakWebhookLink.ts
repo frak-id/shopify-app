@@ -1,13 +1,13 @@
 import { useMemo } from "react";
+import { buildWebhookLink } from "../utils/url";
 
 export function useFrakWebhookLink({ productId }: { productId: string }) {
-    return useMemo(() => {
-        // Build the url
-        const createUrl = new URL(
-            process.env.BUSINESS_URL ?? "https://business.frak.id"
-        );
-        createUrl.pathname = "/embedded/purchase-tracker";
-        createUrl.searchParams.append("pid", productId);
-        return createUrl.toString();
-    }, [productId]);
+    return useMemo(
+        () =>
+            buildWebhookLink(
+                process.env.BUSINESS_URL ?? "https://business.frak.id",
+                productId
+            ),
+        [productId]
+    );
 }

@@ -15,19 +15,16 @@ import type { LoaderFunctionArgs } from "react-router";
 import { data, useLoaderData } from "react-router";
 import type { PurchaseTable } from "../../db/schema/purchaseTable";
 import { getPurchase } from "../services.server/purchase";
+import { parseChargeId } from "../utils/url";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-    // Get the charge_id query param
-    const rawChargeId = new URL(request.url).searchParams.get("charge_id");
-    if (!rawChargeId) {
-        return data({ polarisTranslations, purchase: null });
-    }
-
-    // Parse it
-    const chargeId = Number.parseInt(rawChargeId, 10);
-    if (Number.isNaN(chargeId)) {
+    // Get and parse the charge_id query param
+    const chargeId = parseChargeId(
+        new URL(request.url).searchParams.get("charge_id")
+    );
+    if (chargeId === null) {
         return data({ polarisTranslations, purchase: null });
     }
 

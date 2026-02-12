@@ -10,6 +10,64 @@ import {
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { SessionTable } from "../schema/sessionTable";
 
+export interface SessionInput {
+    id: string;
+    shop: string;
+    state: string;
+    isOnline: boolean;
+    scope?: string;
+    expires?: Date;
+    accessToken?: string;
+    onlineAccessInfo?: { associated_user: { id: number } };
+}
+
+/**
+ * Convert a session object to a database row for insertion.
+ */
+export function sessionToRow(
+    session: SessionInput
+): InferInsertModel<SessionTable> {
+    return {
+        id: session.id,
+        shop: session.shop,
+        state: session.state,
+        isOnline: session.isOnline,
+        scope: session.scope,
+        expires: session.expires,
+        accessToken: session.accessToken,
+        userId: session.onlineAccessInfo?.associated_user.id,
+    };
+}
+
+/**
+ * Convert a database row to session constructor params.
+ */
+export function rowToSessionParams(
+    row: InferSelectModel<SessionTable>
+): Record<string, boolean | string | number> {
+    const sessionParams: Record<string, boolean | string | number> = {
+        id: row.id,
+        shop: row.shop,
+        state: row.state,
+        isOnline: row.isOnline,
+    };
+
+    if (row.expires) {
+        sessionParams.expires = row.expires.getTime();
+    }
+    if (row.scope) {
+        sessionParams.scope = row.scope;
+    }
+    if (row.accessToken) {
+        sessionParams.accessToken = row.accessToken;
+    }
+    if (row.userId) {
+        sessionParams.onlineAccessInfo = row.userId;
+    }
+
+    return sessionParams;
+}
+
 export class DrizzleSessionStorageAdapter<
     DB extends PostgresJsDatabase<Record<string, unknown>>,
 > implements SessionStorage
@@ -91,42 +149,12 @@ export class DrizzleSessionStorageAdapter<
     }
 
     private sessionToRow(session: Session): InferInsertModel<SessionTable> {
-        return {
-            id: session.id,
-            shop: session.shop,
-            state: session.state,
-            isOnline: session.isOnline,
-            scope: session.scope,
-            expires: session.expires,
-            accessToken: session.accessToken,
-            userId: session.onlineAccessInfo?.associated_user.id,
-        };
+        return sessionToRow(session);
     }
 
     private rowToSession(row: InferSelectModel<SessionTable>): Session {
-        const sessionParams: Record<string, boolean | string | number> = {
-            id: row.id,
-            shop: row.shop,
-            state: row.state,
-            isOnline: row.isOnline,
-        };
-
-        if (row.expires) {
-            sessionParams.expires = row.expires.getTime();
-        }
-
-        if (row.scope) {
-            sessionParams.scope = row.scope;
-        }
-
-        if (row.accessToken) {
-            sessionParams.accessToken = row.accessToken;
-        }
-
-        if (row.userId) {
-            sessionParams.onlineAccessInfo = row.userId;
-        }
-
-        return Session.fromPropertyArray(Object.entries(sessionParams));
+        return Session.fromPropertyArray(
+            Object.entries(rowToSessionParams(row))
+        );
     }
 }

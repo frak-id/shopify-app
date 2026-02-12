@@ -28,12 +28,9 @@ import {
 } from "react-router";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
+import { isAbsoluteUrl } from "../utils/url";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
-
-function isAbsoluteUrl(url: string) {
-    return /^(https?|mailto|tel):/.test(url);
-}
 
 function PolarisLink({
     children,

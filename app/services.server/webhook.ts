@@ -36,28 +36,41 @@ export type DeleteWebhookSubscriptionReturnType = {
 };
 
 /**
+ * Filter webhook edges to those matching a backend URL.
+ */
+export function filterWebhooksByBackendUrl(
+    edges: GetWebhooksSubscriptionsReturnType["edges"],
+    backendUrl: string
+): GetWebhooksSubscriptionsReturnType["edges"] {
+    return edges.filter((webhook) => {
+        return webhook.node.endpoint.callbackUrl?.includes(backendUrl) ?? false;
+    });
+}
+
+/**
  * Get all the webhooks
  */
 export async function getWebhooks({
     admin: { graphql },
 }: AuthenticatedContext): Promise<GetWebhooksSubscriptionsReturnType["edges"]> {
     const response = await graphql(`
-query {
-  webhookSubscriptions(first: 20, topics: ORDERS_UPDATED) {
-    edges {
-      node {
-        id
-        topic
-        endpoint {
-          __typename
-          ... on WebhookHttpEndpoint {
-            callbackUrl
+    query {
+      webhookSubscriptions(first: 20, topics: ORDERS_UPDATED) {
+        edges {
+          node {
+            id
+            topic
+            endpoint {
+              __typename
+              ... on WebhookHttpEndpoint {
+                callbackUrl
+              }
+            }
           }
         }
       }
     }
-  }
-}`);
+  `);
     const {
         data: { webhookSubscriptions },
     } = await response.json();
@@ -65,13 +78,10 @@ query {
         webhookSubscriptions as GetWebhooksSubscriptionsReturnType;
 
     // Filter for the webhook containing the backend url
-    return parsedWebhooks.edges.filter((webhook) => {
-        return (
-            webhook.node.endpoint.callbackUrl?.includes(
-                process.env.BACKEND_URL ?? ""
-            ) ?? false
-        );
-    });
+    return filterWebhooksByBackendUrl(
+        parsedWebhooks.edges,
+        process.env.BACKEND_URL ?? ""
+    );
 }
 
 /**
@@ -85,26 +95,33 @@ export async function createWebhook(
     const webhookUrl = `${process.env.BACKEND_URL}/ext/products/${shop.productId}/webhook/oracle/shopify`;
     const response = await graphql(
         `
-mutation webhookSubscriptionCreate($topic: WebhookSubscriptionTopic!, $webhookSubscription: WebhookSubscriptionInput!) {
-  webhookSubscriptionCreate(topic: $topic, webhookSubscription: $webhookSubscription) {
-    webhookSubscription {
-      id
-      topic
-      filter
-      format
-      endpoint {
-        __typename
-        ... on WebhookHttpEndpoint {
-          callbackUrl
+      mutation webhookSubscriptionCreate(
+        $topic: WebhookSubscriptionTopic!
+        $webhookSubscription: WebhookSubscriptionInput!
+      ) {
+        webhookSubscriptionCreate(
+          topic: $topic
+          webhookSubscription: $webhookSubscription
+        ) {
+          webhookSubscription {
+            id
+            topic
+            filter
+            format
+            endpoint {
+              __typename
+              ... on WebhookHttpEndpoint {
+                callbackUrl
+              }
+            }
+          }
+          userErrors {
+            field
+            message
+          }
         }
       }
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}`,
+    `,
         {
             variables: {
                 topic: "ORDERS_UPDATED",
@@ -132,15 +149,16 @@ export async function deleteWebhook({
 }): Promise<DeleteWebhookSubscriptionReturnType> {
     const response = await graphql(
         `
-mutation webhookSubscriptionDelete($id: ID!) {
-  webhookSubscriptionDelete(id: $id) {
-    deletedWebhookSubscriptionId
-    userErrors {
-      field
-      message
-    }
-  }
-}`,
+      mutation webhookSubscriptionDelete($id: ID!) {
+        webhookSubscriptionDelete(id: $id) {
+          deletedWebhookSubscriptionId
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `,
         {
             variables: {
                 id,
