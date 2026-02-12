@@ -1,6 +1,6 @@
 # components/ — Polaris UI Components
 
-29 files across 14 feature directories. All use Shopify Polaris. No custom design system.
+29 files across 14 feature directories. All use Shopify Polaris v13. No custom design system.
 
 ## STRUCTURE
 
@@ -78,6 +78,6 @@ components/
 
 ## ANTI-PATTERNS
 
-- **No bare `<a>` tags** — use Polaris `Link` or Remix `Link`. Embedded app loses session.
+- **No bare `<a>` tags** — use Polaris `Link` or React Router `Link`. Embedded app loses session.
 - **No custom CSS** unless absolutely necessary — Polaris handles styling.
 - **No `useEffect` for derived state** — use `useMemo`.

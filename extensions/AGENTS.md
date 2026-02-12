@@ -27,7 +27,7 @@ extensions/
 Theme blocks (listener.liquid)
   → Loads Frak SDK from CDN (jsdelivr)
   → Sets window.FrakSetup config (wallet URL, shop metadata, appearance)
-  → Reads metafields: frak.appearance, frak.modal_i18n
+  → Reads metafields: frak.appearance, frak.modal_i18n, frak.merchant_id
 
 referral_button.liquid / wallet_button.liquid
   → Renders <frak-button-share> / <frak-button-wallet> web components
@@ -45,11 +45,11 @@ checkout-web-pixel
 
 **listener.liquid** is the critical block — without it, no Frak SDK loads. Config comes from:
 
-- Block settings (wallet URL, custom JS)
-- Shop metafields (appearance, i18n customizations)
+- Block settings (wallet URL, language, logo, wallet button position, custom JS)
+- Shop metafields (`frak.appearance`, `frak.modal_i18n`, `frak.merchant_id`)
 - Shop object (name, logo, locale)
 
-**Customization flow**: merchant configures via Shopify admin metafields → `listener.liquid` reads at render time → passes to Frak SDK.
+**Customization flow**: merchant configures via Shopify admin metafields → `listener.liquid` reads at render time → passes to Frak SDK via `window.FrakSetup`.
 
 ## CHECKOUT-WEB-PIXEL
 

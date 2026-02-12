@@ -4,16 +4,16 @@
 
 ## INVENTORY
 
-| Hook                     | Pattern            | External   | Purpose                                                         |
-| ------------------------ | ------------------ | ---------- | --------------------------------------------------------------- |
-| `useOnChainShopInfo`     | React Query        | indexerApi | Shop/bank/campaign data from indexer, 30s polling               |
-| `useOnChainCampaignInfo` | React Query + viem | viemClient | Campaign metadata/status via multicall                          |
-| `usetokenInfo`           | React Query + viem | viemClient | ERC20 name/symbol/decimals/balance via multicall                |
-| `useConversionRate`      | React Query        | backendApi | Token→fiat rates, hardcoded fallback on error                   |
-| `useCreateCampaignLink`  | useMemo            | none       | Builds business.frak.id campaign URL from loader data           |
-| `useFrakWebhookLink`     | useMemo            | none       | Builds business.frak.id webhook URL                             |
-| `useRefreshData`         | useCallback        | none       | Dual refresh: React Query `refetchQueries` + Remix `revalidate` |
-| `useVisibilityChange`    | useEffect          | none       | Fires callback when tab becomes visible                         |
+| Hook                     | Pattern            | External   | Purpose                                                                      |
+| ------------------------ | ------------------ | ---------- | ---------------------------------------------------------------------------- |
+| `useOnChainShopInfo`     | React Query        | indexerApi | Shop/bank/campaign data from indexer, 30s polling                            |
+| `useOnChainCampaignInfo` | React Query + viem | viemClient | Campaign metadata/status via multicall                                       |
+| `usetokenInfo`           | React Query + viem | viemClient | ERC20 name/symbol/decimals/balance via multicall (`useTokenInfoWithBalance`) |
+| `useConversionRate`      | React Query        | backendApi | Token→fiat rates, hardcoded fallback (USD 1, EUR 0.85, GBP 0.72)             |
+| `useCreateCampaignLink`  | useMemo            | none       | Builds business.frak.id campaign URL from loader data                        |
+| `useFrakWebhookLink`     | useMemo            | none       | Builds business.frak.id webhook URL with merchantId                          |
+| `useRefreshData`         | useCallback        | none       | Dual refresh: React Query `refetchQueries` + React Router `revalidate`       |
+| `useVisibilityChange`    | useEffect          | none       | Fires callback when tab becomes visible                                      |
 
 ## REACT QUERY PATTERN
 
@@ -40,18 +40,18 @@ export function useOnChainShopInfo() {
 ## VIEM MULTICALL PATTERN
 
 ```ts
-const results = await readContracts(viemClient, {
+const results = await multicall(viemClient, {
   contracts: [
-    { address, abi: campaignAbi, functionName: "getMetadata" },
-    { address, abi: campaignAbi, functionName: "isActive" },
+    { address, abi: interactionCampaignAbi, functionName: "getMetadata" },
+    { address, abi: interactionCampaignAbi, functionName: "isActive" },
   ],
   allowFailure: false,
 });
 ```
 
 - `allowFailure: false` — strict mode, fails if any call fails.
-- ABIs from `utils/abis/campaignAbis.ts`.
-- Chain: Arbitrum (prod) or Arbitrum Sepolia (dev), set in `viemClient.ts`.
+- ABIs from `utils/abis/campaignAbis.ts` (7 contracts).
+- Chain: Arbitrum (prod) or Arbitrum Sepolia (dev). RPC via erpc.gcp.frak.id with 50ms batching.
 
 ## URL BUILDER PATTERN
 
