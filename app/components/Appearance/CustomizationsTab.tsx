@@ -1,4 +1,3 @@
-import { Form, useFetcher, useNavigation } from "@remix-run/react";
 import {
     Badge,
     BlockStack,
@@ -18,6 +17,7 @@ import type {
 } from "app/services.server/metafields";
 import { type FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Form, useFetcher, useNavigation } from "react-router";
 import {
     LogoField,
     MultiLanguageFields,

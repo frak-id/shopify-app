@@ -1,5 +1,4 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
-import { useFetcher, useRouteLoaderData } from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
 import { useMutation } from "@tanstack/react-query";
 import { useRefreshData } from "app/hooks/useRefreshData";
@@ -10,6 +9,7 @@ import {
 } from "app/utils/onboarding";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useFetcher, useRouteLoaderData } from "react-router";
 import { CollapsibleStep } from "./CollapsibleStep";
 
 let pollTimeout: ReturnType<typeof setTimeout> | null = null;

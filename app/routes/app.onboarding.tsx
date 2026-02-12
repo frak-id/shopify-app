@@ -1,8 +1,8 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
 import { Page } from "@shopify/polaris";
 import { Stepper } from "app/components/Stepper";
 import { clearOnChainShopCache } from "app/services.server/onchain";
 import { useTranslation } from "react-i18next";
+import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 
 export async function action({ request }: ActionFunctionArgs) {

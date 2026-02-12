@@ -1,7 +1,7 @@
-import { useRouteLoaderData } from "@remix-run/react";
 import { Box, Card, Link } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import screenWalletButton from "../../assets/wallet-button.png";
 import { Activated } from "../Activated";
 import { Instructions } from "../Instructions";

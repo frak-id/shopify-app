@@ -1,5 +1,5 @@
 import process from "node:process";
-import { vitePlugin as remix } from "@remix-run/dev";
+import { reactRouter } from "@react-router/dev/vite";
 import { pick } from "radash";
 import { Resource } from "sst";
 import { defineConfig, type UserConfig } from "vite";
@@ -51,12 +51,6 @@ const wantedFromConfig: (keyof typeof Resource)[] = [
     "RPC_SECRET",
 ];
 
-declare module "@remix-run/node" {
-    interface Future {
-        v3_singleFetch: true;
-    }
-}
-
 export default defineConfig(() => {
     // Load some secrets from SST
     const sstSecrets = Object.entries(pick(Resource, wantedFromConfig)).map(
@@ -104,19 +98,7 @@ export default defineConfig(() => {
             },
             allowedHosts: true,
         },
-        plugins: [
-            remix({
-                future: {
-                    v3_fetcherPersist: true,
-                    v3_relativeSplatPath: true,
-                    v3_throwAbortReason: true,
-                    v3_singleFetch: true,
-                    v3_lazyRouteDiscovery: true,
-                    v3_routeConfig: true,
-                },
-            }),
-            tsconfigPaths(),
-        ],
+        plugins: [reactRouter(), tsconfigPaths()],
         build: {
             assetsInlineLimit: 0,
         },

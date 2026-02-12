@@ -1,5 +1,3 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { BlockStack, Box, Card, Link } from "@shopify/polaris";
 import screenFrakListener from "app/assets/frak-listener.png";
 import { Activated } from "app/components/Activated";
@@ -14,6 +12,8 @@ import {
 import { authenticate } from "app/shopify.server";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import type { LoaderFunctionArgs } from "react-router";
+import { useLoaderData, useRouteLoaderData } from "react-router";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);

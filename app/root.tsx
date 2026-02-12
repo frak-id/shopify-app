@@ -1,4 +1,5 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import { useTranslation } from "react-i18next";
+import type { LoaderFunctionArgs } from "react-router";
 import {
     Links,
     Meta,
@@ -6,8 +7,7 @@ import {
     Scripts,
     ScrollRestoration,
     useLoaderData,
-} from "@remix-run/react";
-import { useTranslation } from "react-i18next";
+} from "react-router";
 import { useChangeLanguage } from "remix-i18next/react";
 import i18next from "./i18n/i18next.server";
 

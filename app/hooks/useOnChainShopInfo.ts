@@ -1,6 +1,6 @@
-import { useRouteLoaderData } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import type { loader as rootLoader } from "app/routes/app";
+import { useRouteLoaderData } from "react-router";
 import type { Address } from "viem";
 import { indexerApi } from "../utils/indexerApi";
 

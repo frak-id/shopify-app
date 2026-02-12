@@ -1,5 +1,4 @@
 import { formatAmount } from "@frak-labs/core-sdk";
-import { useRouteLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Card,
@@ -11,6 +10,7 @@ import {
 import type { loader as rootLoader } from "app/routes/app";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import { formatUnits } from "viem";
 import { useConversionRate } from "../../hooks/useConversionRate";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";

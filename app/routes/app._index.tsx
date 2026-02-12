@@ -1,4 +1,3 @@
-import { Await, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import {
     Banner,
     BlockStack,
@@ -17,6 +16,7 @@ import {
 } from "app/utils/onboarding";
 import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Await, useNavigate, useRouteLoaderData } from "react-router";
 import { CampaignStatus } from "../components/Campaign";
 import { BankingStatus } from "../components/Funding/Bank";
 

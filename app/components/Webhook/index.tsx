@@ -1,4 +1,3 @@
-import { useFetcher } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { BlockStack, Button, Card, InlineStack, Text } from "@shopify/polaris";
 import { useFrakWebhookLink } from "app/hooks/useFrakWebhookLink";
@@ -10,6 +9,7 @@ import type {
 } from "app/services.server/webhook";
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useFetcher } from "react-router";
 
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 

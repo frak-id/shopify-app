@@ -1,4 +1,3 @@
-import { useRouteLoaderData } from "@remix-run/react";
 import { BlockStack, Button, Grid, Text } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import {
@@ -6,6 +5,7 @@ import {
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
 import { Trans, useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import screenShareButton from "../../assets/share-button.png";
 import screenWalletButton from "../../assets/wallet-button.png";
 import { CollapsibleStep } from "./CollapsibleStep";

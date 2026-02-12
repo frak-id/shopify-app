@@ -1,4 +1,3 @@
-import { useFetcher } from "@remix-run/react";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Button } from "@shopify/polaris";
 import { useRefreshData } from "app/hooks/useRefreshData";
@@ -8,6 +7,7 @@ import type {
 } from "app/services.server/webPixel";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useFetcher } from "react-router";
 
 export type IntentWebPixel = "createWebPixel" | "deleteWebPixel";
 

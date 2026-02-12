@@ -1,5 +1,4 @@
 import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
-import { useRouteLoaderData } from "@remix-run/react";
 import {
     Banner,
     Button,
@@ -13,6 +12,7 @@ import {
 import type { loader } from "app/routes/app";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import LogoFrak from "../../assets/LogoFrak.svg";
 
 export function WalletGated({ children }: { children: ReactNode }) {

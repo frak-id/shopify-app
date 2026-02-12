@@ -1,4 +1,3 @@
-import { useRouteLoaderData } from "@remix-run/react";
 import {
     Badge,
     BlockStack,
@@ -16,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { loader as rootLoader } from "app/routes/app";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import type { PurchaseTable } from "../../../db/schema/purchaseTable";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 

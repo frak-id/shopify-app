@@ -1,5 +1,3 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import {
     AppProvider,
     BlockStack,
@@ -13,6 +11,8 @@ import {
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
 import polarisTranslations from "@shopify/polaris/locales/en.json";
 import { useCallback } from "react";
+import type { LoaderFunctionArgs } from "react-router";
+import { data, useLoaderData } from "react-router";
 import type { PurchaseTable } from "../../db/schema/purchaseTable";
 import { getPurchase } from "../services.server/purchase";
 
@@ -22,22 +22,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     // Get the charge_id query param
     const rawChargeId = new URL(request.url).searchParams.get("charge_id");
     if (!rawChargeId) {
-        return Response.json({ polarisTranslations });
+        return data({ polarisTranslations, purchase: null });
     }
 
     // Parse it
     const chargeId = Number.parseInt(rawChargeId, 10);
     if (Number.isNaN(chargeId)) {
-        return Response.json({ polarisTranslations });
+        return data({ polarisTranslations, purchase: null });
     }
 
     // Try to get the purchase
     try {
         const purchase = await getPurchase(chargeId);
-        return Response.json({ polarisTranslations, purchase });
+        return data({ polarisTranslations, purchase });
     } catch (error) {
         console.warn("Purchase not found", error);
-        return Response.json({ polarisTranslations });
+        return data({ polarisTranslations, purchase: null });
     }
 };
 

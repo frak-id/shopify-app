@@ -1,5 +1,4 @@
 import { type Currency, formatAmount } from "@frak-labs/core-sdk";
-import { useRouteLoaderData } from "@remix-run/react";
 import {
     Badge,
     BlockStack,
@@ -19,6 +18,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@shopify/polaris-icons";
 import type { loader as rootLoader } from "app/routes/app";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteLoaderData } from "react-router";
 import { useCreateCampaignLink } from "../../hooks/useCreateCampaignLink";
 import { useOnChainCampaignInfo } from "../../hooks/useOnChainCampaignInfo";
 import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";

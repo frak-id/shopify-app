@@ -1,5 +1,3 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import { Badge, BlockStack, Box, Card, Text } from "@shopify/polaris";
 import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { type IntentWebPixel, Pixel } from "app/components/Pixel";
@@ -10,6 +8,8 @@ import {
 } from "app/services.server/webPixel";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { useLoaderData } from "react-router";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);

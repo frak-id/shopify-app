@@ -1,8 +1,8 @@
-import { useLoaderData, useRouteLoaderData } from "@remix-run/react";
 import { Box, Card, Link } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import type { loader } from "app/routes/app.appearance";
 import { useTranslation } from "react-i18next";
+import { useLoaderData, useRouteLoaderData } from "react-router";
 import screenShareButton from "../../assets/share-button.png";
 import { Activated } from "../Activated";
 import { Instructions } from "../Instructions";

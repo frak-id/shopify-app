@@ -1,4 +1,3 @@
-import { Await, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import {
     BlockStack,
     Box,
@@ -18,6 +17,7 @@ import {
 import type { ReactNode } from "react";
 import { Suspense, useCallback, useEffect } from "react";
 import { Trans, useTranslation } from "react-i18next";
+import { Await, useNavigate, useRouteLoaderData } from "react-router";
 import { useRefreshData } from "../../hooks/useRefreshData";
 import { Step1 } from "./Step1";
 import { Step2 } from "./Step2";

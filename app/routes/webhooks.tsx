@@ -1,7 +1,7 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
 import { drizzleDb } from "app/db.server";
 import { sessionTable } from "db/schema/sessionTable";
 import { eq } from "drizzle-orm";
+import type { ActionFunctionArgs } from "react-router";
 import { purchaseTable } from "../../db/schema/purchaseTable";
 import { authenticate } from "../shopify.server";
 

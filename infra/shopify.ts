@@ -29,7 +29,7 @@ const shopifyEnv = {
 
 const subdomain = isProd ? "extension-shop" : "extension-shop-dev";
 
-new sst.aws.Remix("Shopify", {
+new sst.aws.React("Shopify", {
     dev: {
         command: "bun run shopify:dev",
     },

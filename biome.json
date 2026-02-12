@@ -14,7 +14,8 @@
             "!**/tsconfig.json",
             "!**/tsconfig.*.json",
             "!**/package.json",
-            "!**/sst-env.d.ts"
+            "!**/sst-env.d.ts",
+            "!**/.react-router"
         ]
     },
     "assist": { "actions": { "source": { "organizeImports": "on" } } },

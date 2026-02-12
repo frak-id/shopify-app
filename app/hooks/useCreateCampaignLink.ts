@@ -1,6 +1,6 @@
-import { useRouteLoaderData } from "@remix-run/react";
 import type { loader as rootLoader } from "app/routes/app";
 import { useMemo } from "react";
+import { useRouteLoaderData } from "react-router";
 import type { Address } from "viem";
 
 export function useCreateCampaignLink({

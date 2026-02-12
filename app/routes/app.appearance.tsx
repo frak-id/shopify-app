@@ -1,5 +1,3 @@
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 import { Layout, Page, Tabs } from "@shopify/polaris";
 import { ButtonTab } from "app/components/Appearance/ButtonTab";
 import { CustomizationsTab } from "app/components/Appearance/CustomizationsTab";
@@ -20,6 +18,8 @@ import {
 import { authenticate } from "app/shopify.server";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { data, useLoaderData } from "react-router";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
@@ -39,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         doesThemeHasFrakWalletButton(context),
     ]);
 
-    return Response.json({
+    return data({
         customizations,
         appearanceMetafield,
         isThemeHasFrakButton,
@@ -54,7 +54,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const intent = formData.get("intent");
 
     if (intent !== "save") {
-        return Response.json(
+        return data(
             { success: false, message: "Invalid action" },
             { status: 400 }
         );
@@ -65,7 +65,7 @@ export async function action({ request }: ActionFunctionArgs) {
         const appearanceMetafieldData = formData.get("appearanceMetafield");
 
         if (!customizationsData && !appearanceMetafieldData) {
-            return Response.json(
+            return data(
                 {
                     success: false,
                     message: "No customizations data provided",
@@ -107,13 +107,13 @@ export async function action({ request }: ActionFunctionArgs) {
         }
 
         if (success) {
-            return Response.json({
+            return data({
                 success: true,
                 message: "Customizations saved successfully!",
             });
         }
 
-        return Response.json(
+        return data(
             {
                 success: false,
                 message: `Error saving customizations: ${userErrors.join(", ")}`,
@@ -122,7 +122,7 @@ export async function action({ request }: ActionFunctionArgs) {
         );
     } catch (error) {
         console.error("Error in customizations action:", error);
-        return Response.json(
+        return data(
             {
                 success: false,
                 message: "An error occurred while saving customizations",

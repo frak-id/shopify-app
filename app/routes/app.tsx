@@ -1,17 +1,11 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
-import type { HeadersFunction, LoaderFunctionArgs } from "@remix-run/node";
-import {
-    Await,
-    Link,
-    Outlet,
-    useLoaderData,
-    useNavigation,
-    useRouteError,
-} from "@remix-run/react";
 import { NavMenu } from "@shopify/app-bridge-react";
+import { AppProvider as PolarisAppProvider } from "@shopify/polaris";
 import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
-import { AppProvider } from "@shopify/shopify-app-remix/react";
-import { boundary } from "@shopify/shopify-app-remix/server";
+import type { LinkLikeComponentProps } from "@shopify/polaris/build/ts/src/utilities/link";
+import enTranslation from "@shopify/polaris/locales/en.json";
+import { AppProvider } from "@shopify/shopify-app-react-router/react";
+import { boundary } from "@shopify/shopify-app-react-router/server";
 import { Skeleton } from "app/components/Skeleton";
 import { WalletGated } from "app/components/WalletGated";
 import { shopInfo } from "app/services.server/shop";
@@ -23,10 +17,43 @@ import {
 } from "app/utils/onboarding";
 import { type ReactNode, Suspense } from "react";
 import { useTranslation } from "react-i18next";
+import type { HeadersFunction, LoaderFunctionArgs } from "react-router";
+import {
+    Await,
+    Link,
+    Outlet,
+    useLoaderData,
+    useNavigation,
+    useRouteError,
+} from "react-router";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
 
 export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
+
+function isAbsoluteUrl(url: string) {
+    return /^(https?|mailto|tel):/.test(url);
+}
+
+function PolarisLink({
+    children,
+    external,
+    url,
+    ...rest
+}: LinkLikeComponentProps) {
+    if (external || isAbsoluteUrl(url)) {
+        return (
+            <a {...rest} href={url} target="_blank" rel="noopener noreferrer">
+                {children}
+            </a>
+        );
+    }
+    return (
+        <Link {...rest} to={url}>
+            {children}
+        </Link>
+    );
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
@@ -45,15 +72,20 @@ export default function App() {
         useLoaderData<typeof loader>();
 
     return (
-        <AppProvider isEmbeddedApp apiKey={apiKey}>
-            <RootProvider>
-                <Suspense>
-                    <AppContent
-                        isThemeSupportedPromise={isThemeSupportedPromise}
-                        onboardingDataPromise={onboardingDataPromise}
-                    />
-                </Suspense>
-            </RootProvider>
+        <AppProvider embedded apiKey={apiKey}>
+            <PolarisAppProvider
+                i18n={enTranslation}
+                linkComponent={PolarisLink}
+            >
+                <RootProvider>
+                    <Suspense fallback={<Skeleton />}>
+                        <AppContent
+                            isThemeSupportedPromise={isThemeSupportedPromise}
+                            onboardingDataPromise={onboardingDataPromise}
+                        />
+                    </Suspense>
+                </RootProvider>
+            </PolarisAppProvider>
         </AppProvider>
     );
 }
@@ -88,7 +120,7 @@ function AppContent({
     );
 }
 
-// Shopify needs Remix to catch some thrown responses, so that their headers are included in the response.
+// Shopify needs React Router to catch some thrown responses, so that their headers are included in the response.
 export function ErrorBoundary() {
     return boundary.error(useRouteError());
 }

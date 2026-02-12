@@ -1,9 +1,9 @@
-import "@shopify/shopify-app-remix/server/adapters/node";
+import "@shopify/shopify-app-react-router/server/adapters/node";
 import {
     ApiVersion,
     AppDistribution,
     shopifyApp,
-} from "@shopify/shopify-app-remix/server";
+} from "@shopify/shopify-app-react-router/server";
 import { MemorySessionStorage } from "@shopify/shopify-app-session-storage-memory";
 import { DrizzleSessionStorageAdapter } from "../db/adapter/sessionAdapter";
 import { sessionTable } from "../db/schema/sessionTable";
@@ -25,9 +25,6 @@ const shopify = shopifyApp({
     authPathPrefix: "/auth",
     sessionStorage: sessionStorageAdapter,
     distribution: AppDistribution.AppStore,
-    future: {
-        unstable_newEmbeddedAuthStrategy: true,
-    },
     ...(process.env.SHOP_CUSTOM_DOMAIN
         ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
         : {}),

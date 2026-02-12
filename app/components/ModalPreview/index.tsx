@@ -1,7 +1,7 @@
 import { type Currency, formatAmount } from "@frak-labs/core-sdk";
-import { useRouteLoaderData } from "@remix-run/react";
 import type { loader as rootLoader } from "app/routes/app";
 import { Fragment } from "react";
+import { useRouteLoaderData } from "react-router";
 import styles from "./index.module.css";
 
 type ModalPreviewProps = {

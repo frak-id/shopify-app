@@ -1,3 +1,5 @@
-import { flatRoutes } from "@remix-run/fs-routes";
+import { flatRoutes } from "@react-router/fs-routes";
 
-export default flatRoutes();
+export default flatRoutes({
+    ignoredRouteFiles: ["**/*.md"],
+});

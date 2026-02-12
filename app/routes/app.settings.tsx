@@ -1,7 +1,7 @@
-import { Outlet, useLocation, useNavigate } from "@remix-run/react";
 import { Page, Tabs } from "@shopify/polaris";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Outlet, useLocation, useNavigate } from "react-router";
 
 export default function SettingsIndex() {
     const { t } = useTranslation();

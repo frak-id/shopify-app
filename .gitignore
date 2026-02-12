@@ -60,3 +60,6 @@ sst-env.d.ts
 
 # Shopify
 .shopify
+
+# Agent workspace
+.sisyphus
