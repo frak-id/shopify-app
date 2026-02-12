@@ -6,7 +6,7 @@ import {
     type IntentWebhook,
     WebhookList,
 } from "app/components/Webhook";
-import { shopInfo } from "app/services.server/shop";
+import { resolveMerchantId } from "app/services.server/merchant";
 import {
     createWebhook,
     deleteWebhook,
@@ -20,12 +20,12 @@ import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const shop = await shopInfo(context);
+    const merchantId = await resolveMerchantId(context);
     const frakWebhook = await frakWebhookStatus({
-        productId: shop.productId,
+        merchantId,
     });
     const webhooks = await getWebhooks(context);
-    return { webhooks, frakWebhook, productId: shop.productId };
+    return { webhooks, frakWebhook, merchantId };
 };
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -58,7 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function SettingsWebhookPage() {
     const data = useLoaderData<typeof loader>();
-    const { webhooks, frakWebhook, productId } = data;
+    const { webhooks, frakWebhook, merchantId } = data;
     const isWebhookExists = webhooks.length > 0;
     const { t } = useTranslation();
 
@@ -107,12 +107,14 @@ export default function SettingsWebhookPage() {
                             {t("webhook.needFrakConnection")}
                         </Text>
                     )}
-                    <Text as="p" variant="bodyMd">
-                        <FrakWebhook
-                            setup={frakWebhook.setup}
-                            productId={productId}
-                        />
-                    </Text>
+                    {merchantId && (
+                        <Text as="p" variant="bodyMd">
+                            <FrakWebhook
+                                setup={frakWebhook.setup}
+                                merchantId={merchantId}
+                            />
+                        </Text>
+                    )}
                 </BlockStack>
             </Card>
         </BlockStack>

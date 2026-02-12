@@ -11,7 +11,7 @@ export function Step4({
 }: {
     onboardingData: OnboardingStepData;
 }) {
-    const { frakWebhook, productId } = onboardingData;
+    const { frakWebhook, merchantId } = onboardingData;
     const { t } = useTranslation();
     const isFrakWebhookExists = frakWebhook?.setup;
     const { failedSteps } = validateCompleteOnboarding(onboardingData);
@@ -24,8 +24,8 @@ export function Step4({
             title={t("stepper.step4.title")}
             description={t("stepper.step4.description")}
         >
-            {!isFrakWebhookExists && productId && (
-                <FrakWebhook setup={false} productId={productId} />
+            {!isFrakWebhookExists && merchantId && (
+                <FrakWebhook setup={false} merchantId={merchantId} />
             )}
         </CollapsibleStep>
     );

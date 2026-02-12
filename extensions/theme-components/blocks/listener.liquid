@@ -32,6 +32,9 @@
     }
   {% endif %}
 
+  // Read merchantId from metafield
+  {% assign merchant_id_metafield = shop.metafields.frak.merchant_id %}
+
   // Top level Frak SDK config
   const frakConfig = {
     walletUrl: 'https://wallet.frak.id',
@@ -41,6 +44,10 @@
       // You can also setup custom styles here
       lang,
       logoUrl,
+      {% if merchant_id_metafield.value %}
+      // Merchant ID from Frak dashboard (avoids domain-based lookup)
+      merchantId: {{ merchant_id_metafield.value | json }},
+      {% endif %}
     },
     customizations: {
       css: "{{ 'customizations.css' | asset_url }}",

@@ -69,16 +69,16 @@ export function CreateShopifyWebhook() {
 
 export function FrakWebhook({
     setup,
-    productId,
+    merchantId,
 }: {
     setup: boolean;
-    productId: string;
+    merchantId: string;
 }) {
     const { t } = useTranslation();
 
     // The webhook link
     const webhookLink = useFrakWebhookLink({
-        productId,
+        merchantId,
     });
 
     const refresh = useRefreshData();

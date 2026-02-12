@@ -1,5 +1,5 @@
 import type { AuthenticatedContext } from "app/types/context";
-import { shopInfo } from "./shop";
+import { resolveMerchantId } from "./merchant";
 
 type WebhookItem = {
     id: string;
@@ -23,7 +23,7 @@ export type CreateWebhookSubscriptionReturnType = {
         field: string;
         message: string;
     }[];
-    webhookSubscription: WebhookItem;
+    webhookSubscription: WebhookItem | null;
 };
 
 export type DeleteWebhookSubscriptionReturnType = {
@@ -90,9 +90,20 @@ export async function getWebhooks({
 export async function createWebhook(
     context: AuthenticatedContext
 ): Promise<CreateWebhookSubscriptionReturnType> {
-    const shop = await shopInfo(context);
+    const merchantId = await resolveMerchantId(context);
+    if (!merchantId) {
+        return {
+            userErrors: [
+                {
+                    field: "merchantId",
+                    message: "Merchant not registered",
+                },
+            ],
+            webhookSubscription: null,
+        };
+    }
     const { graphql } = context.admin;
-    const webhookUrl = `${process.env.BACKEND_URL}/ext/products/${shop.productId}/webhook/oracle/shopify`;
+    const webhookUrl = `${process.env.BACKEND_URL}/ext/merchant/${merchantId}/webhook/shopify`;
     const response = await graphql(
         `
       mutation webhookSubscriptionCreate(
@@ -180,17 +191,34 @@ export type FrakWebhookStatusReturnType = {
 };
 
 /**
- * Get the frak webhook status
+ * Get the frak webhook status by checking if a webhook exists for this merchant
  */
 export async function frakWebhookStatus({
-    productId,
+    merchantId,
 }: {
-    productId: string;
+    merchantId: string | null;
 }): Promise<FrakWebhookStatusReturnType> {
+    if (!merchantId) {
+        return {
+            userErrors: [{ message: "Merchant not registered" }],
+            setup: false,
+        };
+    }
+
     try {
-        const webhookUrl = `${process.env.BACKEND_URL}/business/product/${productId}/oracleWebhook/status`;
+        const webhookUrl = `${process.env.BACKEND_URL}/business/merchant/${merchantId}/webhooks`;
         const response = await fetch(webhookUrl);
-        return await response.json();
+        if (!response.ok) {
+            return {
+                userErrors: [],
+                setup: false,
+            };
+        }
+        const data = await response.json();
+        return {
+            userErrors: [],
+            setup: Array.isArray(data) ? data.length > 0 : Boolean(data),
+        };
     } catch (error) {
         console.error(error);
         return {

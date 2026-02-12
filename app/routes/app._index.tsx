@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { Await, useNavigate, useRouteLoaderData } from "react-router";
 import { CampaignStatus } from "../components/Campaign";
 import { BankingStatus } from "../components/Funding/Bank";
+import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
 
 /**
  * todo: Index page of the Frak application on the shopify admin panel
@@ -149,14 +150,16 @@ function OnBoardingComplete({
 }: {
     onboardingData: OnboardingStepData;
 }) {
-    if (!onboardingData.shopInfo) {
+    const { shopInfo } = useOnChainShopInfo();
+
+    if (!onboardingData.merchantId || !shopInfo) {
         return null;
     }
 
     return (
         <BlockStack gap="500">
-            <CampaignStatus shopInfo={onboardingData.shopInfo} />
-            <BankingStatus shopInfo={onboardingData.shopInfo} />
+            <CampaignStatus shopInfo={shopInfo} />
+            <BankingStatus shopInfo={shopInfo} />
         </BlockStack>
     );
 }

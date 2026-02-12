@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { productIdFromDomain } from "../utils/productIdFromDomain";
 import { normalizeDomain, normalizePreferredCurrency } from "./shop";
 
 describe("domain normalization", () => {
@@ -69,20 +68,5 @@ describe("currency normalization", () => {
 
     it("falls back to usd for JPY", () => {
         expect(normalizePreferredCurrency("JPY")).toBe("usd");
-    });
-});
-
-describe("productId derivation from normalized domain", () => {
-    it("produces consistent productId from domain", () => {
-        const domain = "shop.example.com";
-        const id1 = productIdFromDomain(domain);
-        const id2 = productIdFromDomain(domain);
-        expect(id1).toBe(id2);
-    });
-
-    it("different domains produce different productIds", () => {
-        const id1 = productIdFromDomain("shop-a.example.com");
-        const id2 = productIdFromDomain("shop-b.example.com");
-        expect(id1).not.toBe(id2);
     });
 });

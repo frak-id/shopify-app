@@ -74,10 +74,10 @@ export function buildCampaignLink({
  */
 export function buildWebhookLink(
     businessUrl: string,
-    productId: string
+    merchantId: string
 ): string {
     const createUrl = new URL(businessUrl);
     createUrl.pathname = "/embedded/purchase-tracker";
-    createUrl.searchParams.append("pid", productId);
+    createUrl.searchParams.append("mid", merchantId);
     return createUrl.toString();
 }

@@ -1,7 +1,5 @@
 import type { AuthenticatedContext } from "app/types/context";
 import { LRUCache } from "lru-cache";
-import type { Hex } from "viem";
-import { productIdFromDomain } from "../utils/productIdFromDomain";
 
 const CURRENCY_MAP: Record<string, "usd" | "eur" | "gbp"> = {
     USD: "usd",
@@ -45,7 +43,6 @@ type ShopInfoReturnType = {
     };
     domain: string;
     normalizedDomain: string;
-    productId: Hex;
     preferredCurrency: "usd" | "eur" | "gbp";
 };
 
@@ -102,7 +99,6 @@ export async function shopInfo({
         ...shop,
         domain: shop.primaryDomain?.host ?? shop.myshopifyDomain,
         normalizedDomain,
-        productId: productIdFromDomain(normalizedDomain),
         preferredCurrency,
     };
 

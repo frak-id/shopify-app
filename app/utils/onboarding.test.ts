@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { GetProductInfoResponseDto } from "../hooks/useOnChainShopInfo";
 import type { OnboardingStepData } from "./onboarding";
 import {
     getOnboardingStatusMessage,
@@ -8,30 +7,9 @@ import {
     validateStep,
 } from "./onboarding";
 
-/**
- * Minimal valid shopInfo fixture for onboarding step 1
- */
-const mockShopInfo: GetProductInfoResponseDto = {
-    product: {
-        id: "0x1",
-        domain: "test.com",
-        productTypes: "press",
-        name: "Test",
-        createTimestamp: "0",
-        lastUpdateTimestamp: null,
-        lastUpdateBlock: "0",
-        metadataUrl: "",
-    },
-    banks: [],
-    interactionContracts: [],
-    administrators: [],
-    campaigns: [],
-    campaignStats: [],
-};
-
 describe("stepValidations", () => {
     it("step 1: passes when shopInfo is present", () => {
-        const data: OnboardingStepData = { shopInfo: mockShopInfo };
+        const data: OnboardingStepData = { merchantId: "test-merchant-id" };
         expect(stepValidations[1](data)).toBe(true);
     });
 
@@ -138,7 +116,7 @@ describe("validateStep", () => {
 
 describe("validateCompleteOnboarding", () => {
     const completeData: OnboardingStepData = {
-        shopInfo: mockShopInfo,
+        merchantId: "test-merchant-id",
         webPixel: { id: "px", settings: "{}" },
         webhooks: [
             {

@@ -19,7 +19,7 @@ export function Step1({
 }: {
     onboardingData: OnboardingStepData;
 }) {
-    const { shopInfo } = onboardingData;
+    const { merchantId } = onboardingData;
     const { t } = useTranslation();
     const refresh = useRefreshData();
     const { data: walletStatus } = useWalletStatus();
@@ -28,7 +28,7 @@ export function Step1({
     const { failedSteps } = validateCompleteOnboarding(onboardingData);
 
     // Check if the shop is connected
-    const isConnected = !!shopInfo;
+    const isConnected = !!merchantId;
     const isConnectedRef = useRef(isConnected);
 
     useEffect(() => {
@@ -36,12 +36,12 @@ export function Step1({
         isConnectedRef.current = isConnected;
     }, [isConnected]);
 
-    // Poll every 1s until shopInfo is defined, then stop polling
-    const pollForShopInfo = async () => {
+    // Poll every 1s until merchantId is defined, then stop polling
+    const pollForMerchantId = async () => {
         await refresh();
 
         if (!isConnectedRef.current) {
-            pollTimeout = setTimeout(() => pollForShopInfo(), 1000);
+            pollTimeout = setTimeout(() => pollForMerchantId(), 1000);
             return;
         }
 
@@ -101,7 +101,7 @@ export function Step1({
                             { method: "POST", action: "/app/onboarding" }
                         );
 
-                        pollForShopInfo();
+                        pollForMerchantId();
                     }
                 }, 500);
             }

@@ -1,8 +1,6 @@
-import type { GetProductInfoResponseDto } from "app/hooks/useOnChainShopInfo";
 import {
     type FirstProductPublishedReturnType,
     firstProductPublished,
-    shopInfo,
 } from "app/services.server/shop";
 import {
     doesThemeHasFrakActivated,
@@ -21,7 +19,7 @@ import {
     getWebPixel,
 } from "app/services.server/webPixel";
 import type { AuthenticatedContext } from "app/types/context";
-import { getOnchainProductInfo } from "../services.server/onchain";
+import { resolveMerchantId } from "../services.server/merchant";
 
 export type OnboardingStepData = {
     webPixel?: GetWebPixelReturnType;
@@ -34,8 +32,7 @@ export type OnboardingStepData = {
     frakWebhook?: {
         setup: boolean;
     };
-    productId?: string;
-    shopInfo?: GetProductInfoResponseDto;
+    merchantId?: string | null;
 };
 
 export type StepValidation = {
@@ -46,7 +43,7 @@ export type StepValidation = {
  * Validation functions for each onboarding step
  */
 export const stepValidations: StepValidation = {
-    1: (data) => Boolean(data?.shopInfo), // Shop info from indexer
+    1: (data) => Boolean(data?.merchantId), // Merchant registered in Frak
     2: (data) => Boolean(data?.webPixel?.id), // Web pixel must be created
     3: (data) => Boolean(data?.webhooks?.length), // Webhooks must be set up
     4: (data) => Boolean(data?.frakWebhook?.setup), // Frak webhook must be set up
@@ -60,10 +57,10 @@ export const stepValidations: StepValidation = {
 export const stepDataFetchers = {
     1: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
         try {
-            const productInfo = await getOnchainProductInfo(context);
-            return { shopInfo: productInfo ?? undefined };
+            const merchantId = await resolveMerchantId(context);
+            return { merchantId };
         } catch (e) {
-            console.warn("Error fetching shop info or product info", e);
+            console.warn("Error resolving merchantId", e);
             return {};
         }
     },
@@ -89,11 +86,11 @@ export const stepDataFetchers = {
 
     4: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
         try {
-            const shop = await shopInfo(context);
+            const merchantId = await resolveMerchantId(context);
             const frakWebhook = await frakWebhookStatus({
-                productId: shop.productId,
+                merchantId,
             });
-            return { frakWebhook, productId: shop.productId };
+            return { frakWebhook, merchantId };
         } catch (error) {
             console.error("Error fetching frak webhook:", error);
             return {};

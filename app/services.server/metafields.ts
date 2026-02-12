@@ -4,6 +4,7 @@ import { shopInfo } from "./shop";
 const FRAK_NAMESPACE = "frak";
 const MODAL_I18N_KEY = "modal_i18n";
 const APPEARANCE_KEY = "appearance";
+const MERCHANT_ID_KEY = "merchant_id";
 
 export type AppearanceMetafieldValue = {
     logoUrl?: string;
@@ -304,6 +305,32 @@ export async function updateAppearanceMetafield(
     // Polish up the object (right now only the logo url, so if not present set it to null)
     const polishedAppearance = polishAppearance(appearance);
     return writeMetafield(context, APPEARANCE_KEY, polishedAppearance);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Merchant ID                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Read the cached merchantId from shop metafields.
+ */
+export async function getMerchantIdMetafield({
+    admin: { graphql },
+}: AuthenticatedContext): Promise<string | null> {
+    return readMetafield<string>(graphql, MERCHANT_ID_KEY);
+}
+
+/**
+ * Write merchantId to shop metafields so Liquid templates can read it.
+ */
+export async function writeMerchantIdMetafield(
+    context: AuthenticatedContext,
+    merchantId: string
+): Promise<{
+    success: boolean;
+    userErrors: Array<{ field: string; message: string }>;
+}> {
+    return writeMetafield(context, MERCHANT_ID_KEY, merchantId);
 }
 
 /**

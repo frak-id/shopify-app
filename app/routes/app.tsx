@@ -8,6 +8,7 @@ import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { Skeleton } from "app/components/Skeleton";
 import { WalletGated } from "app/components/WalletGated";
+import { resolveMerchantId } from "app/services.server/merchant";
 import { shopInfo } from "app/services.server/shop";
 import { doesThemeSupportBlock } from "app/services.server/theme";
 import {
@@ -54,12 +55,16 @@ function PolarisLink({
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const [shop] = await Promise.all([shopInfo(context)]);
+    const [shop, merchantId] = await Promise.all([
+        shopInfo(context),
+        resolveMerchantId(context),
+    ]);
 
     return {
         apiKey: process.env.SHOPIFY_API_KEY || "",
         isThemeSupportedPromise: doesThemeSupportBlock(context),
         shop,
+        merchantId,
         onboardingDataPromise: fetchAllOnboardingData(context),
     };
 };
