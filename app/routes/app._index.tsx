@@ -16,23 +16,31 @@ import {
 } from "app/utils/onboarding";
 import { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Await, useNavigate, useRouteLoaderData } from "react-router";
+import type { LoaderFunctionArgs } from "react-router";
+import {
+    Await,
+    data,
+    useLoaderData,
+    useNavigate,
+    useRouteLoaderData,
+} from "react-router";
 import { CampaignStatus } from "../components/Campaign";
 import { BankingStatus } from "../components/Funding/Bank";
-import { useOnChainShopInfo } from "../hooks/useOnChainShopInfo";
+import {
+    getMerchantBankStatus,
+    getMerchantCampaigns,
+} from "../services.server/backendMerchant";
+import { authenticate } from "../shopify.server";
 
-/**
- * todo: Index page of the Frak application on the shopify admin panel
- *  - Login with a Frak wallet if needed
- *  - Check if a product is present, otherwise, link to product page?
- *  - Quickly check product status? Active campaign etc? And redirect to business for more infos?
- *  - Setup pixel + webhook automatically?
- *
- *
- *  todo:
- *   - theme app extensions for the frak-setup js asset? https://shopify.dev/docs/apps/build/online-store/theme-app-extensions
- * @param request
- */
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+    const context = await authenticate.admin(request);
+    const [campaigns, bankStatus] = await Promise.all([
+        getMerchantCampaigns(context, request),
+        getMerchantBankStatus(context, request),
+    ]);
+    return data({ campaigns, bankStatus });
+};
+
 export default function Index() {
     const rootData = useRouteLoaderData<typeof appLoader>("routes/app");
     const isThemeSupportedPromise = rootData?.isThemeSupportedPromise;
@@ -150,16 +158,16 @@ function OnBoardingComplete({
 }: {
     onboardingData: OnboardingStepData;
 }) {
-    const { shopInfo } = useOnChainShopInfo();
+    const { campaigns, bankStatus } = useLoaderData<typeof loader>();
 
-    if (!onboardingData.merchantId || !shopInfo) {
+    if (!onboardingData.merchantId || !campaigns || !bankStatus) {
         return null;
     }
 
     return (
         <BlockStack gap="500">
-            <CampaignStatus shopInfo={shopInfo} />
-            <BankingStatus shopInfo={shopInfo} />
+            <CampaignStatus campaigns={campaigns} bankStatus={bankStatus} />
+            <BankingStatus bankStatus={bankStatus} />
         </BlockStack>
     );
 }

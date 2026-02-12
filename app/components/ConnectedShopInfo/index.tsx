@@ -8,27 +8,15 @@ import {
     Text,
 } from "@shopify/polaris";
 import { CheckIcon } from "@shopify/polaris-icons";
+import type { MerchantResolveResponse } from "app/services.server/merchant";
 import { useTranslation } from "react-i18next";
 
-type ConnectedShopInfoProps = {
-    product: {
-        name: string;
-        createTimestamp: string;
-    };
-};
-
-export function ConnectedShopInfo({ product }: ConnectedShopInfoProps) {
+export function ConnectedShopInfo({
+    merchantInfo,
+}: {
+    merchantInfo: MerchantResolveResponse;
+}) {
     const { t } = useTranslation();
-
-    // Convert Unix timestamp (seconds) to a human-readable date
-    const formatDate = (unixTimestamp: string) => {
-        const date = new Date(Number.parseInt(unixTimestamp, 10) * 1000);
-        return date.toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-        });
-    };
 
     return (
         <Card>
@@ -47,12 +35,16 @@ export function ConnectedShopInfo({ product }: ConnectedShopInfoProps) {
                 <DescriptionList
                     items={[
                         {
-                            term: t("status.connectedShop.productName"),
-                            description: product.name,
+                            term: t("status.connectedShop.merchantName"),
+                            description: merchantInfo.name,
                         },
                         {
-                            term: t("status.connectedShop.createdOn"),
-                            description: formatDate(product.createTimestamp),
+                            term: t("status.connectedShop.domain"),
+                            description: merchantInfo.domain,
+                        },
+                        {
+                            term: t("status.connectedShop.merchantId"),
+                            description: merchantInfo.merchantId,
                         },
                     ]}
                 />

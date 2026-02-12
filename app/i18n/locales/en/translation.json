@@ -115,6 +115,13 @@
     },
     "status": {
         "connected": "Connected to Frak",
+        "connectedShop": {
+            "title": "Your Shop on Frak",
+            "merchantName": "Merchant Name",
+            "domain": "Domain",
+            "merchantId": "Merchant ID",
+            "description": "Your shop is successfully connected to the Frak ecosystem and ready to use all features."
+        },
         "connectionStatus": {
             "title": "Connection Status",
             "loading": "Checking Connection Status...",
@@ -127,19 +134,14 @@
             "button": "Register your shop in the Frak ecosystem",
             "close": "Close"
         },
-        "connectedShop": {
-            "title": "Your Shop on Frak",
-            "productName": "Product Name",
-            "createdOn": "Created On",
-            "description": "Your shop is successfully connected to the Frak ecosystem and ready to use all features."
-        },
+
         "campaign": {
             "title": "Campaigns",
             "description": "The campaigns are the core parts of your monetization strategy with Frak. It will define what rewards will be distributed to end users.",
             "name": "Name",
             "type": "Type",
             "active": "Active",
-            "running": "Running",
+
             "nameInput": "Campaign name",
             "bankSelect": "Select bank",
             "bankBalance": "Bank balance",
@@ -167,8 +169,7 @@
             "description": "The banks are the source of cash that will be used to distribute rewards to end users.",
             "token": "Token",
             "balance": "Balance",
-            "distributed": "Distributed",
-            "claimed": "Claimed",
+
             "address": "Address"
         },
         "purchase": {
@@ -186,7 +187,7 @@
             "confirm": "Confirm",
             "confirmPurchase": "Confirm the purchase",
             "errorInvalidAmount": "Please enter a valid amount.",
-            "errorSelectBank": "Please select a bank.",
+
             "errorBilling": "Failed to start billing process.",
             "done": "Done",
             "pendingProcessing": "Pending processing",

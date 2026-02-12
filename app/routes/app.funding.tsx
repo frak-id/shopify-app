@@ -5,20 +5,20 @@ import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, useLoaderData } from "react-router";
-import { getOnchainProductInfo } from "../services.server/onchain";
+import { getMerchantBankStatus } from "../services.server/backendMerchant";
 import { getCurrentPurchases } from "../services.server/purchase";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
-    const [currentPurchases, shopInfo] = await Promise.all([
+    const [currentPurchases, bankStatus] = await Promise.all([
         getCurrentPurchases(context),
-        getOnchainProductInfo(context),
+        getMerchantBankStatus(context, request),
     ]);
-    return data({ currentPurchases, shopInfo });
+    return data({ currentPurchases, bankStatus });
 };
 
 export default function FundingPage() {
-    const { currentPurchases, shopInfo } = useLoaderData<typeof loader>();
+    const { currentPurchases, bankStatus } = useLoaderData<typeof loader>();
     const { t } = useTranslation();
 
     return (
@@ -26,16 +26,16 @@ export default function FundingPage() {
             <Layout>
                 <Layout.Section>
                     <BlockStack gap="500">
-                        {shopInfo && (
+                        {bankStatus && (
                             <>
-                                <BankingStatus shopInfo={shopInfo} />
+                                <BankingStatus bankStatus={bankStatus} />
                                 <PurchaseStatus
-                                    shopInfo={shopInfo}
+                                    bankStatus={bankStatus}
                                     currentPurchases={currentPurchases}
                                 />
                             </>
                         )}
-                        {!shopInfo && (
+                        {!bankStatus && (
                             // TODO: Link to the settings / setup instructions
                             <p>Nope</p>
                         )}

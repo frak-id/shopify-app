@@ -9,27 +9,29 @@ import {
     InlineGrid,
     InlineStack,
     RangeSlider,
-    Select,
-    SkeletonDisplayText,
     Text,
     TextField,
 } from "@shopify/polaris";
 import { ChevronDownIcon, ChevronUpIcon } from "@shopify/polaris-icons";
 import type { loader as rootLoader } from "app/routes/app";
+import type {
+    BankStatus,
+    CampaignResponse,
+} from "app/services.server/backendMerchant";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteLoaderData } from "react-router";
+import type { Address } from "viem";
 import { useCreateCampaignLink } from "../../hooks/useCreateCampaignLink";
-import { useOnChainCampaignInfo } from "../../hooks/useOnChainCampaignInfo";
-import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 import { useRefreshData } from "../../hooks/useRefreshData";
 
 export function CampaignStatus({
-    shopInfo,
+    campaigns,
+    bankStatus,
 }: {
-    shopInfo: GetProductInfoResponseDto;
+    campaigns: CampaignResponse[];
+    bankStatus: BankStatus;
 }) {
-    const { campaigns, banks } = shopInfo;
     const { t } = useTranslation();
     const [creationOpen, setCreationOpen] = useState(false);
 
@@ -61,18 +63,14 @@ export function CampaignStatus({
                         timingFunction: "ease-in-out",
                     }}
                 >
-                    <CampaignCreation banks={banks} />
+                    <CampaignCreation bankAddress={bankStatus.bankAddress} />
                 </Collapsible>
             </BlockStack>
         </Card>
     );
 }
 
-function CampaignTable({
-    campaigns,
-}: {
-    campaigns: GetProductInfoResponseDto["campaigns"];
-}) {
+function CampaignTable({ campaigns }: { campaigns: CampaignResponse[] }) {
     const { t } = useTranslation();
     return (
         <DataTable
@@ -83,13 +81,13 @@ function CampaignTable({
                 t("status.campaign.active"),
             ]}
             rows={campaigns
-                .filter((c) => c?.attached)
+                .filter((c) => c.status === "active")
                 .map((campaign) => [
                     campaign.name,
-                    campaign.type,
+                    campaign.rule.trigger,
                     <CampaignStatusBadge
                         key={campaign.id}
-                        campaign={campaign}
+                        status={campaign.status}
                     />,
                 ])}
         />
@@ -97,54 +95,24 @@ function CampaignTable({
 }
 
 function CampaignStatusBadge({
-    campaign,
+    status,
 }: {
-    campaign: GetProductInfoResponseDto["campaigns"][number];
+    status: CampaignResponse["status"];
 }) {
-    const { data: campaignInfo, isLoading: campaignInfoLoading } =
-        useOnChainCampaignInfo(campaign.id);
     const { t } = useTranslation();
 
-    if (campaignInfoLoading || !campaignInfo) {
-        return <SkeletonDisplayText size="small" />;
-    }
+    const tone = status === "active" ? "success" : "warning";
 
     return (
         <InlineStack gap="200">
-            <Badge
-                tone={
-                    campaign.attached && campaignInfo.isActive
-                        ? "success"
-                        : "warning"
-                }
-            >
-                {t("status.campaign.active")}
-            </Badge>
-            <Badge
-                tone={
-                    campaign.attached && campaignInfo.isRunning
-                        ? "success"
-                        : "warning"
-                }
-            >
-                {t("status.campaign.running")}
-            </Badge>
+            <Badge tone={tone}>{t("status.campaign.active")}</Badge>
         </InlineStack>
     );
 }
 
-function CampaignCreation({
-    banks,
-}: {
-    banks: GetProductInfoResponseDto["banks"];
-}) {
+function CampaignCreation({ bankAddress }: { bankAddress: Address | null }) {
     const { t } = useTranslation();
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
-
-    const [selectedBankId, setSelectedBankId] = useState(
-        banks.length === 1 ? banks[0].id : ""
-    );
-    const selectedBank = banks.find((b) => b.id === selectedBankId) || null;
 
     const [globalBudget, setGlobalBudget] = useState("");
     const [rawCAC, setRawCAC] = useState("");
@@ -152,11 +120,11 @@ function CampaignCreation({
     const [name, setName] = useState("");
 
     const isCreationDisabled = useMemo(() => {
-        if (!selectedBank) return true;
+        if (!bankAddress) return true;
         if (!globalBudget || !rawCAC) return true;
 
         return false;
-    }, [globalBudget, rawCAC, selectedBank]);
+    }, [globalBudget, rawCAC, bankAddress]);
 
     // Breakdown calculations
     const breakdown = useMemo(() => {
@@ -182,15 +150,9 @@ function CampaignCreation({
     const currencySymbol = (rootData?.shop.preferredCurrency ??
         "usd") as Currency;
 
-    // Bank select options (just show id, show balance separately)
-    const bankOptions = banks.map((bank) => ({
-        label: bank.id,
-        value: bank.id,
-    }));
-
     // The creation link
     const creationLink = useCreateCampaignLink({
-        bankId: selectedBank?.id ?? "0x",
+        bankId: bankAddress ?? "0x",
         globalBudget: Number(globalBudget),
         rawCAC: Number(rawCAC),
         ratio,
@@ -221,6 +183,10 @@ function CampaignCreation({
         }
     }, [creationLink, refresh]);
 
+    if (!bankAddress) {
+        return null;
+    }
+
     return (
         <BlockStack gap="400">
             <InlineGrid gap="200" columns={2}>
@@ -230,13 +196,9 @@ function CampaignCreation({
                     onChange={setName}
                     autoComplete="off"
                 />
-                <Select
-                    label={t("status.campaign.bankSelect")}
-                    options={bankOptions}
-                    value={selectedBankId}
-                    onChange={setSelectedBankId}
-                    disabled={banks.length === 0 || banks.length === 1}
-                />
+                <Text variant="bodySm" as="p">
+                    {t("status.campaign.bankSelect")}: {bankAddress}
+                </Text>
             </InlineGrid>
             <InlineGrid gap="200" columns={2}>
                 <BlockStack gap="200">
@@ -249,7 +211,6 @@ function CampaignCreation({
                         min={0}
                         step={0.01}
                         suffix={currencySymbol}
-                        disabled={!selectedBank}
                     />
                     <Text variant="bodySm" as="p">
                         {t("status.campaign.budgetInfo")}
@@ -265,7 +226,6 @@ function CampaignCreation({
                         min={0}
                         step={0.01}
                         suffix={currencySymbol}
-                        disabled={!selectedBank}
                     />
                     <Text variant="bodySm" as="p">
                         {t("status.campaign.rawCACInfo")}
@@ -285,7 +245,6 @@ function CampaignCreation({
                     onChange={(value) => setRatio(value as number)}
                     output
                     helpText={t("status.campaign.ratioHelp")}
-                    disabled={!selectedBank}
                 />
                 <Text variant="bodyMd" as="span">
                     {t("status.campaign.ratioReferee")}

@@ -4,7 +4,7 @@ import { backendApi } from "../utils/backendApi";
 import { getMerchantIdMetafield, writeMerchantIdMetafield } from "./metafields";
 import { shopInfo } from "./shop";
 
-type MerchantResolveResponse = {
+export type MerchantResolveResponse = {
     merchantId: string;
     productId: string;
     name: string;
@@ -14,6 +14,11 @@ type MerchantResolveResponse = {
 const merchantIdCache = new LRUCache<string, string>({
     max: 512,
     // Cache for 5 minutes — merchantId rarely changes
+    ttl: 5 * 60_000,
+});
+
+const merchantInfoCache = new LRUCache<string, MerchantResolveResponse>({
+    max: 512,
     ttl: 5 * 60_000,
 });
 
@@ -52,10 +57,12 @@ export async function resolveMerchantId(
     }
 
     // 3. Fetch from Frak backend using stable domain
-    const merchantId = await fetchMerchantIdFromBackend(cacheKey);
-    if (!merchantId) {
+    const info = await fetchMerchantFromBackend(cacheKey);
+    if (!info) {
         return null;
     }
+    const merchantId = info.merchantId;
+    merchantInfoCache.set(cacheKey, info);
 
     // Cache + persist to metafield for listener.liquid
     merchantIdCache.set(cacheKey, merchantId);
@@ -67,11 +74,51 @@ export async function resolveMerchantId(
 }
 
 /**
- * Fetch merchantId from the Frak backend by domain.
+ * Resolve the full merchant info for the current shop.
+ * Returns name, domain, merchantId, productId.
  */
-async function fetchMerchantIdFromBackend(
+export async function resolveMerchantInfo(
+    context: AuthenticatedContext
+): Promise<MerchantResolveResponse | null> {
+    const shop = await shopInfo(context);
+    const cacheKey = shop.normalizedDomain;
+
+    const cached = merchantInfoCache.get(cacheKey);
+    if (cached) {
+        return cached;
+    }
+
+    const info = await fetchMerchantFromBackend(cacheKey);
+    if (!info) {
+        return null;
+    }
+
+    merchantInfoCache.set(cacheKey, info);
+    // Also populate the id-only cache
+    merchantIdCache.set(cacheKey, info.merchantId);
+
+    return info;
+}
+
+/**
+ * Clear cached merchant data for the current shop.
+ * Called after merchant registration so the next resolve fetches fresh data.
+ */
+export async function clearMerchantCache(
+    context: AuthenticatedContext
+): Promise<void> {
+    const shop = await shopInfo(context);
+    const cacheKey = shop.normalizedDomain;
+    merchantIdCache.delete(cacheKey);
+    merchantInfoCache.delete(cacheKey);
+}
+
+/**
+ * Fetch merchant info from the Frak backend by domain.
+ */
+async function fetchMerchantFromBackend(
     domain: string
-): Promise<string | null> {
+): Promise<MerchantResolveResponse | null> {
     try {
         const response = await backendApi.get("user/merchant/resolve", {
             searchParams: { domain },
@@ -85,8 +132,7 @@ async function fetchMerchantIdFromBackend(
             return null;
         }
 
-        const data = (await response.json()) as MerchantResolveResponse;
-        return data.merchantId;
+        return (await response.json()) as MerchantResolveResponse;
     } catch (error) {
         console.error(`[merchantId] fetch failed for domain ${domain}:`, error);
         return null;

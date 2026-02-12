@@ -116,6 +116,13 @@
     },
     "status": {
         "connected": "Connecté à Frak",
+        "connectedShop": {
+            "title": "Votre boutique sur Frak",
+            "merchantName": "Nom du marchand",
+            "domain": "Domaine",
+            "merchantId": "Identifiant marchand",
+            "description": "Votre boutique est correctement connectée à l'écosystème Frak et prête à utiliser toutes les fonctionnalités."
+        },
         "connectionStatus": {
             "title": "Statut de connexion",
             "loading": "Vérification du statut de connexion...",
@@ -128,19 +135,14 @@
             "button": "Enregistrer votre boutique dans l'écosystème Frak",
             "close": "Fermer"
         },
-        "connectedShop": {
-            "title": "Votre boutique sur Frak",
-            "productName": "Nom du produit",
-            "createdOn": "Créé le",
-            "description": "Votre boutique est correctement connectée à l'écosystème Frak et prête à utiliser toutes les fonctionnalités."
-        },
+
         "campaign": {
             "title": "Campagnes",
             "description": "Les campagnes sont le cœur de votre stratégie de monétisation avec Frak. Elles définissent les récompenses qui seront distribuées aux utilisateurs finaux.",
             "name": "Nom",
             "type": "Type",
             "active": "Active",
-            "running": "En cours",
+
             "nameInput": "Nom de la campagne",
             "bankSelect": "Sélectionner la banque",
             "bankBalance": "Solde de la banque",
@@ -168,8 +170,7 @@
             "description": "Les banques sont la source de fonds qui seront utilisés pour distribuer des récompenses aux utilisateurs finaux.",
             "token": "Token",
             "balance": "Solde",
-            "distributed": "Distribué",
-            "claimed": "Réclamé",
+
             "address": "Adresse"
         },
         "purchase": {
@@ -187,7 +188,7 @@
             "confirm": "Confirmer",
             "confirmPurchase": "Confirmer l'achat",
             "errorInvalidAmount": "Veuillez entrer un montant valide.",
-            "errorSelectBank": "Veuillez sélectionner une banque.",
+
             "errorBilling": "Échec du démarrage du processus de facturation.",
             "done": "Terminé",
             "pendingProcessing": "Traitement en cours",

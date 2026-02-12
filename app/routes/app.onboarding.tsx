@@ -1,6 +1,6 @@
 import { Page } from "@shopify/polaris";
 import { Stepper } from "app/components/Stepper";
-import { clearOnChainShopCache } from "app/services.server/onchain";
+import { clearMerchantCache } from "app/services.server/merchant";
 import { useTranslation } from "react-i18next";
 import type { ActionFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
@@ -12,7 +12,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     switch (intent) {
         case "clearCache": {
-            await clearOnChainShopCache(context);
+            await clearMerchantCache(context);
             return { success: true };
         }
         default: {

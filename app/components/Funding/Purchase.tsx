@@ -6,27 +6,25 @@ import {
     DataTable,
     InlineStack,
     Link,
-    Select,
     Text,
     TextField,
 } from "@shopify/polaris";
 import type { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import { useMutation } from "@tanstack/react-query";
 import type { loader as rootLoader } from "app/routes/app";
+import type { BankStatus } from "app/services.server/backendMerchant";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteLoaderData } from "react-router";
 import type { PurchaseTable } from "../../../db/schema/purchaseTable";
-import type { GetProductInfoResponseDto } from "../../hooks/useOnChainShopInfo";
 
 export function PurchaseStatus({
-    shopInfo,
+    bankStatus,
     currentPurchases,
 }: {
-    shopInfo: GetProductInfoResponseDto;
+    bankStatus: BankStatus;
     currentPurchases: PurchaseTable["$inferSelect"][];
 }) {
-    const { banks } = shopInfo;
     const { t } = useTranslation();
 
     return (
@@ -40,7 +38,9 @@ export function PurchaseStatus({
                     {t("status.purchase.description")}
                 </Text>
 
-                <CreatePurchase banks={banks} />
+                {bankStatus.deployed && bankStatus.bankAddress && (
+                    <CreatePurchase bankAddress={bankStatus.bankAddress} />
+                )}
 
                 <ActivePurchases currentPurchases={currentPurchases} />
             </BlockStack>
@@ -115,18 +115,11 @@ function ActivePurchases({
 }
 
 /**
- * Component that will permit to fund a given bank
- *  under the hood it should trigger the complete stuff to fund the bank via shopify
+ * Component to fund the merchant bank via Shopify app purchase.
+ * Uses the single bank address from the backend BankStatus.
  */
-function CreatePurchase({
-    banks,
-}: {
-    banks: GetProductInfoResponseDto["banks"];
-}) {
+function CreatePurchase({ bankAddress }: { bankAddress: string }) {
     const [amount, setAmount] = useState("");
-    const [selectedBank, setSelectedBank] = useState(
-        banks.length === 1 ? banks[0].id : ""
-    );
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
     const [error, setError] = useState<string | null>(null);
     const { t } = useTranslation();
@@ -136,7 +129,7 @@ function CreatePurchase({
         mutate: handleSubmit,
         isPending: isLoading,
     } = useMutation({
-        mutationKey: ["createPurchase", amount, selectedBank],
+        mutationKey: ["createPurchase", amount, bankAddress],
         mutationFn: async () => {
             setError(null);
             const amountNumber = Number(amount);
@@ -144,12 +137,8 @@ function CreatePurchase({
                 setError(t("status.purchase.errorInvalidAmount"));
                 return;
             }
-            if (!selectedBank) {
-                setError(t("status.purchase.errorSelectBank"));
-                return;
-            }
             try {
-                const url = `/api/purchase?amount=${amount}&bank=${selectedBank}`;
+                const url = `/api/purchase?amount=${amount}&bank=${bankAddress}`;
                 const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error("Failed to start billing process.");
@@ -162,25 +151,12 @@ function CreatePurchase({
         },
     });
 
-    if (!banks || banks.length === 0) {
-        return null;
-    }
-
     return (
         <BlockStack gap="200">
             <InlineStack gap="200" align="space-evenly">
-                <Select
-                    label={t("status.purchase.selectBank")}
-                    options={banks.map((bank) => ({
-                        label: bank.id,
-                        value: bank.id,
-                    }))}
-                    value={selectedBank}
-                    onChange={(value) => setSelectedBank(value)}
-                    disabled={
-                        banks.length === 1 || isLoading || confirmationUrl
-                    }
-                />
+                <Text variant="bodySm" as="p">
+                    {t("status.purchase.selectBank")}: {bankAddress}
+                </Text>
                 <TextField
                     label={t("status.purchase.amountToFund")}
                     type="number"
@@ -195,9 +171,7 @@ function CreatePurchase({
                 <Button
                     onClick={handleSubmit}
                     loading={isLoading}
-                    disabled={
-                        !amount || !selectedBank || isLoading || confirmationUrl
-                    }
+                    disabled={!amount || isLoading || confirmationUrl}
                     variant="primary"
                 >
                     {t("status.purchase.fundBank")}
