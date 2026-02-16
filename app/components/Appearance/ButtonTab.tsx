@@ -1,4 +1,3 @@
-import { Box, Card, Link } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import type { loader } from "app/routes/app.appearance";
 import { useTranslation } from "react-i18next";
@@ -23,30 +22,30 @@ export function ButtonTab({
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <Box>
+        <s-section>
+            <s-box>
                 {isThemeHasFrakButton && (
                     <>
                         <Activated
                             text={t("appearance.shareButton.activated")}
                         />
-                        <Box paddingBlockStart={"200"}>
+                        <s-box paddingBlockStart="small">
                             {firstProduct ? (
-                                <Link
-                                    url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
+                                <s-link
+                                    href={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
                                     target="_blank"
                                 >
                                     {t("appearance.shareButton.link")}
-                                </Link>
+                                </s-link>
                             ) : (
                                 t("appearance.shareButton.noProduct")
                             )}
-                        </Box>
+                        </s-box>
                     </>
                 )}
                 {!isThemeHasFrakButton && <ButtonNotActivated />}
-            </Box>
-        </Card>
+            </s-box>
+        </s-section>
     );
 }
 
@@ -64,12 +63,12 @@ function ButtonNotActivated() {
             image={screenShareButton}
         >
             {firstProduct ? (
-                <Link
-                    url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
+                <s-link
+                    href={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
                     target="_blank"
                 >
                     {t("appearance.shareButton.link")}
-                </Link>
+                </s-link>
             ) : (
                 t("appearance.shareButton.noProduct")
             )}

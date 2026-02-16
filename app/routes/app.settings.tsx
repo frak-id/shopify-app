@@ -1,4 +1,4 @@
-import { Page, Tabs } from "@shopify/polaris";
+import { Tabs } from "app/components/ui/Tabs";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router";
@@ -52,9 +52,9 @@ export default function SettingsIndex() {
     };
 
     return (
-        <Page title={t("settings.title")}>
+        <s-page heading={t("settings.title")}>
             <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} />
             <Outlet />
-        </Page>
+        </s-page>
     );
 }

@@ -1,13 +1,4 @@
-import {
-    Badge,
-    BlockStack,
-    Box,
-    Card,
-    DescriptionList,
-    InlineStack,
-    Text,
-} from "@shopify/polaris";
-import { CheckIcon } from "@shopify/polaris-icons";
+import { DescriptionList } from "app/components/ui/DescriptionList";
 import type { MerchantResolveResponse } from "app/services.server/merchant";
 import { useTranslation } from "react-i18next";
 
@@ -19,18 +10,20 @@ export function ConnectedShopInfo({
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Box paddingBlockEnd="200">
-                    <InlineStack align="space-between">
-                        <Text variant="headingMd" as="h2">
-                            {t("status.connectedShop.title")}
-                        </Text>
-                        <Badge tone="success" icon={CheckIcon}>
+        <s-section>
+            <s-stack gap="base">
+                <s-box paddingBlockEnd="small">
+                    <s-stack
+                        direction="inline"
+                        justifyContent="space-between"
+                        alignItems="center"
+                    >
+                        <s-heading>{t("status.connectedShop.title")}</s-heading>
+                        <s-badge tone="success" icon="check">
                             {t("status.connected")}
-                        </Badge>
-                    </InlineStack>
-                </Box>
+                        </s-badge>
+                    </s-stack>
+                </s-box>
 
                 <DescriptionList
                     items={[
@@ -49,12 +42,10 @@ export function ConnectedShopInfo({
                     ]}
                 />
 
-                <Box paddingBlockStart="200">
-                    <Text variant="bodyMd" as="p">
-                        {t("status.connectedShop.description")}
-                    </Text>
-                </Box>
-            </BlockStack>
-        </Card>
+                <s-box paddingBlockStart="small">
+                    <s-text>{t("status.connectedShop.description")}</s-text>
+                </s-box>
+            </s-stack>
+        </s-section>
     );
 }

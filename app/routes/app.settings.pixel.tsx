@@ -1,5 +1,3 @@
-import { Badge, BlockStack, Box, Card, Text } from "@shopify/polaris";
-import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import { type IntentWebPixel, Pixel } from "app/components/Pixel";
 import {
     createWebPixel,
@@ -45,29 +43,27 @@ export default function SettingsPixelPage() {
     const { t } = useTranslation();
 
     return (
-        <BlockStack gap="500">
-            <Card>
-                <BlockStack gap="200">
-                    <Box paddingBlockStart={"200"} paddingBlockEnd={"200"}>
+        <s-stack gap="base">
+            <s-section>
+                <s-stack gap="small">
+                    <s-box paddingBlockStart="small" paddingBlockEnd="small">
                         {webPixel && (
-                            <Badge tone="success" icon={CheckIcon}>
+                            <s-badge tone="success">
                                 {t("pixel.connected")}
-                            </Badge>
+                            </s-badge>
                         )}
                         {!webPixel && (
-                            <Badge tone="critical" icon={XSmallIcon}>
+                            <s-badge tone="critical">
                                 {t("pixel.notConnected")}
-                            </Badge>
+                            </s-badge>
                         )}
-                    </Box>
-                    <Text as="p" variant="bodyMd">
-                        {!webPixel && t("pixel.needConnection")}
-                    </Text>
-                    <Text as="p" variant="bodyMd">
+                    </s-box>
+                    <s-text>{!webPixel && t("pixel.needConnection")}</s-text>
+                    <s-text>
                         <Pixel id={webPixel?.id} />
-                    </Text>
-                </BlockStack>
-            </Card>
-        </BlockStack>
+                    </s-text>
+                </s-stack>
+            </s-section>
+        </s-stack>
     );
 }

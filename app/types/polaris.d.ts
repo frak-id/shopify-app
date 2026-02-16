@@ -8,9 +8,10 @@
  * `import type { Tone } from "@shopify/polaris/build/ts/src/components/Badge"`
  */
 export type BadgeTone =
+    | "auto"
+    | "neutral"
     | "info"
     | "success"
+    | "caution"
     | "warning"
-    | "critical"
-    | "attention"
-    | "new";
+    | "critical";

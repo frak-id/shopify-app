@@ -1,5 +1,3 @@
-import { useAppBridge } from "@shopify/app-bridge-react";
-import { Button } from "@shopify/polaris";
 import { useRefreshData } from "app/hooks/useRefreshData";
 import type {
     CreateWebPixelReturnType,
@@ -12,7 +10,6 @@ import { useFetcher } from "react-router";
 export type IntentWebPixel = "createWebPixel" | "deleteWebPixel";
 
 export function Pixel({ id }: { id?: string }) {
-    const shopify = useAppBridge();
     const fetcher = useFetcher<
         CreateWebPixelReturnType | DeleteWebPixelReturnType
     >();
@@ -29,21 +26,21 @@ export function Pixel({ id }: { id?: string }) {
             .deletedWebPixelId;
 
         if (userErrors?.length > 0) {
-            shopify.toast.show(t("pixel.actions.messages.error"), {
+            window.shopify.toast.show(t("pixel.actions.messages.error"), {
                 isError: true,
             });
         }
 
         if (webPixel) {
-            shopify.toast.show(t("pixel.actions.messages.connect"));
+            window.shopify.toast.show(t("pixel.actions.messages.connect"));
             refresh();
         }
 
         if (deletedWebPixelId) {
-            shopify.toast.show(t("pixel.actions.messages.disconnect"));
+            window.shopify.toast.show(t("pixel.actions.messages.disconnect"));
             refresh();
         }
-    }, [fetcher.data, shopify.toast, t, refresh]);
+    }, [fetcher.data, t, refresh]);
 
     const handleAction = async (intent: IntentWebPixel) => {
         fetcher.submit(
@@ -55,24 +52,24 @@ export function Pixel({ id }: { id?: string }) {
     return (
         <>
             {!id && (
-                <Button
+                <s-button
                     variant="primary"
                     loading={fetcher.state !== "idle"}
                     disabled={fetcher.state !== "idle"}
                     onClick={() => handleAction("createWebPixel")}
                 >
                     {t("pixel.actions.cta.connect")}
-                </Button>
+                </s-button>
             )}
             {id && (
-                <Button
+                <s-button
                     variant="primary"
                     loading={fetcher.state !== "idle"}
                     disabled={fetcher.state !== "idle"}
                     onClick={() => handleAction("deleteWebPixel")}
                 >
                     {t("pixel.actions.cta.disconnect")}
-                </Button>
+                </s-button>
             )}
         </>
     );

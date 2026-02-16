@@ -1,13 +1,3 @@
-import {
-    Badge,
-    BlockStack,
-    Box,
-    Button,
-    Card,
-    FormLayout,
-    Text,
-} from "@shopify/polaris";
-import { CheckIcon } from "@shopify/polaris-icons";
 import type { action } from "app/routes/app.appearance";
 import type {
     AppearanceMetafieldValue,
@@ -127,19 +117,17 @@ export function CustomizationsTab({
     };
 
     return (
-        <BlockStack gap="500">
-            <Card>
-                <BlockStack gap="400">
-                    <Box paddingBlockStart="200" paddingBlockEnd="200">
-                        <Badge tone="info" icon={CheckIcon}>
+        <s-stack gap="large">
+            <s-section>
+                <s-stack gap="base">
+                    <s-box paddingBlockStart="small" paddingBlockEnd="small">
+                        <s-badge tone="info">
                             {t("customizations.modal.title")}
-                        </Badge>
-                    </Box>
-                    <Text as="p" variant="bodyMd">
-                        {t("customizations.modal.description")}
-                    </Text>
-                </BlockStack>
-            </Card>
+                        </s-badge>
+                    </s-box>
+                    <s-text>{t("customizations.modal.description")}</s-text>
+                </s-stack>
+            </s-section>
 
             <LanguageModeSelector
                 mode={languageMode}
@@ -159,7 +147,7 @@ export function CustomizationsTab({
                     value={JSON.stringify(appearanceMetafield)}
                 />
 
-                <FormLayout>
+                <s-stack gap="base">
                     <LogoField
                         logoUrl={appearanceMetafield.logoUrl || ""}
                         onUpdate={(value) =>
@@ -187,13 +175,13 @@ export function CustomizationsTab({
                             onUpdate={handleMultiLanguageUpdate}
                         />
                     )}
-                    <Box paddingBlockEnd="400">
-                        <Button submit loading={isLoading}>
+                    <s-box paddingBlockEnd="base">
+                        <s-button type="submit" loading={isLoading}>
                             {t("customizations.save")}
-                        </Button>
-                    </Box>
-                </FormLayout>
+                        </s-button>
+                    </s-box>
+                </s-stack>
             </Form>
-        </BlockStack>
+        </s-stack>
     );
 }

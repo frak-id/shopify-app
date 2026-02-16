@@ -1,19 +1,8 @@
-import {
-    Badge,
-    BlockStack,
-    Button,
-    Card,
-    DataTable,
-    InlineStack,
-    Link,
-    Text,
-    TextField,
-} from "@shopify/polaris";
-import type { Tone } from "@shopify/polaris/build/ts/src/components/Badge";
 import { useMutation } from "@tanstack/react-query";
 import type { loader as rootLoader } from "app/routes/app";
 import type { BankStatus } from "app/services.server/backendMerchant";
-import { useMemo, useState } from "react";
+import type { BadgeTone } from "app/types/polaris";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteLoaderData } from "react-router";
 import type { PurchaseTable } from "../../../db/schema/purchaseTable";
@@ -28,23 +17,19 @@ export function PurchaseStatus({
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Text as="h2" variant="headingMd">
-                    {t("status.purchase.title")}
-                </Text>
+        <s-section>
+            <s-stack gap="base">
+                <s-heading>{t("status.purchase.title")}</s-heading>
 
-                <Text variant="bodyMd" as="p">
-                    {t("status.purchase.description")}
-                </Text>
+                <s-text>{t("status.purchase.description")}</s-text>
 
                 {bankStatus.deployed && bankStatus.bankAddress && (
                     <CreatePurchase bankAddress={bankStatus.bankAddress} />
                 )}
 
                 <ActivePurchases currentPurchases={currentPurchases} />
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }
 
@@ -54,63 +39,67 @@ function ActivePurchases({
     currentPurchases: PurchaseTable["$inferSelect"][];
 }) {
     const { t } = useTranslation();
-    const items = useMemo(
-        () =>
-            currentPurchases.map((purchase) => {
-                const { status, variant } = mapStatus(purchase, t);
-
-                return [
-                    `$${purchase.amount}`,
-                    <Badge key={purchase.id} tone={variant}>
-                        {status}
-                    </Badge>,
-                    purchase.txHash ?? "N/A",
-                    purchase.createdAt
-                        ? new Date(purchase.createdAt).toLocaleString()
-                        : "N/A",
-                    <InlineStack key={purchase.id}>
-                        {purchase.status === "pending" && (
-                            <Link
-                                url={purchase.confirmationUrl}
-                                key={purchase.id}
-                                target="_blank"
-                            >
-                                {t("status.purchase.confirm")}
-                            </Link>
-                        )}
-                    </InlineStack>,
-                ];
-            }),
-        [currentPurchases, t]
-    );
 
     if (currentPurchases.length === 0) {
         return null;
     }
 
     return (
-        <BlockStack gap="200">
-            <Text as="h2" variant="headingMd">
-                {t("status.purchase.activePurchases")}
-            </Text>
-            <DataTable
-                columnContentTypes={[
-                    "numeric",
-                    "text",
-                    "text",
-                    "text",
-                    "numeric",
-                ]}
-                headings={[
-                    t("status.purchase.amount"),
-                    t("status.purchase.status"),
-                    t("status.purchase.txHash"),
-                    t("status.purchase.createdAt"),
-                    t("status.purchase.actions"),
-                ]}
-                rows={items}
-            />
-        </BlockStack>
+        <s-stack gap="small">
+            <s-heading>{t("status.purchase.activePurchases")}</s-heading>
+            <s-table>
+                <s-table-header-row>
+                    <s-table-header>
+                        {t("status.purchase.amount")}
+                    </s-table-header>
+                    <s-table-header>
+                        {t("status.purchase.status")}
+                    </s-table-header>
+                    <s-table-header>
+                        {t("status.purchase.txHash")}
+                    </s-table-header>
+                    <s-table-header>
+                        {t("status.purchase.createdAt")}
+                    </s-table-header>
+                    <s-table-header>
+                        {t("status.purchase.actions")}
+                    </s-table-header>
+                </s-table-header-row>
+                <s-table-body>
+                    {currentPurchases.map((purchase) => {
+                        const { status, variant } = mapStatus(purchase, t);
+                        return (
+                            <s-table-row key={purchase.id}>
+                                <s-table-cell>{`$${purchase.amount}`}</s-table-cell>
+                                <s-table-cell>
+                                    <s-badge tone={variant}>{status}</s-badge>
+                                </s-table-cell>
+                                <s-table-cell>
+                                    {purchase.txHash ?? "N/A"}
+                                </s-table-cell>
+                                <s-table-cell>
+                                    {purchase.createdAt
+                                        ? new Date(
+                                              purchase.createdAt
+                                          ).toLocaleString()
+                                        : "N/A"}
+                                </s-table-cell>
+                                <s-table-cell>
+                                    {purchase.status === "pending" && (
+                                        <s-link
+                                            href={purchase.confirmationUrl}
+                                            target="_blank"
+                                        >
+                                            {t("status.purchase.confirm")}
+                                        </s-link>
+                                    )}
+                                </s-table-cell>
+                            </s-table-row>
+                        );
+                    })}
+                </s-table-body>
+            </s-table>
+        </s-stack>
     );
 }
 
@@ -152,46 +141,43 @@ function CreatePurchase({ bankAddress }: { bankAddress: string }) {
     });
 
     return (
-        <BlockStack gap="200">
-            <InlineStack gap="200" align="space-evenly">
-                <Text variant="bodySm" as="p">
+        <s-stack gap="small">
+            <s-stack direction="inline" gap="small">
+                <s-text>
                     {t("status.purchase.selectBank")}: {bankAddress}
-                </Text>
-                <TextField
+                </s-text>
+                <s-number-field
                     label={t("status.purchase.amountToFund")}
-                    type="number"
                     value={amount}
-                    onChange={setAmount}
-                    autoComplete="off"
+                    onChange={(e) => setAmount(e.currentTarget.value)}
+                    autocomplete="off"
                     min={0}
                     step={0.5}
-                    disabled={isLoading || confirmationUrl}
+                    disabled={isLoading || !!confirmationUrl}
                     suffix={rootData?.shop.preferredCurrency ?? "USD"}
                 />
-                <Button
-                    onClick={handleSubmit}
+                <s-button
+                    onClick={() => handleSubmit()}
                     loading={isLoading}
-                    disabled={!amount || isLoading || confirmationUrl}
+                    disabled={!amount || isLoading || !!confirmationUrl}
                     variant="primary"
                 >
                     {t("status.purchase.fundBank")}
-                </Button>
-            </InlineStack>
+                </s-button>
+            </s-stack>
 
-            {error && (
-                <Text as="span" tone="critical">
-                    {error}
-                </Text>
-            )}
+            {error && <s-text tone="critical">{error}</s-text>}
 
             {confirmationUrl && (
-                <Link url={confirmationUrl} target="_blank">
-                    <Button variant="primary">
-                        {t("status.purchase.confirmPurchase")}
-                    </Button>
-                </Link>
+                <s-button
+                    href={confirmationUrl}
+                    target="_blank"
+                    variant="primary"
+                >
+                    {t("status.purchase.confirmPurchase")}
+                </s-button>
             )}
-        </BlockStack>
+        </s-stack>
     );
 }
 
@@ -200,7 +186,7 @@ function mapStatus(
     t: (key: string) => string
 ): {
     status: string;
-    variant: Tone;
+    variant: BadgeTone;
 } {
     if (purchase.txStatus === "confirmed") {
         return {
@@ -211,7 +197,7 @@ function mapStatus(
     if (purchase.txStatus === "pending" || purchase.status === "active") {
         return {
             status: t("status.purchase.pendingProcessing"),
-            variant: "new",
+            variant: "info",
         };
     }
 

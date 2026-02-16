@@ -1,5 +1,3 @@
-import { Badge, BlockStack, Box, Text } from "@shopify/polaris";
-import { XSmallIcon } from "@shopify/polaris-icons";
 import type { PropsWithChildren } from "react";
 
 export function Instructions({
@@ -13,21 +11,17 @@ export function Instructions({
     image: string;
 }>) {
     return (
-        <BlockStack gap="400">
-            <Text as="p" variant="bodyMd">
-                <Badge tone="critical" icon={XSmallIcon}>
+        <s-stack gap="base">
+            <s-text>
+                <s-badge tone="critical" icon="x">
                     {badgeText}
-                </Badge>
-            </Text>
-            <Text as="p" variant="bodyMd">
-                {todoText}
-            </Text>
-            <Box>
+                </s-badge>
+            </s-text>
+            <s-text>{todoText}</s-text>
+            <div>
                 <img src={image} alt="" />
-            </Box>
-            <Text as="p" variant="bodyMd">
-                {children}
-            </Text>
-        </BlockStack>
+            </div>
+            <s-text>{children}</s-text>
+        </s-stack>
     );
 }

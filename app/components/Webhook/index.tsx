@@ -1,5 +1,3 @@
-import { useAppBridge } from "@shopify/app-bridge-react";
-import { BlockStack, Button, Card, InlineStack, Text } from "@shopify/polaris";
 import { useFrakWebhookLink } from "app/hooks/useFrakWebhookLink";
 import { useRefreshData } from "app/hooks/useRefreshData";
 import type {
@@ -14,7 +12,6 @@ import { useFetcher } from "react-router";
 export type IntentWebhook = "createWebhook" | "deleteWebhook";
 
 export function CreateShopifyWebhook() {
-    const shopify = useAppBridge();
     const fetcher = useFetcher<
         | CreateWebhookSubscriptionReturnType
         | DeleteWebhookSubscriptionReturnType
@@ -32,19 +29,21 @@ export function CreateShopifyWebhook() {
             .deletedWebhookSubscriptionId;
 
         if (userErrors?.length > 0) {
-            shopify.toast.show(t("webhook.actions.messages.error"), {
+            window.shopify?.toast.show(t("webhook.actions.messages.error"), {
                 isError: true,
             });
         }
 
         if (webhook) {
-            shopify.toast.show(t("webhook.actions.messages.connect"));
+            window.shopify?.toast.show(t("webhook.actions.messages.connect"));
         }
 
         if (deletedWebhookId) {
-            shopify.toast.show(t("webhook.actions.messages.disconnect"));
+            window.shopify?.toast.show(
+                t("webhook.actions.messages.disconnect")
+            );
         }
-    }, [fetcher.data, shopify.toast, t]);
+    }, [fetcher.data, t]);
 
     const handleAction = async (intent: IntentWebhook) => {
         fetcher.submit(
@@ -54,7 +53,7 @@ export function CreateShopifyWebhook() {
     };
 
     return (
-        <Button
+        <s-button
             variant="primary"
             loading={fetcher.state !== "idle"}
             disabled={fetcher.state !== "idle"}
@@ -63,7 +62,7 @@ export function CreateShopifyWebhook() {
             }}
         >
             {t("webhook.actions.cta.connect")}
-        </Button>
+        </s-button>
     );
 }
 
@@ -108,9 +107,9 @@ export function FrakWebhook({
     return (
         <>
             {!setup && (
-                <Button variant="primary" onClick={handleSetupWebhook}>
+                <s-button variant="primary" onClick={handleSetupWebhook}>
                     {t("webhook.actions.cta.frakConnect")}
-                </Button>
+                </s-button>
             )}
         </>
     );
@@ -122,7 +121,6 @@ export function WebhookList({
     webhooks: GetWebhooksSubscriptionsReturnType["edges"];
 }) {
     const { t } = useTranslation();
-    const shopify = useAppBridge();
     const fetcher = useFetcher<DeleteWebhookSubscriptionReturnType>();
 
     useEffect(() => {
@@ -133,15 +131,17 @@ export function WebhookList({
         const deletedWebhookId = data.deletedWebhookSubscriptionId;
 
         if (userErrors?.length > 0) {
-            shopify.toast.show(t("webhook.actions.messages.error"), {
+            window.shopify?.toast.show(t("webhook.actions.messages.error"), {
                 isError: true,
             });
         }
 
         if (deletedWebhookId) {
-            shopify.toast.show(t("webhook.actions.messages.disconnect"));
+            window.shopify?.toast.show(
+                t("webhook.actions.messages.disconnect")
+            );
         }
-    }, [fetcher.data, shopify.toast, t]);
+    }, [fetcher.data, t]);
 
     const handleDeleteWebhook = (webhookId: string) => {
         fetcher.submit(
@@ -151,45 +151,43 @@ export function WebhookList({
     };
 
     if (webhooks.length === 0) {
-        return (
-            <Text as="p" variant="bodyMd" tone="subdued">
-                {t("webhook.noWebhooks")}
-            </Text>
-        );
+        return <s-text tone="neutral">{t("webhook.noWebhooks")}</s-text>;
     }
 
     return (
-        <BlockStack gap="300">
-            <Text as="h3" variant="headingMd">
-                {t("webhook.list.title")}
-            </Text>
+        <s-stack gap="base">
+            <s-heading>{t("webhook.list.title")}</s-heading>
             {webhooks.map(({ node }) => (
-                <Card key={node.id}>
-                    <BlockStack gap="200">
-                        <Text as="p" variant="bodyMd">
+                <s-section key={node.id}>
+                    <s-stack gap="small">
+                        <s-text>
                             <strong>{t("webhook.list.topic")}:</strong>{" "}
                             {node.topic}
-                        </Text>
-                        <Text as="p" variant="bodyMd">
+                        </s-text>
+                        <s-text>
                             <strong>{t("webhook.list.endpoint")}:</strong>{" "}
                             {node.endpoint.callbackUrl ||
                                 t("webhook.list.noEndpoint")}
-                        </Text>
-                        <InlineStack align="end">
-                            <Button
+                        </s-text>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                            }}
+                        >
+                            <s-button
                                 variant="primary"
                                 tone="critical"
-                                size="slim"
                                 loading={fetcher.state !== "idle"}
                                 disabled={fetcher.state !== "idle"}
                                 onClick={() => handleDeleteWebhook(node.id)}
                             >
                                 {t("webhook.actions.cta.delete")}
-                            </Button>
-                        </InlineStack>
-                    </BlockStack>
-                </Card>
+                            </s-button>
+                        </div>
+                    </s-stack>
+                </s-section>
             ))}
-        </BlockStack>
+        </s-stack>
     );
 }

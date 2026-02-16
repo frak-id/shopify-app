@@ -1,4 +1,3 @@
-import { Button, Text } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import {
     type OnboardingStepData,
@@ -29,17 +28,17 @@ export function Step5({
             title={t("stepper.step5.title")}
             currentStep={failedSteps[0]}
         >
-            <Text as="p" variant="bodyMd">
+            <s-text>
                 <Trans i18nKey="stepper.step5.description" />
-            </Text>
+            </s-text>
             <img src={screenFrakListener} alt="" />
-            <Button
+            <s-button
                 variant="primary"
-                url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
+                href={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
                 target="_blank"
             >
                 {t("stepper.step5.link")}
-            </Button>
+            </s-button>
         </CollapsibleStep>
     );
 }

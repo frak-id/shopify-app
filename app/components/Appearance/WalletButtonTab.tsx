@@ -1,4 +1,3 @@
-import { Box, Card, Link } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import { useTranslation } from "react-i18next";
 import { useRouteLoaderData } from "react-router";
@@ -16,26 +15,26 @@ export function WalletButtonTab({ themeWalletButton }: WalletButtonTabProps) {
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <Box>
+        <s-section>
+            <s-box>
                 {themeWalletButton && (
                     <>
                         <Activated
                             text={t("appearance.walletButton.activated")}
                         />
-                        <Box paddingBlockStart={"200"}>
-                            <Link
-                                url={`${editorUrl}?context=apps&appEmbed=${themeWalletButton}%2Fwallet_button`}
+                        <s-box paddingBlockStart="small">
+                            <s-link
+                                href={`${editorUrl}?context=apps&appEmbed=${themeWalletButton}%2Fwallet_button`}
                                 target="_blank"
                             >
                                 {t("appearance.walletButton.link")}
-                            </Link>
-                        </Box>
+                            </s-link>
+                        </s-box>
                     </>
                 )}
                 {!themeWalletButton && <WalletButtonNotActivated />}
-            </Box>
-        </Card>
+            </s-box>
+        </s-section>
     );
 }
 
@@ -50,9 +49,9 @@ function WalletButtonNotActivated() {
             todoText={t("appearance.walletButton.todo")}
             image={screenWalletButton}
         >
-            <Link url={`${editorUrl}?context=apps`} target="_blank">
+            <s-link href={`${editorUrl}?context=apps`} target="_blank">
                 {t("appearance.walletButton.link")}
-            </Link>
+            </s-link>
         </Instructions>
     );
 }

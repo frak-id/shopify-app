@@ -1,5 +1,3 @@
-import { Badge, BlockStack, Box, Card, Text } from "@shopify/polaris";
-import { CheckIcon, XSmallIcon } from "@shopify/polaris-icons";
 import {
     CreateShopifyWebhook,
     FrakWebhook,
@@ -61,60 +59,58 @@ export default function SettingsWebhookPage() {
     const { t } = useTranslation();
 
     return (
-        <BlockStack gap="500">
-            <Card>
-                <BlockStack gap="200">
-                    <Box paddingBlockStart={"200"} paddingBlockEnd={"200"}>
+        <s-stack gap="large">
+            <s-section>
+                <s-stack gap="small">
+                    <s-box paddingBlockStart="small" paddingBlockEnd="small">
                         {isWebhookExists && (
-                            <Badge tone="success" icon={CheckIcon}>
+                            <s-badge tone="success">
                                 {t("webhook.connected")}
-                            </Badge>
+                            </s-badge>
                         )}
                         {!isWebhookExists && (
-                            <Badge tone="critical" icon={XSmallIcon}>
+                            <s-badge tone="critical">
                                 {t("webhook.notConnected")}
-                            </Badge>
+                            </s-badge>
                         )}
-                    </Box>
-                    <Text as="p" variant="bodyMd">
+                    </s-box>
+                    <s-text>
                         {!isWebhookExists && t("webhook.needConnection")}
-                    </Text>
+                    </s-text>
                     {!isWebhookExists && (
-                        <Text as="p" variant="bodyMd">
+                        <s-text>
                             <CreateShopifyWebhook />
-                        </Text>
+                        </s-text>
                     )}
 
                     {/* Display all webhooks */}
                     <WebhookList webhooks={webhooks} />
 
-                    <Box paddingBlockStart={"200"} paddingBlockEnd={"200"}>
+                    <s-box paddingBlockStart="small" paddingBlockEnd="small">
                         {frakWebhook.setup && (
-                            <Badge tone="success" icon={CheckIcon}>
+                            <s-badge tone="success">
                                 {t("webhook.frakConnected")}
-                            </Badge>
+                            </s-badge>
                         )}
                         {!frakWebhook.setup && (
-                            <Badge tone="critical" icon={XSmallIcon}>
+                            <s-badge tone="critical">
                                 {t("webhook.frakNotConnected")}
-                            </Badge>
+                            </s-badge>
                         )}
-                    </Box>
+                    </s-box>
                     {!frakWebhook.setup && (
-                        <Text as="p" variant="bodyMd">
-                            {t("webhook.needFrakConnection")}
-                        </Text>
+                        <s-text>{t("webhook.needFrakConnection")}</s-text>
                     )}
                     {merchantId && (
-                        <Text as="p" variant="bodyMd">
+                        <s-text>
                             <FrakWebhook
                                 setup={frakWebhook.setup}
                                 merchantId={merchantId}
                             />
-                        </Text>
+                        </s-text>
                     )}
-                </BlockStack>
-            </Card>
-        </BlockStack>
+                </s-stack>
+            </s-section>
+        </s-stack>
     );
 }

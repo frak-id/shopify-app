@@ -1,4 +1,3 @@
-import { BlockStack, Layout } from "@shopify/polaris";
 import { ConnectedShopInfo } from "app/components/ConnectedShopInfo";
 import { Stepper } from "app/components/Stepper";
 import { resolveMerchantInfo } from "app/services.server/merchant";
@@ -16,15 +15,9 @@ export default function SettingsGeneralPage() {
     const { merchantInfo } = useLoaderData<typeof loader>();
 
     return (
-        <Layout>
-            <Layout.Section>
-                <BlockStack gap="500">
-                    {merchantInfo && (
-                        <ConnectedShopInfo merchantInfo={merchantInfo} />
-                    )}
-                    <Stepper redirectToApp={false} />
-                </BlockStack>
-            </Layout.Section>
-        </Layout>
+        <s-stack gap="large">
+            {merchantInfo && <ConnectedShopInfo merchantInfo={merchantInfo} />}
+            <Stepper redirectToApp={false} />
+        </s-stack>
     );
 }

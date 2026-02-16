@@ -1,4 +1,3 @@
-import { BlockStack, Layout, Page } from "@shopify/polaris";
 import { BankingStatus } from "app/components/Funding/Bank";
 import { PurchaseStatus } from "app/components/Funding/Purchase";
 import { authenticate } from "app/shopify.server";
@@ -22,26 +21,22 @@ export default function FundingPage() {
     const { t } = useTranslation();
 
     return (
-        <Page title={t("funding.title")}>
-            <Layout>
-                <Layout.Section>
-                    <BlockStack gap="500">
-                        {bankStatus && (
-                            <>
-                                <BankingStatus bankStatus={bankStatus} />
-                                <PurchaseStatus
-                                    bankStatus={bankStatus}
-                                    currentPurchases={currentPurchases}
-                                />
-                            </>
-                        )}
-                        {!bankStatus && (
-                            // TODO: Link to the settings / setup instructions
-                            <p>Nope</p>
-                        )}
-                    </BlockStack>
-                </Layout.Section>
-            </Layout>
-        </Page>
+        <s-page heading={t("funding.title")}>
+            <s-stack gap="large">
+                {bankStatus && (
+                    <>
+                        <BankingStatus bankStatus={bankStatus} />
+                        <PurchaseStatus
+                            bankStatus={bankStatus}
+                            currentPurchases={currentPurchases}
+                        />
+                    </>
+                )}
+                {!bankStatus && (
+                    // TODO: Link to the settings / setup instructions
+                    <p>Nope</p>
+                )}
+            </s-stack>
+        </s-page>
     );
 }

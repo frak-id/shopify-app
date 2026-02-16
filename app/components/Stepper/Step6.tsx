@@ -1,4 +1,3 @@
-import { BlockStack, Button, Grid, Text } from "@shopify/polaris";
 import type { loader as rootLoader } from "app/routes/app";
 import {
     type OnboardingStepData,
@@ -31,46 +30,42 @@ export function Step6({
             completed={isCompleted}
             title={t("stepper.step6.title")}
         >
-            <Grid>
+            <s-grid gridTemplateColumns="1fr 1fr" gap="base">
                 {!isThemeHasFrakButton && firstProduct && (
-                    <Grid.Cell
-                        columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-                    >
-                        <BlockStack gap="400">
-                            <Text as="p" variant="bodyMd">
+                    <div>
+                        <s-stack gap="base">
+                            <s-text>
                                 <Trans i18nKey="stepper.step6.descriptionShare" />
-                            </Text>
+                            </s-text>
                             <img src={screenShareButton} alt="" />
-                            <Button
+                            <s-button
                                 variant="primary"
-                                url={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
+                                href={`${editorUrl}?previewPath=/products/${firstProduct.handle}`}
                                 target="_blank"
                             >
                                 {t("stepper.step6.linkShare")}
-                            </Button>
-                        </BlockStack>
-                    </Grid.Cell>
+                            </s-button>
+                        </s-stack>
+                    </div>
                 )}
                 {!isThemeWalletButtonExist && (
-                    <Grid.Cell
-                        columnSpan={{ xs: 6, sm: 3, md: 3, lg: 6, xl: 6 }}
-                    >
-                        <BlockStack gap="400">
-                            <Text as="p" variant="bodyMd">
+                    <div>
+                        <s-stack gap="base">
+                            <s-text>
                                 <Trans i18nKey="stepper.step6.descriptionWallet" />
-                            </Text>
+                            </s-text>
                             <img src={screenWalletButton} alt="" />
-                            <Button
+                            <s-button
                                 variant="primary"
-                                url={`${editorUrl}?context=apps`}
+                                href={`${editorUrl}?context=apps`}
                                 target="_blank"
                             >
                                 {t("stepper.step6.linkWallet")}
-                            </Button>
-                        </BlockStack>
-                    </Grid.Cell>
+                            </s-button>
+                        </s-stack>
+                    </div>
                 )}
-            </Grid>
+            </s-grid>
         </CollapsibleStep>
     );
 }

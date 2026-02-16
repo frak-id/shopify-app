@@ -1,4 +1,3 @@
-import { Page } from "@shopify/polaris";
 import { Stepper } from "app/components/Stepper";
 import { clearMerchantCache } from "app/services.server/merchant";
 import { useTranslation } from "react-i18next";
@@ -25,8 +24,8 @@ export default function OnBoardingPage() {
     const { t } = useTranslation();
 
     return (
-        <Page title={t("common.title")}>
+        <s-page heading={t("common.title")}>
             <Stepper redirectToApp={true} />
-        </Page>
+        </s-page>
     );
 }

@@ -1,15 +1,12 @@
-import { Card, Layout, SkeletonBodyText, SkeletonPage } from "@shopify/polaris";
+import { SkeletonBodyText } from "app/components/ui/SkeletonBodyText";
+import { SkeletonPage } from "app/components/ui/SkeletonPage";
 
 export function Skeleton() {
     return (
         <SkeletonPage>
-            <Layout>
-                <Layout.Section>
-                    <Card>
-                        <SkeletonBodyText lines={5} />
-                    </Card>
-                </Layout.Section>
-            </Layout>
+            <s-section>
+                <SkeletonBodyText lines={5} />
+            </s-section>
         </SkeletonPage>
     );
 }

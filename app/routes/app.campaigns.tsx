@@ -1,4 +1,3 @@
-import { Layout, Page } from "@shopify/polaris";
 import { CampaignStatus } from "app/components/Campaign";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
@@ -23,20 +22,13 @@ export default function CampaignsPage() {
     const { t } = useTranslation();
 
     return (
-        <Page title={t("campaigns.title")}>
-            <Layout>
-                <Layout.Section>
-                    {campaigns && bankStatus ? (
-                        <CampaignStatus
-                            campaigns={campaigns}
-                            bankStatus={bankStatus}
-                        />
-                    ) : (
-                        // TODO: Link to the settings / setup instructions
-                        <p>Nope</p>
-                    )}
-                </Layout.Section>
-            </Layout>
-        </Page>
+        <s-page heading={t("campaigns.title")}>
+            {campaigns && bankStatus ? (
+                <CampaignStatus campaigns={campaigns} bankStatus={bankStatus} />
+            ) : (
+                // TODO: Link to the settings / setup instructions
+                <p>Nope</p>
+            )}
+        </s-page>
     );
 }

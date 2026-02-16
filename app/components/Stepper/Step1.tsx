@@ -1,5 +1,4 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
-import { Button, Text } from "@shopify/polaris";
 import { useMutation } from "@tanstack/react-query";
 import { useRefreshData } from "app/hooks/useRefreshData";
 import type { loader as rootLoader } from "app/routes/app";
@@ -115,17 +114,15 @@ export function Step1({
             completed={isConnected}
             title={t("status.connectionStatus.title")}
         >
-            <Text as="p" variant="bodyMd">
-                {t("stepper.step1.description")}
-            </Text>
-            <Button
-                onClick={openMintEmbed}
+            <s-text>{t("stepper.step1.description")}</s-text>
+            <s-button
+                onClick={() => openMintEmbed()}
                 variant="primary"
                 loading={isPending}
                 disabled={walletStatus?.wallet === undefined}
             >
                 {t("status.modal.button")}
-            </Button>
+            </s-button>
         </CollapsibleStep>
     );
 }

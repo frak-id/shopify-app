@@ -7,7 +7,6 @@ export function UncheckedIcon(props: SVGProps<SVGSVGElement>) {
             width="20"
             height="20"
             fill="none"
-            className="Polaris-Icon__Svg"
             focusable="false"
             aria-hidden="true"
             {...props}

@@ -1,18 +1,6 @@
 import { type Currency, formatAmount } from "@frak-labs/core-sdk";
-import {
-    Badge,
-    BlockStack,
-    Button,
-    Card,
-    Collapsible,
-    DataTable,
-    InlineGrid,
-    InlineStack,
-    RangeSlider,
-    Text,
-    TextField,
-} from "@shopify/polaris";
-import { ChevronDownIcon, ChevronUpIcon } from "@shopify/polaris-icons";
+import { Collapsible } from "app/components/ui/Collapsible";
+import { RangeSlider } from "app/components/ui/RangeSlider";
 import type { loader as rootLoader } from "app/routes/app";
 import type {
     BankStatus,
@@ -36,24 +24,17 @@ export function CampaignStatus({
     const [creationOpen, setCreationOpen] = useState(false);
 
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Text as="h2" variant="headingMd">
-                    {t("status.campaign.title")}
-                </Text>
+        <s-section>
+            <s-stack gap="base">
+                <s-heading>{t("status.campaign.title")}</s-heading>
 
-                <Text variant="bodyMd" as="p">
-                    {t("status.campaign.description")}
-                </Text>
+                <s-text>{t("status.campaign.description")}</s-text>
 
                 <CampaignTable campaigns={campaigns} />
 
-                <Button
-                    icon={creationOpen ? ChevronUpIcon : ChevronDownIcon}
-                    onClick={() => setCreationOpen(!creationOpen)}
-                >
+                <s-button onClick={() => setCreationOpen(!creationOpen)}>
                     {t("status.campaign.createOpen")}
-                </Button>
+                </s-button>
 
                 <Collapsible
                     open={creationOpen}
@@ -65,32 +46,38 @@ export function CampaignStatus({
                 >
                     <CampaignCreation bankAddress={bankStatus.bankAddress} />
                 </Collapsible>
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }
 
 function CampaignTable({ campaigns }: { campaigns: CampaignResponse[] }) {
     const { t } = useTranslation();
+    const activeCampaigns = campaigns.filter((c) => c.status === "active");
+
     return (
-        <DataTable
-            columnContentTypes={["text", "text", "text"]}
-            headings={[
-                t("status.campaign.name"),
-                t("status.campaign.type"),
-                t("status.campaign.active"),
-            ]}
-            rows={campaigns
-                .filter((c) => c.status === "active")
-                .map((campaign) => [
-                    campaign.name,
-                    campaign.rule.trigger,
-                    <CampaignStatusBadge
-                        key={campaign.id}
-                        status={campaign.status}
-                    />,
-                ])}
-        />
+        <s-section padding="none">
+            <s-table>
+                <s-table-header-row>
+                    <s-table-header>{t("status.campaign.name")}</s-table-header>
+                    <s-table-header>{t("status.campaign.type")}</s-table-header>
+                    <s-table-header>
+                        {t("status.campaign.active")}
+                    </s-table-header>
+                </s-table-header-row>
+                <s-table-body>
+                    {activeCampaigns.map((campaign) => (
+                        <s-table-row key={campaign.id}>
+                            <s-table-cell>{campaign.name}</s-table-cell>
+                            <s-table-cell>{campaign.rule.trigger}</s-table-cell>
+                            <s-table-cell>
+                                <CampaignStatusBadge status={campaign.status} />
+                            </s-table-cell>
+                        </s-table-row>
+                    ))}
+                </s-table-body>
+            </s-table>
+        </s-section>
     );
 }
 
@@ -103,11 +90,7 @@ function CampaignStatusBadge({
 
     const tone = status === "active" ? "success" : "warning";
 
-    return (
-        <InlineStack gap="200">
-            <Badge tone={tone}>{t("status.campaign.active")}</Badge>
-        </InlineStack>
-    );
+    return <s-badge tone={tone}>{t("status.campaign.active")}</s-badge>;
 }
 
 function CampaignCreation({ bankAddress }: { bankAddress: Address | null }) {
@@ -157,7 +140,7 @@ function CampaignCreation({ bankAddress }: { bankAddress: Address | null }) {
         rawCAC: Number(rawCAC),
         ratio,
         name,
-        merchantId: rootData?.merchantId ?? ""
+        merchantId: rootData?.merchantId ?? "",
     });
     const refresh = useRefreshData();
 
@@ -189,92 +172,98 @@ function CampaignCreation({ bankAddress }: { bankAddress: Address | null }) {
     }
 
     return (
-        <BlockStack gap="400">
-            <InlineGrid gap="200" columns={2}>
-                <TextField
-                    label={t("status.campaign.nameInput")}
-                    value={name}
-                    onChange={setName}
-                    autoComplete="off"
-                />
-                <Text variant="bodySm" as="p">
-                    {t("status.campaign.bankSelect")}: {bankAddress}
-                </Text>
-            </InlineGrid>
-            <InlineGrid gap="200" columns={2}>
-                <BlockStack gap="200">
-                    <TextField
-                        label={t("status.campaign.budget")}
-                        type="number"
-                        value={globalBudget}
-                        onChange={setGlobalBudget}
-                        autoComplete="off"
-                        min={0}
-                        step={0.01}
-                        suffix={currencySymbol}
+        <s-stack gap="base">
+            <s-grid gridTemplateColumns="repeat(2, 1fr)" gap="small">
+                <s-grid-item>
+                    <s-text-field
+                        label={t("status.campaign.nameInput")}
+                        value={name}
+                        onChange={(e) => setName(e.currentTarget.value)}
+                        autocomplete="off"
                     />
-                    <Text variant="bodySm" as="p">
-                        {t("status.campaign.budgetInfo")}
-                    </Text>
-                </BlockStack>
-                <BlockStack gap="200">
-                    <TextField
-                        label={t("status.campaign.rawCAC")}
-                        type="number"
-                        value={rawCAC}
-                        onChange={setRawCAC}
-                        autoComplete="off"
-                        min={0}
-                        step={0.01}
-                        suffix={currencySymbol}
-                    />
-                    <Text variant="bodySm" as="p">
-                        {t("status.campaign.rawCACInfo")}
-                    </Text>
-                </BlockStack>
-            </InlineGrid>
-            <InlineStack gap="400" blockAlign="center" align="space-around">
-                <Text variant="bodyMd" as="span">
-                    {t("status.campaign.ratioReferrer")}
-                </Text>
+                </s-grid-item>
+                <s-grid-item>
+                    <s-text>
+                        {t("status.campaign.bankSelect")}: {bankAddress}
+                    </s-text>
+                </s-grid-item>
+            </s-grid>
+            <s-grid gridTemplateColumns="repeat(2, 1fr)" gap="small">
+                <s-grid-item>
+                    <s-stack gap="small">
+                        <s-number-field
+                            label={t("status.campaign.budget")}
+                            value={globalBudget}
+                            onChange={(e) =>
+                                setGlobalBudget(e.currentTarget.value)
+                            }
+                            inputMode="decimal"
+                            min={0}
+                            step={0.01}
+                            suffix={currencySymbol}
+                        />
+                        <s-text>{t("status.campaign.budgetInfo")}</s-text>
+                    </s-stack>
+                </s-grid-item>
+                <s-grid-item>
+                    <s-stack gap="small">
+                        <s-number-field
+                            label={t("status.campaign.rawCAC")}
+                            value={rawCAC}
+                            onChange={(e) => setRawCAC(e.currentTarget.value)}
+                            inputMode="decimal"
+                            min={0}
+                            step={0.01}
+                            suffix={currencySymbol}
+                        />
+                        <s-text>{t("status.campaign.rawCACInfo")}</s-text>
+                    </s-stack>
+                </s-grid-item>
+            </s-grid>
+            <div
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "16px",
+                }}
+            >
+                <s-text>{t("status.campaign.ratioReferrer")}</s-text>
                 <RangeSlider
                     label={t("status.campaign.ratio")}
                     value={ratio}
                     min={10}
                     max={90}
                     step={5}
-                    onChange={(value) => setRatio(value as number)}
+                    onChange={(value) => setRatio(value)}
                     output
                     helpText={t("status.campaign.ratioHelp")}
                 />
-                <Text variant="bodyMd" as="span">
-                    {t("status.campaign.ratioReferee")}
-                </Text>
-            </InlineStack>
-            <BlockStack gap="100">
-                <Text variant="bodyMd" as="span">
+                <s-text>{t("status.campaign.ratioReferee")}</s-text>
+            </div>
+            <s-stack gap="small">
+                <s-text>
                     {`${t("status.campaign.breakdown.rawCAC")}: ${formatAmount(breakdown.cac, currencySymbol)}`}
-                </Text>
-                <Text variant="bodyMd" as="span">
+                </s-text>
+                <s-text>
                     {`${t("status.campaign.breakdown.commission")}: ${formatAmount(breakdown.commission, currencySymbol)} (20%)`}
-                </Text>
-                <Text variant="bodyMd" as="span">
+                </s-text>
+                <s-text>
                     {`${t("status.campaign.breakdown.referrer")}: ${formatAmount(breakdown.referrerAmount, currencySymbol)} (${ratio}%)`}
-                </Text>
-                <Text variant="bodyMd" as="span">
+                </s-text>
+                <s-text>
                     {`${t("status.campaign.breakdown.referee")}: ${formatAmount(breakdown.refereeAmount, currencySymbol)} (${100 - ratio}%)`}
-                </Text>
-                <Text variant="bodyMd" as="span">
+                </s-text>
+                <s-text>
                     {`${t("status.campaign.breakdown.newUser")}: ${breakdown.maxUsers.toFixed(0)}`}
-                </Text>
-            </BlockStack>
-            <Button
+                </s-text>
+            </s-stack>
+            <s-button
                 variant="primary"
                 onClick={handleCreate}
                 disabled={isCreationDisabled}
             >
                 {t("status.campaign.createButton")}
-            </Button>
-        </BlockStack>
+            </s-button>
+        </s-stack>
     );
 }

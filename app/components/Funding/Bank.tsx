@@ -1,11 +1,5 @@
 import { formatAmount } from "@frak-labs/core-sdk";
-import {
-    BlockStack,
-    Card,
-    DataTable,
-    SkeletonDisplayText,
-    Text,
-} from "@shopify/polaris";
+import { SkeletonDisplayText } from "app/components/ui/SkeletonDisplayText";
 import type { loader as rootLoader } from "app/routes/app";
 import type { BankStatus } from "app/services.server/backendMerchant";
 import { useMemo } from "react";
@@ -29,25 +23,21 @@ export function BankingStatus({ bankStatus }: { bankStatus: BankStatus }) {
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <BlockStack gap="400" align="center" inlineAlign="stretch">
-                <Text as="h2" variant="headingMd">
-                    {t("status.bank.title")}
-                </Text>
+        <s-section>
+            <s-stack gap="base">
+                <s-heading>{t("status.bank.title")}</s-heading>
 
-                <Text variant="bodyMd" as="p">
-                    {t("status.bank.description")}
-                </Text>
+                <s-text>{t("status.bank.description")}</s-text>
 
                 {bankStatus.deployed && bankStatus.bankAddress ? (
                     <BankItem bankAddress={bankStatus.bankAddress} />
                 ) : (
-                    <Text variant="bodySm" as="p">
+                    <s-text>
                         {t("status.bank.notDeployed", "Bank not deployed yet")}
-                    </Text>
+                    </s-text>
                 )}
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }
 
@@ -85,21 +75,20 @@ function BankItem({ bankAddress }: { bankAddress: Address }) {
     }
 
     return (
-        <DataTable
-            columnContentTypes={["text", "text", "text"]}
-            headings={[
-                t("status.bank.token"),
-                t("status.bank.balance"),
-                t("status.bank.address"),
-            ]}
-            rows={[
-                [
-                    `${tokenInfo.name} (${tokenInfo.symbol})`,
-                    balance,
-                    bankAddress,
-                ],
-            ]}
-        />
+        <s-table>
+            <s-table-header-row>
+                <s-table-header>{t("status.bank.token")}</s-table-header>
+                <s-table-header>{t("status.bank.balance")}</s-table-header>
+                <s-table-header>{t("status.bank.address")}</s-table-header>
+            </s-table-header-row>
+            <s-table-body>
+                <s-table-row>
+                    <s-table-cell>{`${tokenInfo.name} (${tokenInfo.symbol})`}</s-table-cell>
+                    <s-table-cell>{balance}</s-table-cell>
+                    <s-table-cell>{bankAddress}</s-table-cell>
+                </s-table-row>
+            </s-table-body>
+        </s-table>
     );
     // TODO: totalDistributed / totalClaimed no longer available from backend — add when endpoint supports it
 }

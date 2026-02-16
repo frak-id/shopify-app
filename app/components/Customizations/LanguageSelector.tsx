@@ -1,4 +1,3 @@
-import { BlockStack, Card, ChoiceList, Text } from "@shopify/polaris";
 import { useTranslation } from "react-i18next";
 
 type LanguageMode = "single" | "multi";
@@ -15,35 +14,45 @@ export function LanguageModeSelector({
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Text as="h3" variant="headingMd">
-                    {t("customizations.languageMode.title")}
-                </Text>
-                <ChoiceList
-                    title={t("customizations.languageMode.choiceTitle")}
-                    choices={[
-                        {
-                            label: t(
-                                "customizations.languageMode.single.label"
-                            ),
-                            value: "single",
-                            helpText: t(
-                                "customizations.languageMode.single.helpText"
-                            ),
-                        },
-                        {
-                            label: t("customizations.languageMode.multi.label"),
-                            value: "multi",
-                            helpText: t(
-                                "customizations.languageMode.multi.helpText"
-                            ),
-                        },
-                    ]}
-                    selected={[mode]}
-                    onChange={(value) => onModeChange(value[0] as LanguageMode)}
-                />
-            </BlockStack>
-        </Card>
+        <s-section>
+            <s-stack gap="base">
+                <s-heading>{t("customizations.languageMode.title")}</s-heading>
+                <s-choice-list
+                    values={[mode]}
+                    onChange={(e) =>
+                        onModeChange(e.currentTarget.values[0] as LanguageMode)
+                    }
+                >
+                    <s-option value="single">
+                        <div>
+                            <div>
+                                {t("customizations.languageMode.single.label")}
+                            </div>
+                            <div
+                                style={{ fontSize: "0.875rem", color: "#666" }}
+                            >
+                                {t(
+                                    "customizations.languageMode.single.helpText"
+                                )}
+                            </div>
+                        </div>
+                    </s-option>
+                    <s-option value="multi">
+                        <div>
+                            <div>
+                                {t("customizations.languageMode.multi.label")}
+                            </div>
+                            <div
+                                style={{ fontSize: "0.875rem", color: "#666" }}
+                            >
+                                {t(
+                                    "customizations.languageMode.multi.helpText"
+                                )}
+                            </div>
+                        </div>
+                    </s-option>
+                </s-choice-list>
+            </s-stack>
+        </s-section>
     );
 }

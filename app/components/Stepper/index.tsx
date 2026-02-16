@@ -1,13 +1,4 @@
-import {
-    BlockStack,
-    Box,
-    Card,
-    Icon,
-    InlineStack,
-    ProgressBar,
-    Text,
-} from "@shopify/polaris";
-import { CheckIcon, DisabledIcon } from "@shopify/polaris-icons";
+import { ProgressBar } from "app/components/ui/ProgressBar";
 import { useVisibilityChange } from "app/hooks/useVisibilityChange";
 import type { loader as appLoader } from "app/routes/app";
 import {
@@ -42,14 +33,12 @@ export function Stepper({ redirectToApp }: { redirectToApp: boolean }) {
     );
 
     return (
-        <Card>
-            <Box paddingBlockEnd="400">
-                <Text variant="headingSm" as="h2">
-                    {t("stepper.title")}
-                </Text>
-            </Box>
+        <s-section>
+            <s-box paddingBlockEnd="base">
+                <s-heading>{t("stepper.title")}</s-heading>
+            </s-box>
 
-            <BlockStack gap="600">
+            <s-stack gap="large-200">
                 <Suspense>
                     <Await resolve={onboardingDataPromise}>
                         {(onboardingData) => {
@@ -67,8 +56,8 @@ export function Stepper({ redirectToApp }: { redirectToApp: boolean }) {
                     </Await>
                 </Suspense>
                 <StepsFooter />
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }
 
@@ -95,40 +84,38 @@ function StepsIntroduction({
     }, [progress, navigate, redirectToApp]);
 
     return (
-        <BlockStack gap="200">
-            <Text variant="bodyMd" as="p" fontWeight="bold">
-                {t("stepper.description")}
-            </Text>
+        <s-stack gap="small">
+            <s-text type="strong">{t("stepper.description")}</s-text>
 
-            <InlineStack gap={"200"} wrap={false} blockAlign="center">
+            <s-stack direction="inline" gap="small" alignItems="center">
                 <span style={{ whiteSpace: "nowrap" }}>
-                    <Text variant="bodySm" tone="subdued" as="p">
+                    <s-text color="subdued">
                         {t("stepper.completedStep", {
                             completedStep,
                             totalSteps: MAX_STEP,
                         })}
-                    </Text>
+                    </s-text>
                 </span>
                 <div style={{ maxWidth: "275px", width: "100%" }}>
                     <ProgressBar progress={progress} size="small" />
                 </div>
-            </InlineStack>
-        </BlockStack>
+            </s-stack>
+        </s-stack>
     );
 }
 
 function Steps({ onboardingData }: { onboardingData: OnboardingStepData }) {
     return (
-        <Box paddingInlineStart="400">
-            <BlockStack gap="600">
+        <s-box paddingInlineStart="base">
+            <s-stack gap="large-200">
                 <Step1 onboardingData={onboardingData} />
                 <Step2 onboardingData={onboardingData} />
                 <Step3 onboardingData={onboardingData} />
                 <Step4 onboardingData={onboardingData} />
                 <Step5 onboardingData={onboardingData} />
                 <Step6 onboardingData={onboardingData} />
-            </BlockStack>
-        </Box>
+            </s-stack>
+        </s-box>
     );
 }
 
@@ -146,32 +133,30 @@ export function StepItem({
     currentStep,
 }: StepItemProps) {
     return (
-        <InlineStack gap="200" blockAlign="center" wrap={false}>
-            <Box>
+        <s-stack direction="inline" gap="small" alignItems="center">
+            <div>
                 {checked ? (
-                    <Icon source={CheckIcon} tone="base" />
+                    <s-icon type="check" />
                 ) : currentStep === stepNumber ? (
-                    <Icon source={UncheckedIcon} tone="base" />
+                    <UncheckedIcon />
                 ) : (
-                    <Icon source={DisabledIcon} tone="subdued" />
+                    <s-icon type="disabled" color="subdued" />
                 )}
-            </Box>
-            <InlineStack gap="100" blockAlign="center" wrap={false}>
-                <Box>
-                    <Text variant="bodyMd" tone="subdued" as="p">
-                        {stepNumber}.
-                    </Text>
-                </Box>
+            </div>
+            <s-stack direction="inline" gap="small" alignItems="center">
+                <div>
+                    <s-text color="subdued">{stepNumber}.</s-text>
+                </div>
                 {children}
-            </InlineStack>
-        </InlineStack>
+            </s-stack>
+        </s-stack>
     );
 }
 
 function StepsFooter() {
     return (
-        <Box>
-            <Text variant="bodySm" tone="subdued" as="p">
+        <div>
+            <s-text color="subdued">
                 <Trans
                     i18nKey="stepper.footer"
                     components={{
@@ -187,7 +172,7 @@ function StepsFooter() {
                         ),
                     }}
                 />
-            </Text>
-        </Box>
+            </s-text>
+        </div>
     );
 }

@@ -1,4 +1,3 @@
-import { BlockStack, Card, Text, TextField } from "@shopify/polaris";
 import { useTranslation } from "react-i18next";
 import type { I18nCustomizations } from "../../services.server/metafields";
 import { ModalSection, SharingSection } from "./Section";
@@ -17,7 +16,7 @@ export function SingleLanguageFields({
     const currentValues = customizations.en || {};
 
     return (
-        <BlockStack gap="500">
+        <s-stack gap="large">
             <ModalSection
                 values={currentValues}
                 onUpdate={onUpdate}
@@ -29,7 +28,7 @@ export function SingleLanguageFields({
                 onUpdate={onUpdate}
                 language="single"
             />
-        </BlockStack>
+        </s-stack>
     );
 }
 // Multi Language Fields Component
@@ -47,13 +46,11 @@ export function MultiLanguageFields({
     const enValues = customizations.en || {};
 
     return (
-        <BlockStack gap="500">
+        <s-stack gap="large">
             {/* French */}
-            <Card>
-                <BlockStack gap="400">
-                    <Text as="h3" variant="headingMd">
-                        French (Français)
-                    </Text>
+            <s-section>
+                <s-stack gap="base">
+                    <s-heading>French (Français)</s-heading>
                     <ModalSection
                         values={frValues}
                         onUpdate={(key, value) => onUpdate("fr", key, value)}
@@ -65,15 +62,13 @@ export function MultiLanguageFields({
                         onUpdate={(key, value) => onUpdate("fr", key, value)}
                         language="fr"
                     />
-                </BlockStack>
-            </Card>
+                </s-stack>
+            </s-section>
 
             {/* English */}
-            <Card>
-                <BlockStack gap="400">
-                    <Text as="h3" variant="headingMd">
-                        English
-                    </Text>
+            <s-section>
+                <s-stack gap="base">
+                    <s-heading>English</s-heading>
                     <ModalSection
                         values={enValues}
                         onUpdate={(key, value) => onUpdate("en", key, value)}
@@ -85,9 +80,9 @@ export function MultiLanguageFields({
                         onUpdate={(key, value) => onUpdate("en", key, value)}
                         language="en"
                     />
-                </BlockStack>
-            </Card>
-        </BlockStack>
+                </s-stack>
+            </s-section>
+        </s-stack>
     );
 }
 
@@ -101,24 +96,18 @@ export function LogoField({
 }) {
     const { t } = useTranslation();
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Text as="h3" variant="headingMd">
-                    {t("customizations.modal.logo.title")}
-                </Text>
-                <Text as="p" variant="bodyMd">
-                    {t("customizations.modal.logo.description")}
-                </Text>
-                <TextField
+        <s-section>
+            <s-stack gap="base">
+                <s-heading>{t("customizations.modal.logo.title")}</s-heading>
+                <s-text>{t("customizations.modal.logo.description")}</s-text>
+                <s-text-area
                     label={t("customizations.fields.logoUrl.label")}
-                    helpText={t("customizations.fields.logoUrl.description")}
                     placeholder={t("customizations.fields.logoUrl.placeholder")}
                     value={logoUrl || ""}
-                    onChange={onUpdate}
-                    multiline={true}
-                    autoComplete="off"
+                    onChange={(e) => onUpdate(e.currentTarget.value)}
+                    autocomplete="off"
                 />
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }

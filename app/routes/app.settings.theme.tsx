@@ -1,4 +1,3 @@
-import { BlockStack, Box, Card, Link } from "@shopify/polaris";
 import screenFrakListener from "app/assets/frak-listener.png";
 import { Activated } from "app/components/Activated";
 import { Instructions } from "app/components/Instructions";
@@ -38,26 +37,26 @@ export default function SettingsThemePage() {
     );
 
     return (
-        <BlockStack gap="500">
-            <Card>
-                <Box paddingBlockStart={"200"}>
+        <s-stack gap="large">
+            <s-section>
+                <s-box paddingBlockStart="small">
                     {isThemeHasFrakActivated && (
                         <>
                             <Activated text={t("theme.connected")} />
-                            <Box paddingBlockStart={"200"}>
-                                <Link
-                                    url={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
+                            <s-box paddingBlockStart="small">
+                                <s-link
+                                    href={`${editorUrl}?context=apps&appEmbed=${id}/listener`}
                                     target="_blank"
                                 >
                                     {t("theme.link")}
-                                </Link>
-                            </Box>
+                                </s-link>
+                            </s-box>
                         </>
                     )}
                     {!isThemeHasFrakActivated && <ThemeNotActivated />}
-                </Box>
-            </Card>
-        </BlockStack>
+                </s-box>
+            </s-section>
+        </s-stack>
     );
 }
 
@@ -72,9 +71,9 @@ function ThemeNotActivated() {
             todoText={t("theme.todo")}
             image={screenFrakListener}
         >
-            <Link url={`${editorUrl}?context=apps`} target="_blank">
+            <s-link href={`${editorUrl}?context=apps`} target="_blank">
                 {t("theme.link")}
-            </Link>
+            </s-link>
         </Instructions>
     );
 }

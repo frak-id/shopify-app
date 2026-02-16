@@ -1,4 +1,4 @@
-import { BlockStack, Box, Button, Collapsible, Text } from "@shopify/polaris";
+import { Collapsible } from "app/components/ui/Collapsible";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { StepItem } from ".";
 
@@ -39,22 +39,18 @@ export function CollapsibleStep({
                 currentStep={currentStep}
             >
                 {completed ? (
-                    <Text variant="bodyMd" as="p">
-                        {title}
-                    </Text>
+                    <s-text>{title}</s-text>
                 ) : currentStep === step ? (
-                    <Button
-                        variant="plain"
+                    <s-button
+                        variant="tertiary"
                         onClick={handleToggle}
-                        ariaExpanded={open}
-                        ariaControls={`stepper-step${step}-collapsible`}
+                        aria-expanded={open}
+                        aria-controls={`stepper-step${step}-collapsible`}
                     >
                         {title}
-                    </Button>
+                    </s-button>
                 ) : (
-                    <Text variant="bodyMd" as="p" tone="subdued">
-                        {title}
-                    </Text>
+                    <s-text color="subdued">{title}</s-text>
                 )}
             </StepItem>
             <Collapsible
@@ -65,18 +61,14 @@ export function CollapsibleStep({
                     timingFunction: "ease-in-out",
                 }}
             >
-                <Box background="bg-surface-secondary" padding="400">
+                <s-box background="subdued" padding="base">
                     <div style={{ width: "fit-content" }}>
-                        <BlockStack gap="400">
-                            {description && (
-                                <Text as="p" variant="bodyMd">
-                                    {description}
-                                </Text>
-                            )}
+                        <s-stack gap="base">
+                            {description && <s-text>{description}</s-text>}
                             {children}
-                        </BlockStack>
+                        </s-stack>
                     </div>
-                </Box>
+                </s-box>
             </Collapsible>
         </>
     );

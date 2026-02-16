@@ -1,7 +1,7 @@
-import { Layout, Page, Tabs } from "@shopify/polaris";
 import { ButtonTab } from "app/components/Appearance/ButtonTab";
 import { CustomizationsTab } from "app/components/Appearance/CustomizationsTab";
 import { WalletButtonTab } from "app/components/Appearance/WalletButtonTab";
+import { Tabs } from "app/components/ui/Tabs";
 import {
     type AppearanceMetafieldValue,
     getAppearanceMetafield,
@@ -187,18 +187,10 @@ export default function AppearancePage() {
     };
 
     return (
-        <Page title={t("appearance.title")}>
-            <Layout>
-                <Layout.Section>
-                    <Tabs
-                        tabs={tabs}
-                        selected={selectedTab}
-                        onSelect={setSelectedTab}
-                    >
-                        {renderTabContent()}
-                    </Tabs>
-                </Layout.Section>
-            </Layout>
-        </Page>
+        <s-page heading={t("appearance.title")}>
+            <Tabs tabs={tabs} selected={selectedTab} onSelect={setSelectedTab}>
+                {renderTabContent()}
+            </Tabs>
+        </s-page>
     );
 }

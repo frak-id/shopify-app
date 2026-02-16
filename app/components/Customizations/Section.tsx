@@ -1,4 +1,3 @@
-import { BlockStack, Box, Card, Grid, Text, TextField } from "@shopify/polaris";
 import { useTranslation } from "react-i18next";
 import { ModalPreview } from "../ModalPreview";
 import { SocialPreview } from "../SocialPreview";
@@ -25,34 +24,48 @@ export function SharingSection({
 
     return (
         <>
-            <Card>
-                <BlockStack gap="400">
-                    <Box>
-                        <Text as="h4" variant="headingSm">
+            <s-section>
+                <s-stack gap="base">
+                    <div>
+                        <s-heading>
                             {t("customizations.sharing.title")}
-                        </Text>
-                        <Text as="p" variant="bodySm" tone="subdued">
+                        </s-heading>
+                        <s-text tone="neutral">
                             {t("customizations.sharing.description")}
-                        </Text>
-                    </Box>
-                    {SHARING_FIELD_KEYS.map((key) => (
-                        <TextField
-                            key={`${language}-${key}`}
-                            label={t(`customizations.fields.${key}.label`)}
-                            helpText={t(
-                                `customizations.fields.${key}.description`
-                            )}
-                            placeholder={t(
-                                `customizations.fields.${key}.placeholder`
-                            )}
-                            value={values[key] || ""}
-                            onChange={(value) => onUpdate(key, value)}
-                            multiline={key.includes("text")}
-                            autoComplete="off"
-                        />
-                    ))}
-                </BlockStack>
-            </Card>
+                        </s-text>
+                    </div>
+                    {SHARING_FIELD_KEYS.map((key) => {
+                        const isMultiline = key.includes("text");
+                        return isMultiline ? (
+                            <s-text-area
+                                key={`${language}-${key}`}
+                                label={t(`customizations.fields.${key}.label`)}
+                                placeholder={t(
+                                    `customizations.fields.${key}.placeholder`
+                                )}
+                                value={values[key] || ""}
+                                onChange={(e) =>
+                                    onUpdate(key, e.currentTarget.value)
+                                }
+                                autocomplete="off"
+                            />
+                        ) : (
+                            <s-text-field
+                                key={`${language}-${key}`}
+                                label={t(`customizations.fields.${key}.label`)}
+                                placeholder={t(
+                                    `customizations.fields.${key}.placeholder`
+                                )}
+                                value={values[key] || ""}
+                                onChange={(e) =>
+                                    onUpdate(key, e.currentTarget.value)
+                                }
+                                autocomplete="off"
+                            />
+                        );
+                    })}
+                </s-stack>
+            </s-section>
             <SocialPreviewSection
                 title={t("customizations.preview.social.title")}
                 description={t("customizations.preview.social.description")}
@@ -78,105 +91,103 @@ export function ModalSection({
     const { t } = useTranslation();
     return (
         <>
-            <Card>
-                <BlockStack gap="300">
-                    <Box>
-                        <Text as="h4" variant="headingSm">
+            <s-section>
+                <s-stack gap="small">
+                    <div>
+                        <s-heading>
                             {t("customizations.modal.formatting.title")}
-                        </Text>
-                        <Text as="p" variant="bodySm" tone="subdued">
+                        </s-heading>
+                        <s-text tone="neutral">
                             {t("customizations.modal.formatting.description")}
-                        </Text>
-                    </Box>
-                    <BlockStack gap="200">
-                        <Box>
-                            <Text as="p" variant="bodySm">
+                        </s-text>
+                    </div>
+                    <s-stack gap="small">
+                        <div>
+                            <s-text>
                                 • {t("customizations.modal.formatting.bold")}
-                            </Text>
-                        </Box>
-                        <Box>
-                            <Text as="p" variant="bodySm">
+                            </s-text>
+                        </div>
+                        <div>
+                            <s-text>
                                 • {t("customizations.modal.formatting.italic")}
-                            </Text>
-                        </Box>
-                        <Box>
-                            <Text as="p" variant="bodySm">
+                            </s-text>
+                        </div>
+                        <div>
+                            <s-text>
                                 •{" "}
                                 {t("customizations.modal.formatting.variable")}
-                            </Text>
-                        </Box>
-                        <Box>
-                            <Text as="p" variant="bodySm" tone="subdued">
+                            </s-text>
+                        </div>
+                        <div>
+                            <s-text tone="neutral">
                                 • {t("customizations.modal.formatting.preview")}
-                            </Text>
-                        </Box>
-                    </BlockStack>
-                </BlockStack>
-            </Card>
-            <Card>
-                <BlockStack gap="400">
-                    <Box>
-                        <Text as="h4" variant="headingSm">
-                            {t("customizations.modal.title")}
-                        </Text>
-                        <Text as="p" variant="bodySm" tone="subdued">
+                            </s-text>
+                        </div>
+                    </s-stack>
+                </s-stack>
+            </s-section>
+            <s-section>
+                <s-stack gap="base">
+                    <div>
+                        <s-heading>{t("customizations.modal.title")}</s-heading>
+                        <s-text tone="neutral">
                             {t("customizations.modal.description")}
-                        </Text>
-                    </Box>
+                        </s-text>
+                    </div>
                     {MODAL_FIELD_KEYS.map((key) => (
-                        <TextField
+                        <s-text-area
                             key={`${language}-${key}`}
                             label={t(`customizations.fields.${key}.label`)}
-                            helpText={t(
-                                `customizations.fields.${key}.description`
-                            )}
                             placeholder={t(
                                 `customizations.fields.${key}.placeholder`
                             )}
                             value={values[key] || ""}
-                            onChange={(value) => onUpdate(key, value)}
-                            multiline={true}
-                            autoComplete="off"
+                            onChange={(e) =>
+                                onUpdate(key, e.currentTarget.value)
+                            }
+                            autocomplete="off"
                         />
                     ))}
-                </BlockStack>
-            </Card>
-            <Grid>
-                <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 3, lg: 6, xl: 6 }}>
-                    <ModalPreviewSection
-                        title={t("customizations.preview.sharing.title")}
-                        description={t(
-                            "customizations.preview.sharing.description"
-                        )}
-                        text={handleValue(
-                            values["sdk.wallet.login.text_sharing"],
-                            t("customizations.preview.sharing.placeholder")
-                        )}
-                        button={handleValue(
-                            values["sdk.wallet.login.primaryAction"],
-                            t("customizations.preview.sharing.button")
-                        )}
-                        logoUrl={logoUrl}
-                    />
-                </Grid.Cell>
-                <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 3, lg: 6, xl: 6 }}>
-                    <ModalPreviewSection
-                        title={t("customizations.preview.referred.title")}
-                        description={t(
-                            "customizations.preview.referred.description"
-                        )}
-                        text={handleValue(
-                            values["sdk.wallet.login.text_referred"],
-                            t("customizations.preview.referred.placeholder")
-                        )}
-                        button={handleValue(
-                            values["sdk.wallet.login.primaryAction"],
-                            t("customizations.preview.referred.button")
-                        )}
-                        logoUrl={logoUrl}
-                    />
-                </Grid.Cell>
-            </Grid>
+                </s-stack>
+            </s-section>
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "1rem",
+                }}
+            >
+                <ModalPreviewSection
+                    title={t("customizations.preview.sharing.title")}
+                    description={t(
+                        "customizations.preview.sharing.description"
+                    )}
+                    text={handleValue(
+                        values["sdk.wallet.login.text_sharing"],
+                        t("customizations.preview.sharing.placeholder")
+                    )}
+                    button={handleValue(
+                        values["sdk.wallet.login.primaryAction"],
+                        t("customizations.preview.sharing.button")
+                    )}
+                    logoUrl={logoUrl}
+                />
+                <ModalPreviewSection
+                    title={t("customizations.preview.referred.title")}
+                    description={t(
+                        "customizations.preview.referred.description"
+                    )}
+                    text={handleValue(
+                        values["sdk.wallet.login.text_referred"],
+                        t("customizations.preview.referred.placeholder")
+                    )}
+                    button={handleValue(
+                        values["sdk.wallet.login.primaryAction"],
+                        t("customizations.preview.referred.button")
+                    )}
+                    logoUrl={logoUrl}
+                />
+            </div>
         </>
     );
 }
@@ -197,19 +208,15 @@ export function ModalPreviewSection({
     logoUrl,
 }: ModalPreviewSectionProps) {
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Box>
-                    <Text as="h4" variant="headingSm">
-                        {title}
-                    </Text>
-                    <Text as="p" variant="bodySm" tone="subdued">
-                        {description}
-                    </Text>
-                </Box>
+        <s-section>
+            <s-stack gap="base">
+                <div>
+                    <s-heading>{title}</s-heading>
+                    <s-text tone="neutral">{description}</s-text>
+                </div>
                 <ModalPreview text={text} button={button} logoUrl={logoUrl} />
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }
 
@@ -229,16 +236,12 @@ export function SocialPreviewSection({
     const { t } = useTranslation();
 
     return (
-        <Card>
-            <BlockStack gap="400">
-                <Box>
-                    <Text as="h4" variant="headingSm">
-                        {title}
-                    </Text>
-                    <Text as="p" variant="bodySm" tone="subdued">
-                        {description}
-                    </Text>
-                </Box>
+        <s-section>
+            <s-stack gap="base">
+                <div>
+                    <s-heading>{title}</s-heading>
+                    <s-text tone="neutral">{description}</s-text>
+                </div>
                 <SocialPreview
                     title={handleValue(
                         sharingTitle,
@@ -249,8 +252,8 @@ export function SocialPreviewSection({
                         t("customizations.preview.social.description")
                     )}
                 />
-            </BlockStack>
-        </Card>
+            </s-stack>
+        </s-section>
     );
 }
 
