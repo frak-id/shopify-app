@@ -32,18 +32,18 @@ export const indexerUrl = isProd
     : "https://ponder.gcp-dev.frak.id";
 export const backendUrl = getStaticVariable({
     prod: "https://backend.frak.id",
-    dev: "https://backend.v2.gcp-dev.frak.id",
-    local: "https://backend.v2.gcp-dev.frak.id",
+    dev: "https://backend.gcp-dev.frak.id",
+    local: "https://backend.gcp-dev.frak.id",
 });
 export const walletUrl = getStaticVariable({
     prod: "https://wallet.frak.id",
-    dev: "https://wallet.v2.gcp-dev.frak.id",
-    local: "https://wallet.v2.gcp-dev.frak.id",
+    dev: "https://wallet.gcp-dev.frak.id",
+    local: "https://wallet.gcp-dev.frak.id",
 });
 export const businessUrl = getStaticVariable({
     prod: "https://business.frak.id",
-    dev: "https://business.v2.gcp-dev.frak.id/",
-    local: "https://business.v2.gcp-dev.frak.id/",
+    dev: "https://business.gcp-dev.frak.id/",
+    local: "https://business.gcp-dev.frak.id/",
 });
 export const stage = $app.stage ?? "dev";
 
