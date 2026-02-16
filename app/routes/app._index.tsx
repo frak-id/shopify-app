@@ -1,13 +1,3 @@
-import {
-    Banner,
-    BlockStack,
-    Button,
-    Card,
-    Layout,
-    Link,
-    Page,
-    Text,
-} from "@shopify/polaris";
 import type { loader as appLoader } from "app/routes/app";
 import {
     getOnboardingStatusMessage,
@@ -48,66 +38,57 @@ export default function Index() {
     const { t } = useTranslation();
 
     return (
-        <Page
-            title={t("common.title")}
-            primaryAction={
-                <Button
-                    variant="primary"
-                    url={process.env.BUSINESS_URL}
-                    target="_blank"
-                >
-                    {t("common.goToDashboard")}
-                </Button>
-            }
-        >
-            <BlockStack gap="500">
-                <Layout>
-                    <Suspense>
-                        <Await resolve={isThemeSupportedPromise}>
-                            {(isThemeSupported) => {
-                                return (
-                                    <>
-                                        {!isThemeSupported && (
-                                            <ThemeNotSupported />
-                                        )}
-                                        {isThemeSupported && (
-                                            <Await
-                                                resolve={onboardingDataPromise}
-                                            >
-                                                {(resolved) =>
-                                                    resolved && (
-                                                        <ThemeSupported
-                                                            onboardingData={
-                                                                resolved
-                                                            }
-                                                        />
-                                                    )
-                                                }
-                                            </Await>
-                                        )}
-                                    </>
-                                );
-                            }}
-                        </Await>
-                    </Suspense>
-                </Layout>
-            </BlockStack>
-        </Page>
+        <s-page heading={t("common.title")}>
+            <s-button
+                slot="primary-action"
+                variant="primary"
+                href={process.env.BUSINESS_URL}
+                target="_blank"
+            >
+                {t("common.goToDashboard")}
+            </s-button>
+            <s-stack gap="large">
+                <Suspense>
+                    <Await resolve={isThemeSupportedPromise}>
+                        {(isThemeSupported) => {
+                            return (
+                                <>
+                                    {!isThemeSupported && <ThemeNotSupported />}
+                                    {isThemeSupported && (
+                                        <Await resolve={onboardingDataPromise}>
+                                            {(resolved) =>
+                                                resolved && (
+                                                    <ThemeSupported
+                                                        onboardingData={
+                                                            resolved
+                                                        }
+                                                    />
+                                                )
+                                            }
+                                        </Await>
+                                    )}
+                                </>
+                            );
+                        }}
+                    </Await>
+                </Suspense>
+            </s-stack>
+        </s-page>
     );
 }
 
 function ThemeNotSupported() {
     return (
-        <Layout.Section>
-            <Text as="p" variant="bodyMd">
+        <>
+            <s-text>
                 It looks like your theme does not fully support the
                 functionality of this app.
-            </Text>
-            <Text as="p" variant="bodyMd">
+            </s-text>
+            <s-text>
                 Try switching to a different theme or contacting your theme
                 developer to request support.
-            </Text>
-        </Layout.Section>
+            </s-text>
+        </>
     );
 }
 
@@ -130,26 +111,24 @@ function ThemeSupported({
     }, [navigate, validationResult.isComplete]);
 
     return (
-        <Layout.Section>
-            <BlockStack gap="500">
-                {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
-                {!validationResult.isComplete && (
-                    <Card>
-                        <Banner tone="warning">
-                            <Text as="p">{statusMessage}</Text>
-                            <Text as="p" variant="bodySm">
-                                Please complete the missing steps to activate
-                                all features.
-                            </Text>
-                            <Link url="/app/onboarding">
-                                {t("common.getStarted")}
-                            </Link>
-                        </Banner>
-                    </Card>
-                )}
-                <OnBoardingComplete onboardingData={onboardingData} />
-            </BlockStack>
-        </Layout.Section>
+        <s-stack gap="large">
+            {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
+            {!validationResult.isComplete && (
+                <s-section>
+                    <s-banner tone="warning">
+                        <s-text>{statusMessage}</s-text>
+                        <s-text>
+                            Please complete the missing steps to activate all
+                            features.
+                        </s-text>
+                        <s-link href="/app/onboarding">
+                            {t("common.getStarted")}
+                        </s-link>
+                    </s-banner>
+                </s-section>
+            )}
+            <OnBoardingComplete onboardingData={onboardingData} />
+        </s-stack>
     );
 }
 
@@ -165,9 +144,9 @@ function OnBoardingComplete({
     }
 
     return (
-        <BlockStack gap="500">
+        <s-stack gap="large">
             <CampaignStatus campaigns={campaigns} bankStatus={bankStatus} />
             <BankingStatus bankStatus={bankStatus} />
-        </BlockStack>
+        </s-stack>
     );
 }

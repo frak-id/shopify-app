@@ -1,19 +1,10 @@
 import { useDisplayModal, useWalletStatus } from "@frak-labs/react-sdk";
-import {
-    Banner,
-    Button,
-    Card,
-    EmptyState,
-    InlineStack,
-    Page,
-    Spinner,
-    Text,
-} from "@shopify/polaris";
 import type { loader } from "app/routes/app";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteLoaderData } from "react-router";
 import LogoFrak from "../../assets/LogoFrak.svg";
+import { EmptyState } from "../ui/EmptyState";
 
 export function WalletGated({ children }: { children: ReactNode }) {
     const rootData = useRouteLoaderData<typeof loader>("routes/app");
@@ -50,30 +41,32 @@ export function WalletGated({ children }: { children: ReactNode }) {
 
     if (walletStatus === undefined) {
         return (
-            <Page>
-                <InlineStack gap="200" blockAlign="center" direction="row">
+            <s-page>
+                <s-stack direction="inline" gap="small" alignItems="center">
                     {!showTimeoutError && (
-                        <InlineStack gap="200" blockAlign="center">
-                            <Spinner size="small" />
-                            <Text variant="headingMd" as="h2">
-                                {t("common.loading")}
-                            </Text>
-                        </InlineStack>
+                        <s-stack
+                            direction="inline"
+                            gap="small"
+                            alignItems="center"
+                        >
+                            <s-spinner />
+                            <s-heading>{t("common.loading")}</s-heading>
+                        </s-stack>
                     )}
                     {showTimeoutError && (
-                        <Banner tone="critical">
+                        <s-banner tone="critical">
                             <p>{t("common.loadingTimeout")}</p>
-                        </Banner>
+                        </s-banner>
                     )}
-                </InlineStack>
-            </Page>
+                </s-stack>
+            </s-page>
         );
     }
 
     if (!walletStatus.wallet) {
         return (
-            <Page>
-                <Card>
+            <s-page>
+                <s-section>
                     <EmptyState
                         heading={t("gated.configure")}
                         action={{
@@ -82,12 +75,12 @@ export function WalletGated({ children }: { children: ReactNode }) {
                         }}
                         footerContent={
                             <p>
-                                <Button
-                                    variant="monochromePlain"
+                                <s-button
+                                    variant="tertiary"
                                     onClick={authenticate}
                                 >
                                     {t("gated.alreadyGotAnAccount")}
-                                </Button>
+                                </s-button>
                                 .
                             </p>
                         }
@@ -95,8 +88,8 @@ export function WalletGated({ children }: { children: ReactNode }) {
                     >
                         <p>{t("gated.start")}</p>
                     </EmptyState>
-                </Card>
-            </Page>
+                </s-section>
+            </s-page>
         );
     }
 
