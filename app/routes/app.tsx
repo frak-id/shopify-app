@@ -1,9 +1,4 @@
 import { useWalletStatus } from "@frak-labs/react-sdk";
-import { NavMenu } from "@shopify/app-bridge-react";
-import { AppProvider as PolarisAppProvider } from "@shopify/polaris";
-import polarisStyles from "@shopify/polaris/build/esm/styles.css?url";
-import type { LinkLikeComponentProps } from "@shopify/polaris/build/ts/src/utilities/link";
-import enTranslation from "@shopify/polaris/locales/en.json";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { Skeleton } from "app/components/Skeleton";
@@ -16,7 +11,7 @@ import {
     type OnboardingStepData,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
-import { type ReactNode, Suspense } from "react";
+import { type ReactNode, Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { HeadersFunction, LoaderFunctionArgs } from "react-router";
 import {
@@ -24,34 +19,12 @@ import {
     Link,
     Outlet,
     useLoaderData,
+    useNavigate,
     useNavigation,
     useRouteError,
 } from "react-router";
 import { RootProvider } from "../providers/RootProvider";
 import { authenticate } from "../shopify.server";
-import { isAbsoluteUrl } from "../utils/url";
-
-export const links = () => [{ rel: "stylesheet", href: polarisStyles }];
-
-function PolarisLink({
-    children,
-    external,
-    url,
-    ...rest
-}: LinkLikeComponentProps) {
-    if (external || isAbsoluteUrl(url)) {
-        return (
-            <a {...rest} href={url} target="_blank" rel="noopener noreferrer">
-                {children}
-            </a>
-        );
-    }
-    return (
-        <Link {...rest} to={url}>
-            {children}
-        </Link>
-    );
-}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
@@ -72,22 +45,35 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function App() {
     const { apiKey, isThemeSupportedPromise, onboardingDataPromise } =
         useLoaderData<typeof loader>();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const handleNavigate = (event: Event) => {
+            const target = event.target;
+            if (target instanceof HTMLElement) {
+                const href = target.getAttribute("href");
+                if (href) {
+                    navigate(href);
+                }
+            }
+        };
+
+        document.addEventListener("shopify:navigate", handleNavigate);
+        return () => {
+            document.removeEventListener("shopify:navigate", handleNavigate);
+        };
+    }, [navigate]);
 
     return (
         <AppProvider embedded apiKey={apiKey}>
-            <PolarisAppProvider
-                i18n={enTranslation}
-                linkComponent={PolarisLink}
-            >
-                <RootProvider>
-                    <Suspense fallback={<Skeleton />}>
-                        <AppContent
-                            isThemeSupportedPromise={isThemeSupportedPromise}
-                            onboardingDataPromise={onboardingDataPromise}
-                        />
-                    </Suspense>
-                </RootProvider>
-            </PolarisAppProvider>
+            <RootProvider>
+                <Suspense fallback={<Skeleton />}>
+                    <AppContent
+                        isThemeSupportedPromise={isThemeSupportedPromise}
+                        onboardingDataPromise={onboardingDataPromise}
+                    />
+                </Suspense>
+            </RootProvider>
         </AppProvider>
     );
 }
@@ -165,12 +151,12 @@ function Navigation({
 
 function NavigationRoot({ children }: { children: ReactNode }) {
     return (
-        <NavMenu>
+        <ui-nav-menu>
             <Link to="/app" rel="home">
                 Home
             </Link>
             {children}
-        </NavMenu>
+        </ui-nav-menu>
     );
 }
 
