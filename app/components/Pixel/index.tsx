@@ -26,18 +26,18 @@ export function Pixel({ id }: { id?: string }) {
             .deletedWebPixelId;
 
         if (userErrors?.length > 0) {
-            window.shopify.toast.show(t("pixel.actions.messages.error"), {
+            window.shopify?.toast.show(t("pixel.actions.messages.error"), {
                 isError: true,
             });
         }
 
         if (webPixel) {
-            window.shopify.toast.show(t("pixel.actions.messages.connect"));
+            window.shopify?.toast.show(t("pixel.actions.messages.connect"));
             refresh();
         }
 
         if (deletedWebPixelId) {
-            window.shopify.toast.show(t("pixel.actions.messages.disconnect"));
+            window.shopify?.toast.show(t("pixel.actions.messages.disconnect"));
             refresh();
         }
     }, [fetcher.data, t, refresh]);
