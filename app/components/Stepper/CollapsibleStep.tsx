@@ -41,14 +41,18 @@ export function CollapsibleStep({
                 {completed ? (
                     <s-text>{title}</s-text>
                 ) : currentStep === step ? (
-                    <s-button
-                        variant="tertiary"
-                        onClick={handleToggle}
-                        aria-expanded={open}
-                        aria-controls={`stepper-step${step}-collapsible`}
-                    >
-                        {title}
-                    </s-button>
+                    <>
+                        {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
+                        {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: s-button renders as button */}
+                        <s-button
+                            variant="tertiary"
+                            onClick={handleToggle}
+                            aria-expanded={open}
+                            aria-controls={`stepper-step${step}-collapsible`}
+                        >
+                            {title}
+                        </s-button>
+                    </>
                 ) : (
                     <s-text color="subdued">{title}</s-text>
                 )}

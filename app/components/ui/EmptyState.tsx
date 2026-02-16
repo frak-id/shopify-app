@@ -52,6 +52,7 @@ export function EmptyState({
             {children && <div>{children}</div>}
             {action && (
                 <button
+                    type="button"
                     onClick={action.onAction}
                     style={{
                         padding: "10px 16px",

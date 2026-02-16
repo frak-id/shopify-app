@@ -53,16 +53,19 @@ export function CreateShopifyWebhook() {
     };
 
     return (
-        <s-button
-            variant="primary"
-            loading={fetcher.state !== "idle"}
-            disabled={fetcher.state !== "idle"}
-            onClick={() => {
-                handleAction("createWebhook");
-            }}
-        >
-            {t("webhook.actions.cta.connect")}
-        </s-button>
+        <>
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
+            <s-button
+                variant="primary"
+                loading={fetcher.state !== "idle"}
+                disabled={fetcher.state !== "idle"}
+                onClick={() => {
+                    handleAction("createWebhook");
+                }}
+            >
+                {t("webhook.actions.cta.connect")}
+            </s-button>
+        </>
     );
 }
 
@@ -107,9 +110,12 @@ export function FrakWebhook({
     return (
         <>
             {!setup && (
-                <s-button variant="primary" onClick={handleSetupWebhook}>
-                    {t("webhook.actions.cta.frakConnect")}
-                </s-button>
+                <>
+                    {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
+                    <s-button variant="primary" onClick={handleSetupWebhook}>
+                        {t("webhook.actions.cta.frakConnect")}
+                    </s-button>
+                </>
             )}
         </>
     );
@@ -175,6 +181,7 @@ export function WebhookList({
                                 justifyContent: "flex-end",
                             }}
                         >
+                            {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
                             <s-button
                                 variant="primary"
                                 tone="critical"

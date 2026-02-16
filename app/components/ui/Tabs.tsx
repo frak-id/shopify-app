@@ -26,6 +26,7 @@ export function Tabs({ tabs, selected, onSelect, children }: TabsProps) {
                 {tabs.map((tab, index) => (
                     <button
                         key={tab.id}
+                        type="button"
                         role="tab"
                         aria-selected={selected === index}
                         onClick={() => onSelect(index)}

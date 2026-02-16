@@ -115,6 +115,7 @@ export function Step1({
             title={t("status.connectionStatus.title")}
         >
             <s-text>{t("stepper.step1.description")}</s-text>
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
             <s-button
                 onClick={() => openMintEmbed()}
                 variant="primary"

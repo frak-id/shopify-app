@@ -267,7 +267,12 @@ export async function getFrakWebookStatus(
                 throwHttpErrors: false,
             }
         );
-        console.log("Response", response.url, merchantId, buildBackendHeaders(request))
+        console.log(
+            "Response",
+            response.url,
+            merchantId,
+            buildBackendHeaders(request)
+        );
         if (!response.ok) {
             return {
                 userErrors: [],

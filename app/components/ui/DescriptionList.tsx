@@ -12,8 +12,8 @@ interface DescriptionListProps {
 export function DescriptionList({ items }: DescriptionListProps) {
     return (
         <dl style={{ margin: 0, padding: 0 }}>
-            {items.map((item, index) => (
-                <div key={index}>
+            {items.map((item) => (
+                <div key={item.term}>
                     <dt
                         style={{
                             fontWeight: 600,

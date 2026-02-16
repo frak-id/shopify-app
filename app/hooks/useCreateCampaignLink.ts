@@ -43,7 +43,7 @@ export function useCreateCampaignLink({
             rootData?.shop?.domain,
             rootData?.shop?.preferredCurrency,
             bankId,
-            merchantId
+            merchantId,
         ]
     );
 }

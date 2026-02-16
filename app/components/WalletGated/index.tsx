@@ -75,6 +75,7 @@ export function WalletGated({ children }: { children: ReactNode }) {
                         }}
                         footerContent={
                             <p>
+                                {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
                                 <s-button
                                     variant="tertiary"
                                     onClick={authenticate}
