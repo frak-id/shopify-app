@@ -156,7 +156,6 @@ function CreatePurchase({ bankAddress }: { bankAddress: string }) {
                     disabled={isLoading || !!confirmationUrl}
                     suffix={rootData?.shop.preferredCurrency ?? "USD"}
                 />
-                {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
                 <s-button
                     onClick={() => handleSubmit()}
                     loading={isLoading}

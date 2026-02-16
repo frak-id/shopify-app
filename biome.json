@@ -49,6 +49,9 @@
                     "level": "error",
                     "options": { "syntax": "shorthand" }
                 }
+            },
+            "a11y": {
+                "noStaticElementInteractions": "off"
             }
         }
     },

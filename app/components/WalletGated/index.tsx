@@ -75,14 +75,20 @@ export function WalletGated({ children }: { children: ReactNode }) {
                         }}
                         footerContent={
                             <p>
-                                {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
-                                <s-button
-                                    variant="tertiary"
+                                <button
+                                    type="button"
                                     onClick={authenticate}
+                                    style={{
+                                        background: "none",
+                                        border: "none",
+                                        padding: 0,
+                                        font: "inherit",
+                                        cursor: "pointer",
+                                        color: "inherit",
+                                    }}
                                 >
-                                    {t("gated.alreadyGotAnAccount")}
-                                </s-button>
-                                .
+                                    {t("gated.alreadyGotAnAccount")}.
+                                </button>
                             </p>
                         }
                         image={LogoFrak}

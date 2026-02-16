@@ -52,30 +52,24 @@ export function Pixel({ id }: { id?: string }) {
     return (
         <>
             {!id && (
-                <>
-                    {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
-                    <s-button
-                        variant="primary"
-                        loading={fetcher.state !== "idle"}
-                        disabled={fetcher.state !== "idle"}
-                        onClick={() => handleAction("createWebPixel")}
-                    >
-                        {t("pixel.actions.cta.connect")}
-                    </s-button>
-                </>
+                <s-button
+                    variant="primary"
+                    loading={fetcher.state !== "idle"}
+                    disabled={fetcher.state !== "idle"}
+                    onClick={() => handleAction("createWebPixel")}
+                >
+                    {t("pixel.actions.cta.connect")}
+                </s-button>
             )}
             {id && (
-                <>
-                    {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
-                    <s-button
-                        variant="primary"
-                        loading={fetcher.state !== "idle"}
-                        disabled={fetcher.state !== "idle"}
-                        onClick={() => handleAction("deleteWebPixel")}
-                    >
-                        {t("pixel.actions.cta.disconnect")}
-                    </s-button>
-                </>
+                <s-button
+                    variant="primary"
+                    loading={fetcher.state !== "idle"}
+                    disabled={fetcher.state !== "idle"}
+                    onClick={() => handleAction("deleteWebPixel")}
+                >
+                    {t("pixel.actions.cta.disconnect")}
+                </s-button>
             )}
         </>
     );

@@ -42,7 +42,6 @@ export function CollapsibleStep({
                     <s-text>{title}</s-text>
                 ) : currentStep === step ? (
                     <>
-                        {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
                         {/* biome-ignore lint/a11y/useAriaPropsSupportedByRole: s-button renders as button */}
                         <s-button
                             variant="tertiary"

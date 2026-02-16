@@ -41,7 +41,6 @@ export default function PostPurchase() {
                 ) : (
                     <NoPurchase />
                 )}
-                {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
                 <s-button onClick={close}>Close</s-button>
             </s-stack>
         </s-page>

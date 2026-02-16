@@ -32,7 +32,6 @@ export function CampaignStatus({
 
                 <CampaignTable campaigns={campaigns} />
 
-                {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
                 <s-button onClick={() => setCreationOpen(!creationOpen)}>
                     {t("status.campaign.createOpen")}
                 </s-button>
@@ -258,7 +257,6 @@ function CampaignCreation({ bankAddress }: { bankAddress: Address | null }) {
                     {`${t("status.campaign.breakdown.newUser")}: ${breakdown.maxUsers.toFixed(0)}`}
                 </s-text>
             </s-stack>
-            {/* biome-ignore lint/a11y/noStaticElementInteractions: s-button is interactive */}
             <s-button
                 variant="primary"
                 onClick={handleCreate}

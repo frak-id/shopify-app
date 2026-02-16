@@ -25,13 +25,17 @@ export function EmptyState({
             style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "24px",
                 textAlign: "center",
                 alignItems: "center",
             }}
         >
             {image && (
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                    }}
+                >
                     <img
                         src={image}
                         alt=""
@@ -41,34 +45,30 @@ export function EmptyState({
             )}
             <h2
                 style={{
-                    margin: 0,
-                    fontSize: "20px",
+                    margin: "0",
                     fontWeight: 600,
-                    color: "#000",
+                    color: "#303030",
                 }}
             >
                 {heading}
             </h2>
-            {children && <div>{children}</div>}
-            {action && (
-                <button
-                    type="button"
-                    onClick={action.onAction}
+            {children && (
+                <div
                     style={{
-                        padding: "10px 16px",
-                        backgroundColor: "#008060",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "4px",
-                        fontSize: "14px",
-                        fontWeight: 500,
-                        cursor: "pointer",
+                        color: "#616161",
                     }}
                 >
-                    {action.content}
-                </button>
+                    {children}
+                </div>
             )}
-            {footerContent && <div>{footerContent}</div>}
+            {action && (
+                <s-button variant="primary" onClick={action.onAction}>
+                    {action.content}
+                </s-button>
+            )}
+            {footerContent && (
+                <div style={{ color: "#616161" }}>{footerContent}</div>
+            )}
         </div>
     );
 }
