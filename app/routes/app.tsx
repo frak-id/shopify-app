@@ -65,7 +65,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         isThemeSupportedPromise: doesThemeSupportBlock(context),
         shop,
         merchantId,
-        onboardingDataPromise: fetchAllOnboardingData(context),
+        onboardingDataPromise: fetchAllOnboardingData(context, request),
     };
 };
 

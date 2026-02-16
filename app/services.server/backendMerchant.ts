@@ -83,7 +83,6 @@ function buildBackendHeaders(
     request: Request
 ): Record<string, string> | undefined {
     const sessionToken = extractSessionToken(request);
-
     if (!sessionToken) {
         return undefined;
     }
@@ -238,5 +237,53 @@ export async function getMerchantCampaignStats(
             error
         );
         return null;
+    }
+}
+
+export type FrakWebhookStatusReturnType = {
+    userErrors: {
+        message: string;
+    }[];
+    setup: boolean;
+};
+
+export async function getFrakWebookStatus(
+    context: AuthenticatedContext,
+    request: Request
+) {
+    const merchantId = await resolveMerchantId(context);
+    if (!merchantId) {
+        return {
+            userErrors: [],
+            setup: false,
+        };
+    }
+
+    try {
+        const response = await backendApi.get(
+            `business/merchant/${merchantId}/webhooks`,
+            {
+                headers: buildBackendHeaders(request),
+                throwHttpErrors: false,
+            }
+        );
+        console.log("Response", response.url, merchantId, buildBackendHeaders(request))
+        if (!response.ok) {
+            return {
+                userErrors: [],
+                setup: false,
+            };
+        }
+        const data = await response.json();
+        return {
+            userErrors: [],
+            setup: Array.isArray(data) ? data.length > 0 : Boolean(data),
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            userErrors: [{ message: "Error fetching frak webhook status" }],
+            setup: false,
+        };
     }
 }

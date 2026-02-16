@@ -10,12 +10,14 @@ export function useCreateCampaignLink({
     rawCAC,
     ratio,
     name,
+    merchantId,
 }: {
     bankId: Address;
     globalBudget: number;
     rawCAC: number;
     ratio: number;
     name: string;
+    merchantId: string;
 }) {
     const rootData = useRouteLoaderData<typeof rootLoader>("routes/app");
 
@@ -30,6 +32,7 @@ export function useCreateCampaignLink({
                 globalBudget,
                 rawCAC,
                 ratio,
+                merchantId,
                 preferredCurrency: rootData?.shop?.preferredCurrency,
             }),
         [
@@ -40,6 +43,7 @@ export function useCreateCampaignLink({
             rootData?.shop?.domain,
             rootData?.shop?.preferredCurrency,
             bankId,
+            merchantId
         ]
     );
 }

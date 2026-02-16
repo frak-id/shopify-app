@@ -1,3 +1,4 @@
+import { getFrakWebookStatus } from "app/services.server/backendMerchant";
 import {
     type FirstProductPublishedReturnType,
     firstProductPublished,
@@ -10,7 +11,6 @@ import {
     getMainThemeId,
 } from "app/services.server/theme";
 import {
-    frakWebhookStatus,
     type GetWebhooksSubscriptionsReturnType,
     getWebhooks,
 } from "app/services.server/webhook";
@@ -84,12 +84,13 @@ export const stepDataFetchers = {
         }
     },
 
-    4: async (context: AuthenticatedContext): Promise<OnboardingStepData> => {
+    4: async (
+        context: AuthenticatedContext,
+        request: Request
+    ): Promise<OnboardingStepData> => {
         try {
             const merchantId = await resolveMerchantId(context);
-            const frakWebhook = await frakWebhookStatus({
-                merchantId,
-            });
+            const frakWebhook = await getFrakWebookStatus(context, request);
             return { frakWebhook, merchantId };
         } catch (error) {
             console.error("Error fetching frak webhook:", error);
@@ -143,7 +144,8 @@ export function validateStep(step: number, data: OnboardingStepData): boolean {
  * @returns Complete onboarding data for all steps
  */
 export async function fetchAllOnboardingData(
-    context: AuthenticatedContext
+    context: AuthenticatedContext,
+    request: Request
 ): Promise<OnboardingStepData> {
     try {
         // Fetch all data in parallel for efficiency
@@ -158,7 +160,7 @@ export async function fetchAllOnboardingData(
             stepDataFetchers[1](context),
             stepDataFetchers[2](context),
             stepDataFetchers[3](context),
-            stepDataFetchers[4](context),
+            stepDataFetchers[4](context, request),
             stepDataFetchers[5](context),
             stepDataFetchers[6](context),
         ]);

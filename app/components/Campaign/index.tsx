@@ -157,6 +157,7 @@ function CampaignCreation({ bankAddress }: { bankAddress: Address | null }) {
         rawCAC: Number(rawCAC),
         ratio,
         name,
+        merchantId: rootData?.merchantId ?? ""
     });
     const refresh = useRefreshData();
 

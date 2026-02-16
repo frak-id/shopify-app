@@ -142,6 +142,7 @@ describe("buildCampaignLink", () => {
             rawCAC: 5,
             ratio: 0.3,
             preferredCurrency: "eur",
+            merchantId: "1312"
         });
         const parsed = new URL(url);
         expect(parsed.pathname).toBe("/embedded/create-campaign");
@@ -152,6 +153,7 @@ describe("buildCampaignLink", () => {
         expect(parsed.searchParams.get("cac")).toBe("5");
         expect(parsed.searchParams.get("r")).toBe("0.3");
         expect(parsed.searchParams.get("sc")).toBe("eur");
+        expect(parsed.searchParams.get("mid")).toBe("1312");
     });
 
     it("omits currency param when not provided", () => {
@@ -163,6 +165,7 @@ describe("buildCampaignLink", () => {
             globalBudget: 100,
             rawCAC: 1,
             ratio: 0.5,
+            merchantId: "1312"
         });
         const parsed = new URL(url);
         expect(parsed.searchParams.has("sc")).toBe(false);

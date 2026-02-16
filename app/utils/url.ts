@@ -44,6 +44,7 @@ export function buildCampaignLink({
     globalBudget,
     rawCAC,
     ratio,
+    merchantId,
     preferredCurrency,
 }: {
     businessUrl: string;
@@ -53,6 +54,7 @@ export function buildCampaignLink({
     globalBudget: number;
     rawCAC: number;
     ratio: number;
+    merchantId: string;
     preferredCurrency?: string;
 }): string {
     const createUrl = new URL(businessUrl);
@@ -63,6 +65,7 @@ export function buildCampaignLink({
     createUrl.searchParams.append("gb", globalBudget.toString());
     createUrl.searchParams.append("cac", rawCAC.toString());
     createUrl.searchParams.append("r", ratio.toString());
+    createUrl.searchParams.append("mid", merchantId);
     if (preferredCurrency) {
         createUrl.searchParams.append("sc", preferredCurrency);
     }

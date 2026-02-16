@@ -6,11 +6,11 @@ import {
     type IntentWebhook,
     WebhookList,
 } from "app/components/Webhook";
+import { getFrakWebookStatus } from "app/services.server/backendMerchant";
 import { resolveMerchantId } from "app/services.server/merchant";
 import {
     createWebhook,
     deleteWebhook,
-    frakWebhookStatus,
     getWebhooks,
 } from "app/services.server/webhook";
 import { useTranslation } from "react-i18next";
@@ -21,9 +21,7 @@ import { authenticate } from "../shopify.server";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
     const context = await authenticate.admin(request);
     const merchantId = await resolveMerchantId(context);
-    const frakWebhook = await frakWebhookStatus({
-        merchantId,
-    });
+    const frakWebhook = await getFrakWebookStatus(context, request);
     const webhooks = await getWebhooks(context);
     return { webhooks, frakWebhook, merchantId };
 };
