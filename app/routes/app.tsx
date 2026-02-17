@@ -12,7 +12,7 @@ import {
     type OnboardingStepData,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
-import { type ReactNode, Suspense, useEffect } from "react";
+import { type ReactNode, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import type { HeadersFunction, LoaderFunctionArgs } from "react-router";
 import {
@@ -21,7 +21,6 @@ import {
     Outlet,
     useLoaderData,
     useLocation,
-    useNavigate,
     useNavigation,
     useRouteError,
 } from "react-router";
@@ -47,25 +46,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function App() {
     const { apiKey, isThemeSupportedPromise, onboardingDataPromise } =
         useLoaderData<typeof loader>();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const handleNavigate = (event: Event) => {
-            const target = event.target;
-            if (target instanceof HTMLElement) {
-                const href = target.getAttribute("href");
-                if (href) {
-                    navigate(href);
-                }
-            }
-        };
-
-        document.addEventListener("shopify:navigate", handleNavigate);
-        return () => {
-            document.removeEventListener("shopify:navigate", handleNavigate);
-        };
-    }, [navigate]);
-
     return (
         <AppProvider embedded apiKey={apiKey}>
             <RootProvider>

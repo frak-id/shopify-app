@@ -4,4 +4,5 @@ export default {
     future: {
         v8_viteEnvironmentApi: true,
     },
+    allowedActionOrigins: ["*.frak.id"],
 } satisfies Config;
