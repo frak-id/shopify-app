@@ -36,6 +36,7 @@ export function useOnChainShopInfo() {
 - `enabled`: Guard with `!!param` to prevent queries when data missing.
 - Return: Destructure `data` into named field + spread `...query`.
 - Error: Return fallback data (e.g., hardcoded rates), never throw.
+- **Types over interfaces**: Prefer `type` aliases. Use `interface` only when declaration merging is required.
 
 ## VIEM MULTICALL PATTERN
 

@@ -86,6 +86,7 @@ export async function action({ request }: Route.ActionArgs) {
 - **Return `Response.json()`**: Not plain objects from loaders/actions.
 - **Layout data access**: Child routes use `useRouteLoaderData<typeof loader>("routes/app")` for parent data.
 - **Route types**: `Route.LoaderArgs` / `Route.ActionArgs` from React Router v7 type generation.
+- **Types over interfaces**: Prefer `type` aliases. Use `interface` only when declaration merging is required.
 
 ## ANTI-PATTERNS
 

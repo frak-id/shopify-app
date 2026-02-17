@@ -59,6 +59,7 @@ Frak Shopify app — embedded React Router v7 app enabling referral/share-to-ear
 - **Biome-only** — no ESLint, no Prettier. Format: `bun format`. Lint: `bun lint`.
 - **Relative imports only** — no path aliases. `import type` enforced.
 - **TypeScript strict mode**. ES2022 target. Bundler module resolution.
+- **Types over interfaces**: Prefer `type` aliases. Use `interface` only when declaration merging is required.
 - **Server files**: `*.server.ts` suffix or in `services.server/` dir.
 - **Services pattern**: async functions taking `AuthenticatedContext` as first param. Named exports only. Never throw — return `null` on error.
 - **Hooks pattern**: `use{Feature}.ts`, React Query for async, `useMemo` for URL builders.

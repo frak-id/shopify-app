@@ -46,6 +46,7 @@ export async function doSomething(
 - **Generic helpers**: `metafields.ts` has `readMetafield<T>()` / `writeMetafield<T>()` — reuse for new metafields.
 - **Error handling**: try-catch with `console.error`, return `null`/`undefined` on failure. Never throw from services.
 - **Tests**: Co-located `*.test.ts` files (6 total). Run with `bun run test`.
+- **Types over interfaces**: Prefer `type` aliases. Use `interface` only when declaration merging is required.
 
 ## WHERE TO LOOK
 

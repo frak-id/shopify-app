@@ -75,6 +75,7 @@ Theme detection works by parsing theme JSON templates and regex-matching block t
 - **Locales**: `en.default.json` is source of truth. Match keys when adding translations.
 - **Extension API version**: matches main app (`2025-01`)
 - **Monorepo workspace**: extensions are npm workspaces in root `package.json`
+- **Types over interfaces**: Prefer `type` aliases. Use `interface` only when declaration merging is required.
 
 ## ANTI-PATTERNS
 

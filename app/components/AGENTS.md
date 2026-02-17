@@ -38,7 +38,8 @@ components/
 - **Entry point**: Always `index.tsx`. No barrel files.
 - **Feature isolation**: Each dir = one feature. Cross-imports between features are rare.
 - **CSS Modules**: Only `ModalPreview/` and `SocialPreview/`. Everything else is Polaris-only.
-- **Props**: Interface named `{ComponentName}Props` when needed.
+- **Props**: Prefer `type {ComponentName}Props` aliases.
+- **Types over interfaces**: Prefer `type` aliases. Use `interface` only when declaration merging is required.
 
 ## UI PATTERNS
 
