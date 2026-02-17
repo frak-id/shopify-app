@@ -1,5 +1,6 @@
 import { BankingStatus } from "app/components/Funding/Bank";
 import { PurchaseStatus } from "app/components/Funding/Purchase";
+import { PageHeading } from "app/components/ui/PageHeading";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
 import type { LoaderFunctionArgs } from "react-router";
@@ -22,6 +23,7 @@ export default function FundingPage() {
 
     return (
         <s-page heading={t("funding.title")}>
+            <PageHeading>{t("funding.title")}</PageHeading>
             <s-stack gap="large">
                 {bankStatus && (
                     <>

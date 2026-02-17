@@ -1,4 +1,5 @@
 import { CampaignStatus } from "app/components/Campaign";
+import { PageHeading } from "app/components/ui/PageHeading";
 import { authenticate } from "app/shopify.server";
 import { useTranslation } from "react-i18next";
 import type { LoaderFunctionArgs } from "react-router";
@@ -23,6 +24,7 @@ export default function CampaignsPage() {
 
     return (
         <s-page heading={t("campaigns.title")}>
+            <PageHeading>{t("campaigns.title")}</PageHeading>
             {campaigns && bankStatus ? (
                 <CampaignStatus campaigns={campaigns} bankStatus={bankStatus} />
             ) : (

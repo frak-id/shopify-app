@@ -1,4 +1,5 @@
 import { Stepper } from "app/components/Stepper";
+import { PageHeading } from "app/components/ui/PageHeading";
 import { clearMerchantCache } from "app/services.server/merchant";
 import { useTranslation } from "react-i18next";
 import type { ActionFunctionArgs } from "react-router";
@@ -25,6 +26,7 @@ export default function OnBoardingPage() {
 
     return (
         <s-page heading={t("common.title")}>
+            <PageHeading>{t("common.title")}</PageHeading>
             <Stepper redirectToApp={true} />
         </s-page>
     );

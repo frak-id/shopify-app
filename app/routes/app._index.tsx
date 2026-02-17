@@ -1,4 +1,5 @@
 import { Stepper } from "app/components/Stepper";
+import { PageHeading } from "app/components/ui/PageHeading";
 import type { loader as appLoader } from "app/routes/app";
 import {
     type OnboardingStepData,
@@ -35,6 +36,7 @@ export default function Index() {
 
     return (
         <s-page heading={t("common.title")}>
+            <PageHeading>{t("common.title")}</PageHeading>
             <s-button
                 slot="primary-action"
                 variant="primary"

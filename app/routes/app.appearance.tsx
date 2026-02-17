@@ -1,6 +1,7 @@
 import { ButtonTab } from "app/components/Appearance/ButtonTab";
 import { CustomizationsTab } from "app/components/Appearance/CustomizationsTab";
 import { WalletButtonTab } from "app/components/Appearance/WalletButtonTab";
+import { PageHeading } from "app/components/ui/PageHeading";
 import { Tabs } from "app/components/ui/Tabs";
 import {
     type AppearanceMetafieldValue,
@@ -188,6 +189,7 @@ export default function AppearancePage() {
 
     return (
         <s-page heading={t("appearance.title")}>
+            <PageHeading>{t("appearance.title")}</PageHeading>
             <Tabs tabs={tabs} selected={selectedTab} onSelect={setSelectedTab}>
                 {renderTabContent()}
             </Tabs>

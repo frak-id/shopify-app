@@ -1,3 +1,4 @@
+import { PageHeading } from "app/components/ui/PageHeading";
 import { Tabs } from "app/components/ui/Tabs";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -53,6 +54,7 @@ export default function SettingsIndex() {
 
     return (
         <s-page heading={t("settings.title")}>
+            <PageHeading>{t("settings.title")}</PageHeading>
             <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} />
             <Outlet />
         </s-page>

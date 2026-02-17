@@ -1,6 +1,5 @@
 .tabList {
     display: flex;
-    border-bottom: 1px solid #e5e5e5;
     gap: 0;
 }
 
@@ -23,13 +22,13 @@
 
 .tab[aria-selected="true"] {
     font-weight: 600;
-    color: #000;
-    border-bottom: 2px solid #008060;
-    margin-bottom: -1px;
+    color: #303030;
+    background-color: #f1f1f1;
+    border-radius: 8px;
 }
 
 .tab[aria-selected="true"]:hover {
-    background-color: transparent;
+    background-color: #f1f1f1;
 }
 
 .content {
