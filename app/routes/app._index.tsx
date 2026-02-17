@@ -1,22 +1,18 @@
+import { Stepper } from "app/components/Stepper";
 import type { loader as appLoader } from "app/routes/app";
 import {
-    getOnboardingStatusMessage,
     type OnboardingStepData,
     validateCompleteOnboarding,
 } from "app/utils/onboarding";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import type { LoaderFunctionArgs } from "react-router";
-import {
-    Await,
-    data,
-    useLoaderData,
-    useNavigate,
-    useRouteLoaderData,
-} from "react-router";
+import { Await, data, useLoaderData, useRouteLoaderData } from "react-router";
 import { CampaignStatus } from "../components/Campaign";
 import { BankingStatus } from "../components/Funding/Bank";
 import {
+    type BankStatus,
+    type CampaignResponse,
     getMerchantBankStatus,
     getMerchantCampaigns,
 } from "../services.server/backendMerchant";
@@ -56,15 +52,13 @@ export default function Index() {
                                     {!isThemeSupported && <ThemeNotSupported />}
                                     {isThemeSupported && (
                                         <Await resolve={onboardingDataPromise}>
-                                            {(resolved) =>
-                                                resolved && (
-                                                    <ThemeSupported
-                                                        onboardingData={
-                                                            resolved
-                                                        }
-                                                    />
-                                                )
-                                            }
+                                            {(resolved) => (
+                                                <ThemeSupported
+                                                    onboardingData={
+                                                        resolved ?? {}
+                                                    }
+                                                />
+                                            )}
                                         </Await>
                                     )}
                                 </>
@@ -97,52 +91,41 @@ function ThemeSupported({
 }: {
     onboardingData: OnboardingStepData;
 }) {
-    // Validate if onboarding is truly complete
-    const validationResult = validateCompleteOnboarding(onboardingData);
-    const statusMessage = getOnboardingStatusMessage(validationResult);
     const { t } = useTranslation();
-    const navigate = useNavigate();
+    const { campaigns, bankStatus } = useLoaderData<typeof loader>();
+    const validationResult = validateCompleteOnboarding(onboardingData);
 
-    useEffect(() => {
-        // Redirect to onboarding if onboarding is not complete
-        if (!validationResult.isComplete) {
-            navigate("/app/onboarding");
-        }
-    }, [navigate, validationResult.isComplete]);
+    if (!validationResult.isComplete) {
+        return <Stepper redirectToApp={false} />;
+    }
+
+    if (!campaigns || !bankStatus) {
+        return (
+            <s-section>
+                <s-banner tone="warning">
+                    <s-text>{t("common.dashboardDataUnavailableTitle")}</s-text>
+                    <s-text>
+                        {t("common.dashboardDataUnavailableDescription")}
+                    </s-text>
+                </s-banner>
+            </s-section>
+        );
+    }
 
     return (
         <s-stack gap="large">
-            {/* Show validation status banner if onboarding is marked complete locally but validation fails */}
-            {!validationResult.isComplete && (
-                <s-section>
-                    <s-banner tone="warning">
-                        <s-text>{statusMessage}</s-text>
-                        <s-text>
-                            Please complete the missing steps to activate all
-                            features.
-                        </s-text>
-                        <s-link href="/app/onboarding">
-                            {t("common.getStarted")}
-                        </s-link>
-                    </s-banner>
-                </s-section>
-            )}
-            <OnBoardingComplete onboardingData={onboardingData} />
+            <OnBoardingComplete campaigns={campaigns} bankStatus={bankStatus} />
         </s-stack>
     );
 }
 
 function OnBoardingComplete({
-    onboardingData,
+    campaigns,
+    bankStatus,
 }: {
-    onboardingData: OnboardingStepData;
+    campaigns: CampaignResponse[];
+    bankStatus: BankStatus;
 }) {
-    const { campaigns, bankStatus } = useLoaderData<typeof loader>();
-
-    if (!onboardingData.merchantId || !campaigns || !bankStatus) {
-        return null;
-    }
-
     return (
         <s-stack gap="large">
             <CampaignStatus campaigns={campaigns} bankStatus={bankStatus} />

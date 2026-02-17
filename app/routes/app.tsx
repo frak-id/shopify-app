@@ -6,6 +6,7 @@ import { WalletGated } from "app/components/WalletGated";
 import { resolveMerchantId } from "app/services.server/merchant";
 import { shopInfo } from "app/services.server/shop";
 import { doesThemeSupportBlock } from "app/services.server/theme";
+import { shouldShowOutletSkeleton } from "app/utils/navigationLoading";
 import {
     fetchAllOnboardingData,
     type OnboardingStepData,
@@ -19,6 +20,7 @@ import {
     Link,
     Outlet,
     useLoaderData,
+    useLocation,
     useNavigate,
     useNavigation,
     useRouteError,
@@ -86,8 +88,12 @@ function AppContent({
     onboardingDataPromise: Promise<OnboardingStepData>;
 }) {
     const navigation = useNavigation();
-    const isLoading =
-        navigation.state === "loading" || navigation.state === "submitting";
+    const location = useLocation();
+    const isLoading = shouldShowOutletSkeleton({
+        currentPathname: location.pathname,
+        navigationState: navigation.state,
+        nextPathname: navigation.location?.pathname ?? null,
+    });
 
     return (
         <Await resolve={isThemeSupportedPromise}>

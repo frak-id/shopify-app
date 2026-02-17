@@ -5,7 +5,9 @@
         "loading": "Chargement...",
         "loadingTimeout": "Le chargement a expiré. Veuillez réessayer.",
         "allSet": "L'application Frak est correctement configurée",
-        "getStarted": "Commencer la configuration de l'application"
+        "getStarted": "Commencer la configuration de l'application",
+        "dashboardDataUnavailableTitle": "Les donnees du tableau de bord sont temporairement indisponibles.",
+        "dashboardDataUnavailableDescription": "Veuillez actualiser la page dans quelques secondes."
     },
     "navigation": {
         "campaigns": "Campagnes",

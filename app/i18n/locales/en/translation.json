@@ -5,7 +5,9 @@
         "loading": "Loading...",
         "loadingTimeout": "The loading has expired. Please try again.",
         "allSet": "Frak application is correctly set up",
-        "getStarted": "Start application setup"
+        "getStarted": "Start application setup",
+        "dashboardDataUnavailableTitle": "Dashboard data is temporarily unavailable.",
+        "dashboardDataUnavailableDescription": "Please refresh the page in a few seconds."
     },
     "navigation": {
         "campaigns": "Campaigns",
