@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./Collapsible.module.css";
 
 interface CollapsibleProps {
     open: boolean;
@@ -19,9 +20,9 @@ export function Collapsible({
     return (
         <div
             id={id}
+            className={styles.collapsible}
             style={{
                 maxHeight: open ? "1000px" : "0",
-                overflow: "hidden",
                 transition: `max-height ${transition.duration} ${transition.timingFunction}`,
             }}
         >

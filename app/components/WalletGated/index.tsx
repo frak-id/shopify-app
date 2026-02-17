@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useRouteLoaderData } from "react-router";
 import LogoFrak from "../../assets/LogoFrak.svg";
 import { EmptyState } from "../ui/EmptyState";
+import styles from "./index.module.css";
 
 export function WalletGated({ children }: { children: ReactNode }) {
     const rootData = useRouteLoaderData<typeof loader>("routes/app");
@@ -78,14 +79,7 @@ export function WalletGated({ children }: { children: ReactNode }) {
                                 <button
                                     type="button"
                                     onClick={authenticate}
-                                    style={{
-                                        background: "none",
-                                        border: "none",
-                                        padding: 0,
-                                        font: "inherit",
-                                        cursor: "pointer",
-                                        color: "inherit",
-                                    }}
+                                    className={styles.linkButton}
                                 >
                                     {t("gated.alreadyGotAnAccount")}.
                                 </button>

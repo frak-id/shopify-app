@@ -1,3 +1,5 @@
+import styles from "./ProgressBar.module.css";
+
 interface ProgressBarProps {
     progress: number;
     size?: "small" | "medium";
@@ -9,26 +11,22 @@ export function ProgressBar({
     size = "medium",
     tone = "primary",
 }: ProgressBarProps) {
-    const height = size === "small" ? "4px" : "8px";
     const fillColor = tone === "success" ? "#008060" : "#008060";
     const backgroundColor = "#e4e5e7";
+    const sizeClass = size === "small" ? styles.small : styles.medium;
 
     return (
         <div
+            className={`${styles.progressBar} ${sizeClass}`}
             style={{
-                width: "100%",
-                height,
                 backgroundColor,
-                borderRadius: "4px",
-                overflow: "hidden",
             }}
         >
             <div
+                className={styles.fill}
                 style={{
                     width: `${Math.min(Math.max(progress, 0), 100)}%`,
-                    height: "100%",
                     backgroundColor: fillColor,
-                    transition: "width 0.3s ease-in-out",
                 }}
             />
         </div>

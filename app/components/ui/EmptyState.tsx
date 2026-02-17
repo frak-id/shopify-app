@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./EmptyState.module.css";
 
 interface EmptyStateAction {
     content: string;
@@ -21,53 +22,21 @@ export function EmptyState({
     children,
 }: EmptyStateProps) {
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                textAlign: "center",
-                alignItems: "center",
-            }}
-        >
+        <div className={styles.emptyState}>
             {image && (
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                >
-                    <img
-                        src={image}
-                        alt=""
-                        style={{ maxWidth: "250px", height: "auto" }}
-                    />
+                <div className={styles.imageContainer}>
+                    <img src={image} alt="" className={styles.image} />
                 </div>
             )}
-            <h2
-                style={{
-                    margin: "0",
-                    fontWeight: 600,
-                    color: "#303030",
-                }}
-            >
-                {heading}
-            </h2>
-            {children && (
-                <div
-                    style={{
-                        color: "#616161",
-                    }}
-                >
-                    {children}
-                </div>
-            )}
+            <h2 className={styles.heading}>{heading}</h2>
+            {children && <div className={styles.children}>{children}</div>}
             {action && (
                 <s-button variant="primary" onClick={action.onAction}>
                     {action.content}
                 </s-button>
             )}
             {footerContent && (
-                <div style={{ color: "#616161" }}>{footerContent}</div>
+                <div className={styles.footer}>{footerContent}</div>
             )}
         </div>
     );

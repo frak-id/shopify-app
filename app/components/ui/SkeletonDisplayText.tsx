@@ -1,10 +1,6 @@
 import type React from "react";
-
-const pulseStyle: React.CSSProperties = {
-    backgroundColor: "#e4e5e7",
-    borderRadius: "4px",
-    animation: "skeleton-pulse 1.5s ease-in-out infinite",
-};
+import styles from "./SkeletonDisplayText.module.css";
+import skeletonStyles from "./skeleton.module.css";
 
 const sizeMap = {
     small: 20,
@@ -20,24 +16,9 @@ export function SkeletonDisplayText({
     const height = sizeMap[size];
 
     return (
-        <>
-            <style>{`
-                @keyframes skeleton-pulse {
-                    0%, 100% {
-                        opacity: 1;
-                    }
-                    50% {
-                        opacity: 0.6;
-                    }
-                }
-            `}</style>
-            <div
-                style={{
-                    ...pulseStyle,
-                    height: `${height}px`,
-                    width: "60%",
-                }}
-            />
-        </>
+        <div
+            className={`${skeletonStyles.pulse} ${styles.displayText}`}
+            style={{ height: `${height}px` }}
+        />
     );
 }

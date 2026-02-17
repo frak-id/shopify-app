@@ -1,3 +1,6 @@
+import { useId } from "react";
+import styles from "./RangeSlider.module.css";
+
 interface RangeSliderProps {
     label: string;
     value: number;
@@ -19,68 +22,27 @@ export function RangeSlider({
     output,
     helpText,
 }: RangeSliderProps) {
-    const inputId = `range-slider-${Math.random().toString(36).slice(2, 9)}`;
+    const inputId = useId();
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            <label
-                htmlFor={inputId}
-                style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    color: "#202223",
-                }}
-            >
+        <div className={styles.rangeSlider}>
+            <label htmlFor={inputId} className={styles.label}>
                 {label}
             </label>
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div className={styles.control}>
                 <input
                     id={inputId}
+                    className={styles.input}
                     type="range"
                     min={min}
                     max={max}
                     step={step}
                     value={value}
                     onChange={(e) => onChange(Number(e.target.value))}
-                    style={
-                        {
-                            flex: 1,
-                            height: "4px",
-                            borderRadius: "2px",
-                            background: "#e4e5e7",
-                            outline: "none",
-                            WebkitAppearance: "none",
-                            appearance: "none",
-                        } as React.CSSProperties & {
-                            WebkitAppearance: string;
-                        }
-                    }
                 />
-                {output && (
-                    <span
-                        style={{
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            color: "#202223",
-                            minWidth: "40px",
-                            textAlign: "right",
-                        }}
-                    >
-                        {value}
-                    </span>
-                )}
+                {output && <span className={styles.output}>{value}</span>}
             </div>
-            {helpText && (
-                <p
-                    style={{
-                        fontSize: "12px",
-                        color: "#6d7175",
-                        margin: "0",
-                    }}
-                >
-                    {helpText}
-                </p>
-            )}
+            {helpText && <p className={styles.helpText}>{helpText}</p>}
         </div>
     );
 }
