@@ -1,3 +1,4 @@
+import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { useCallback } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { data, useLoaderData } from "react-router";
@@ -33,17 +34,22 @@ export default function PostPurchase() {
     }, []);
 
     return (
-        <s-page>
-            <s-stack gap="large-400" alignItems="center">
-                <img src="https://frak.id/assets/logo-frak.png" alt="Logo" />
-                {purchase ? (
-                    <PurchasePresent purchase={purchase} />
-                ) : (
-                    <NoPurchase />
-                )}
-                <s-button onClick={close}>Close</s-button>
-            </s-stack>
-        </s-page>
+        <AppProvider embedded={false}>
+            <s-page>
+                <s-stack gap="large-400" alignItems="center">
+                    <img
+                        src="https://frak.id/assets/logo-frak.png"
+                        alt="Logo"
+                    />
+                    {purchase ? (
+                        <PurchasePresent purchase={purchase} />
+                    ) : (
+                        <NoPurchase />
+                    )}
+                    <s-button onClick={close}>Close</s-button>
+                </s-stack>
+            </s-page>
+        </AppProvider>
     );
 }
 

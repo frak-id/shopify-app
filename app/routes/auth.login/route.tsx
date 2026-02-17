@@ -1,3 +1,4 @@
+import { AppProvider } from "@shopify/shopify-app-react-router/react";
 import { useState } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { data, Form, useActionData, useLoaderData } from "react-router";
@@ -25,24 +26,26 @@ export default function Auth() {
     const { errors } = actionData || loaderData;
 
     return (
-        <s-page>
-            <s-section>
-                <Form method="post">
-                    <s-stack gap="base">
-                        <s-heading>Log in</s-heading>
-                        <s-text-field
-                            name="shop"
-                            label="Shop domain"
-                            details="example.myshopify.com"
-                            value={shop}
-                            onChange={(e) => setShop(e.currentTarget.value)}
-                            autocomplete="on"
-                            error={errors.shop}
-                        />
-                        <s-button type="submit">Log in</s-button>
-                    </s-stack>
-                </Form>
-            </s-section>
-        </s-page>
+        <AppProvider embedded={false}>
+            <s-page>
+                <s-section>
+                    <Form method="post">
+                        <s-stack gap="base">
+                            <s-heading>Log in</s-heading>
+                            <s-text-field
+                                name="shop"
+                                label="Shop domain"
+                                details="example.myshopify.com"
+                                value={shop}
+                                onChange={(e) => setShop(e.currentTarget.value)}
+                                autocomplete="on"
+                                error={errors.shop}
+                            />
+                            <s-button type="submit">Log in</s-button>
+                        </s-stack>
+                    </Form>
+                </s-section>
+            </s-page>
+        </AppProvider>
     );
 }
