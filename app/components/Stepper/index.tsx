@@ -85,7 +85,9 @@ function StepsIntroduction({
 
     return (
         <s-stack gap="small">
-            <s-text type="strong">{t("stepper.description")}</s-text>
+            <s-text>
+                <strong>{t("stepper.description")}</strong>
+            </s-text>
 
             <s-stack direction="inline" gap="small" alignItems="center">
                 <span style={{ whiteSpace: "nowrap" }}>
@@ -97,7 +99,7 @@ function StepsIntroduction({
                     </s-text>
                 </span>
                 <div style={{ maxWidth: "275px", width: "100%" }}>
-                    <ProgressBar progress={progress} size="small" />
+                    <ProgressBar progress={progress} size="medium" />
                 </div>
             </s-stack>
         </s-stack>
@@ -107,7 +109,7 @@ function StepsIntroduction({
 function Steps({ onboardingData }: { onboardingData: OnboardingStepData }) {
     return (
         <s-box paddingInlineStart="base">
-            <s-stack gap="large-200">
+            <s-stack gap="small-100">
                 <Step1 onboardingData={onboardingData} />
                 <Step2 onboardingData={onboardingData} />
                 <Step3 onboardingData={onboardingData} />

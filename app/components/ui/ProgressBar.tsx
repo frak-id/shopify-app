@@ -11,7 +11,7 @@ export function ProgressBar({
     size = "medium",
     tone = "primary",
 }: ProgressBarProps) {
-    const fillColor = tone === "success" ? "#008060" : "#008060";
+    const fillColor = tone === "success" ? "#008060" : "#91D0FF";
     const backgroundColor = "#e4e5e7";
     const sizeClass = size === "small" ? styles.small : styles.medium;
 
